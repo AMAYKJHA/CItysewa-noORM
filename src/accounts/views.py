@@ -7,15 +7,11 @@ from .serializers import (
 )
 
 
-class CustomerRegisterAPIView(APIView):
-    # authentication_classes = []
-    # permission_classes = []
-    
+class CustomerRegisterAPIView(APIView):    
     def post(self, request):
         serializer = CustomerRegisterSerializer(data=request.data)        
         if serializer.is_valid():
             data = serializer.save()
-            print("IN view:\n", data)
             return Response(data, status=HTTP_200_OK)
         
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

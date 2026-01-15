@@ -1,8 +1,9 @@
 import os
 from abc import ABC, abstractmethod
+
 import django
 from django.db import connection
-
+from django.utils import timezone
 
 from .schema import table_queries
 
@@ -52,14 +53,13 @@ class SchemaManager:
 
 class Table(ABC):
     table_name = None
-    fields = None
-    required_fields = None
+    required_fields = []
     
     def __init__(self):
         pass
     
     @abstractmethod
-    def abstract_table(self):
+    def abstract_method(self):
         '''This method is only mentioned to make this class abstract.'''
         pass
     
@@ -95,8 +95,7 @@ class Table(ABC):
     def filter(self):
         pass
     
-    def create(self, values:dict):
-        
+    def create(self, values:dict):        
         cols = ", ".join(list(values.keys()))
         vals = tuple(values.values())
         placeholders = ", ".join(['%s' for _ in vals])
@@ -112,7 +111,7 @@ class Table(ABC):
             return f"Error: {e}"
         
     def update(self):
-        pass
+        current_time = timezone.now()
     
     def delete(self, id:int):
         query = f"DELETE FROM {self.table_name} WHERE id = %s"

@@ -1,12 +1,13 @@
+from django.contrib.auth.hashers import make_password, check_password
+
+from datetime import datetime
 from src.core.db_manager import Table
 
 
 class Users(Table):
     table_name = 'users'
     required_fields = ['email', 'password']
-    optional_fields = []
-    foreign_key_fields = None
-    
+        
     def __init__(self):
         super().__init__()
         self.id = int()
@@ -19,8 +20,16 @@ class Users(Table):
         self.updated_at = None
        
     @staticmethod 
-    def abstract_table():
+    def abstract_method():
         pass
+    
+    def set_password(self, password):
+        self.password = make_password(password)
+        return self.password
+    
+    def check_password(self, raw_password):
+        password = "get from database"
+        return check_password(raw_password, password)
     
     def __str__(self):
         return (f"id: {self.id} email: {self.email}")
@@ -29,8 +38,6 @@ class Users(Table):
 class Customers(Table):
     table_name = 'customers'
     required_fields = ['user_id']
-    optional_fields = []
-    foreign_key_fields = ['user_id']
     
     def __init__(self):
         super().__init__()
@@ -44,12 +51,15 @@ class Customers(Table):
         self.updated_at = None
        
     @staticmethod 
-    def abstract_table():
+    def abstract_method():
         pass
     
     def __str__(self):
         return (f"id: {self.id} Name: {self.first_name} {self.last_name}")
 
 if __name__ == "__main__":
-    result = Users().get({"email": "abc@test.com"})
-    print(result)
+    # result = Users().get({"email": "abc@test.com"})
+    # print(result)
+    user = Users()
+    col = "is_admin"
+    print(user.created_at)
