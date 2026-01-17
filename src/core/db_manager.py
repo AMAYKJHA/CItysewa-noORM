@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 
 import django
 from django.db import connection
-from django.utils import timezone
 
 from .schema import table_queries
 
@@ -85,26 +84,13 @@ class Table(ABC):
         if not isinstance(value, self._attrs[key]):
             raise TypeError(f"{key} must be {self._attrs[key].__name__}")
         return super().__setattr__(key, value)
-    
-    def count(self):
-        pass
-    
-    def all(self):
-        query = f"SELECT * FROM {self.table_name}"
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute(query)
-                result = cursor.fetchall()
-                return result
-        except Exception as e:
-            print(f"Error: {e}")
-            return
-        
+           
+    #C   
     def create(self, **kwargs):
         for key in self.required_fields:
             if key not in kwargs.keys():
                 raise TypeError(f"Missing required field: {key}")
-        
+       
         for key, value in kwargs.items():
             if key in self._attrs.keys() and key not in self.read_only_fields:
                 self.__setattr__(key, value)
@@ -123,7 +109,8 @@ class Table(ABC):
         except Exception as e:
             print(f"Error: {e}")
             return   
-             
+    
+    #R         
     def get(self, **kwargs):
         if len(kwargs) == 0:
             print("Atleast a field is required for searching rows.")
@@ -148,16 +135,41 @@ class Table(ABC):
                             self.__setattr__(keys[i], value)
                     return self
                 return result
+            
         except Exception as e:
             print(f"Error: {e}")
             return None
     
     def filter(self):
         pass   
-        
-    def update(self):
-        current_time = timezone.now()
     
+    def count(self):
+        query = f"SELECT COUNT(*) FROM {self.table_name}"
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                total_rows = cursor.fetchone()[0]
+                return total_rows
+        except Exception as e:
+            print(f"Error: {e}")
+            return
+    
+    def all(self):
+        query = f"SELECT * FROM {self.table_name}"
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                result = cursor.fetchall()
+                return result
+        except Exception as e:
+            print(f"Error: {e}")
+            return
+        
+    #U  
+    def update(self):
+        pass
+    
+    #D
     def delete(self, **kwargs):
         if len(kwargs) == 0:
             print("Atleast a field is required for searching rows.")

@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 
 from .tables import (
-    Users,
-    Customers,
+    User,
+    Customer,
 )
 from .constants import (
     CUSTOMER_PROFILE_EXISTS,
@@ -21,10 +21,10 @@ class CustomerRegisterSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         email = attrs.get('email')
-        user = Users().get({"email":email})
+        user = User().get({"email":email})
         if user:
             user_id = user[0]
-            customer_profile = Customers().get({"id": user_id})
+            customer_profile = Customer().get({"id": user_id})
             if customer_profile:
                 raise serializers.ValidationError({
                     "message": CUSTOMER_PROFILE_EXISTS
@@ -41,9 +41,9 @@ class CustomerRegisterSerializer(serializers.Serializer):
         
         if not user_id:
             values = {'email': email, 'password': password}
-            Users().create(values=values)
-            user_id = Users().get({"email":email})[0]
+            User().create(values=values)
+            user_id = User().get({"email":email})[0]
           
-        Customers().create(validated_data)
+        Customer().create(validated_data)
         return validated_data
         

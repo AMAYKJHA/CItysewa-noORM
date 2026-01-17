@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from src.core.db_manager import Table
 
 
-class Users(Table):
+class User(Table):
     table_name = 'users'
     _attrs = {
         "email": str,
@@ -22,19 +22,29 @@ class Users(Table):
     def abstract_method():
         pass
     
+    def create(self, **kwargs):
+        raw_password = kwargs.pop("password", None)
+        if raw_password:
+            password_hash = self.set_password(raw_password)
+        else:
+            raise ValueError("Password is required.")
+        
+        kwargs["password"] = password_hash
+        return super().create(**kwargs)
+    
     def set_password(self, password):
         self.password = make_password(password)
         return self.password
     
     def check_password(self, raw_password):
-        password = "fetch from database"
+        password = self.password
         return check_password(raw_password, password)
     
     def __str__(self):
-        return (f"email: {self.email}")
+        return (f"Table instance: {self.table_name}")
     
     
-class Customers(Table):
+class Customer(Table):
     table_name = 'customers'
     _attrs = {
         "user_id": int,
@@ -53,13 +63,10 @@ class Customers(Table):
     @staticmethod 
     def abstract_method():
         pass
-    
+        
     def __str__(self):
         return (f"Name: {self.first_name}")
 
 if __name__ == "__main__":
-    result = Users().get(id='3')
-    if result:
-        print(result.__dict__)
-    else:
-        print(result)
+    result = User().all()
+    print(result)
