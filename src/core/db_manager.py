@@ -18,38 +18,49 @@ class SchemaManager:
         try:
             with connection.cursor() as cursor:
                 cursor.execute(test_query)
-                return True if cursor.fetchone()[0] else False
+                if cursor.fetchone()[0]:
+                    print("Database connection successful.")
+                    return True
+                print("Database connection failed.")
+                return False
         except Exception as e:
-            print(f"{e}")
+            print("Database connection failed.")
+            print(f"Error: {e}")
             return False
     
     def migrate(self, table_name, query):
         if not self.test_connection():
-            return "Error: Couldn`t connect to the database."
+            print("Error: Couldn`t connect to the database.")
+            return
         
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query)
             connection.commit()
-            return f"Table: {table_name} created successfully."
+            print(f"Table: {table_name} created successfully.")
+            return
             
         except Exception as e:
             connection.rollback()
-            return f"Error: Unable to create table. {e}"
+            print(f"Error: Unable to create table. {e}")
+            return
     
     def drop_table(self, table_name):        
         if not self.test_connection():
-            return "Error: Couldn`t connect to the database."
+            print("Error: Couldn`t connect to the database.")
+            return
         
         try:
             with connection.cursor() as cursor:
                 cursor.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE;")
             connection.commit()
-            return f"Table:{table_name} deleted successfully."
+            print(f"Table:{table_name} deleted successfully.")
+            return
             
         except Exception as e:
             connection.rollback()
-            return f"Error: Unable to delete table. {e}"
+            print(f"Error: Unable to delete table. {e}")
+            return
 
 
 class Table(ABC):
@@ -88,7 +99,31 @@ class Table(ABC):
         except Exception as e:
             print(f"Error: {e}")
             return
-            
+        
+    def create(self, **kwargs):
+        for key in self.required_fields:
+            if key not in kwargs.keys():
+                raise TypeError(f"Missing required field: {key}")
+        
+        for key, value in kwargs.items():
+            if key in self._attrs.keys() and key not in self.read_only_fields:
+                self.__setattr__(key, value)
+                
+        cols = ", ".join(list(self.__dict__.keys()))
+        vals = tuple(self.__dict__.values())
+        placeholders = ", ".join(['%s' for _ in vals])
+        
+        query = f"INSERT INTO {self.table_name} ({cols}) VALUES ({placeholders});"        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query, vals)
+            connection.commit()
+            print(f"Record inserted successfully in the {self.table_name}.")
+            return self
+        except Exception as e:
+            print(f"Error: {e}")
+            return   
+             
     def get(self, **kwargs):
         if len(kwargs) == 0:
             print("Atleast a field is required for searching rows.")
@@ -118,31 +153,7 @@ class Table(ABC):
             return None
     
     def filter(self):
-        pass
-    
-    def create(self, **kwargs):
-        for key in self.required_fields:
-            if key not in kwargs.keys():
-                raise TypeError(f"Missing required field: {key}")
-        
-        for key, value in kwargs.items():
-            if key in self._attrs.keys() and key not in self.read_only_fields:
-                self.__setattr__(key, value)
-                
-        cols = ", ".join(list(self.__dict__.keys()))
-        vals = tuple(self.__dict__.values())
-        placeholders = ", ".join(['%s' for _ in vals])
-        
-        query = f"INSERT INTO {self.table_name} ({cols}) VALUES ({placeholders});"        
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute(query, vals)
-            connection.commit()
-            print(f"Record inserted successfully in the {self.table_name}.")
-            return self
-        except Exception as e:
-            print(f"Error: {e}")
-            return
+        pass   
         
     def update(self):
         current_time = timezone.now()
@@ -166,10 +177,7 @@ class Table(ABC):
         
         except Exception as e:
             print(f"Error: {e}")
-        
-
+      
 
 if __name__ == "__main__":
-    for table in table_queries: 
-        print(SchemaManager().migrate(table_name=table, query=table_queries[table]))     
-    
+    print(SchemaManager().test_connection())   
