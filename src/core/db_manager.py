@@ -1,4 +1,5 @@
 import os
+import datetime
 from abc import ABC, abstractmethod
 
 import django
@@ -57,8 +58,8 @@ class Table(ABC):
     read_only_fields = ['id', 'created_at', 'updated_at']
     _attrs = {
         "id": int,
-        "created_at": timezone,
-        "updated_at": timezone
+        "created_at": datetime.datetime,
+        "updated_at": datetime.datetime
     }
     
     def __init__(self):
@@ -71,7 +72,6 @@ class Table(ABC):
     
     def __setattr__(self, key, value):
         if not isinstance(value, self._attrs[key]):
-            print("here")
             raise TypeError(f"{key} must be {self._attrs[key].__name__}")
         return super().__setattr__(key, value)
     
@@ -88,21 +88,33 @@ class Table(ABC):
         except Exception as e:
             return f"Error: {e}"
             
-    def get(self, filters: dict):
-        if len(filters) == 0:
-            return "Atleast a field is required for searching rows."  
+    def get(self, **kwargs):
+        if len(kwargs) == 0:
+            print("Atleast a field is required for searching rows.")
+            return
         
-        values = tuple(filters.values())
-        condition = " AND ".join([f'{cols} = %s' for cols in filters.keys()])
+        cols = [col for col in kwargs.keys() if col in self._attrs]
+        values = tuple(kwargs[col] for col in cols)
+        condition = " AND ".join([f'{col} = %s' for col in cols])
         query = f"SELECT * FROM {self.table_name} WHERE {condition};"
         
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
                 result = cursor.fetchone()
+                if result:
+                    res = list(result)
+                    self.id, self.created_at, self.updated_at = res.pop(0), res.pop(-2), res.pop(-1)
+                    keys = list(self._attrs.keys())
+                    keys.remove("id")
+                    for i,value in enumerate(res):
+                        if value is not None:
+                            self.__setattr__(keys[i], value)
+                    return self
                 return result
         except Exception as e:
-            return f"Error: {e}"
+            print(f"Error: {e}")
+            return None
     
     def filter(self):
         pass
