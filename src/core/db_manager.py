@@ -154,8 +154,11 @@ class Table(ABC):
             print(f"Error: {e}")
             return
     
-    def all(self):
+    def all(self, order_by=None, order_type=0): # 0->ASC 1->DESC
+        order_type_list = ["ASC", "DESC"]
         query = f"SELECT * FROM {self.table_name}"
+        if order_by:
+            query = f"{query} ORDER BY {order_by} {order_type_list[order_type]}"
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query)
