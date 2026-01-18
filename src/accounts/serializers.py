@@ -153,6 +153,13 @@ class CustomerLoginSerializer(serializers.Serializer):
         return attrs
     
     def create(self, validated_data):
-        ...
+        user_id = validated_data.get("user_id")
+        token = Token().get(user_id=user_id)
+        
+        if not token:
+            token = Token().create(user_id=user_id)
+                    
+        customer = Customer().get(user_id=user_id)
+        return {**customer.__dict__, "token": token.token}
         
     

@@ -25,12 +25,11 @@ class Token(Table):
         return super().create(user_id=user_id, token=token)
         
         
-    def generate_token(length=40):
+    def generate_token(self, length=40):
         """
         1 byte = 2 hex-digits. So for 20 bytes, it would be equal to 40 hex digits.
         """
-        nbytes = int(length/2)
-        return secrets.token_hex(nbytes)
+        return secrets.token_hex(length//2)
     
 
 class User(Table):
