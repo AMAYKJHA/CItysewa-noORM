@@ -21,8 +21,9 @@ from rest_framework.views import APIView
 from django.shortcuts import render
    
 def homepage(request):
+    current_host = request.build_absolute_uri('')
     context = {
-        "BASE_URL": "citysewa.onrender.com"
+        "BASE_URL": current_host
     }
     return render(request, 'index.html', context)
 
