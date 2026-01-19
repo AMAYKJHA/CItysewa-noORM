@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: citysewa
+    plan: starter
+    branch: main
+    autoDeploy: false
+    buildCommand: |
+      pip install -r requirements.txt
+      # run custom migrations and collectstatic during build so the app is ready at startup
+      python manage.py custommigrate --noinput
+    startCommand: gunicorn config.wsgi:application --workers 3 --bind 0.0.0.0:$PORT
+    healthCheckPath: "/"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+      - key: SECRET_KEY
+        generate: secret
+      - key: DEBUG
+        value: "False"
+      - key: LOCAL
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
