@@ -4,7 +4,9 @@ from .views import (
     AdminRegisterAPIView,
     AdminLoginAPIView,
     CustomerRegisterAPIView,
-    CustomerLoginAPIView
+    CustomerLoginAPIView,
+    CustomerListAPIView,
+    CustomerRetrieveAPIView
 )
 urlpatterns= [
     path('admin/register', AdminRegisterAPIView.as_view(), name="admin-register"),
@@ -12,4 +14,6 @@ urlpatterns= [
     
     path('customer/register', CustomerRegisterAPIView.as_view(), name="customer-register"),
     path('customer/login', CustomerLoginAPIView.as_view(), name="customer-login"),
+    path('customer', CustomerListAPIView.as_view(), name="customer-list"),
+    path('customer/<int:id>', CustomerRetrieveAPIView.as_view(), name="customer-retrieve")
 ]

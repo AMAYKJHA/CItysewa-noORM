@@ -177,8 +177,12 @@ class Table(ABC):
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query)
-                result = cursor.fetchall()
-                return result
+                rows = cursor.fetchall()
+                cols = ["id", *self._attrs.keys()]
+                cols.pop(-3) # removed id key from last
+                result = [dict(zip(cols, row)) for row in rows]                
+                return result                
+            
         except Exception as e:
             print(f"Error: {e}")
             return

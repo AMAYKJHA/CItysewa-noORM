@@ -1,12 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_200_OK, HTTP_400_BAD_REQUEST)
+from rest_framework.status import (
+    HTTP_200_OK, 
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+)
+
+from .tables import (
+    Customer
+)
 
 from .serializers import (
     AdminRegisterSeriaizer,
     AdminLoginSerializer,
     CustomerRegisterSerializer,
-    CustomerLoginSerializer
+    CustomerLoginSerializer,
+    CustomerSerializer
 )
 
 class AdminRegisterAPIView(APIView):
@@ -42,3 +51,21 @@ class CustomerLoginAPIView(APIView):
             data = serializer.save()
             return Response(data, status=HTTP_200_OK)        
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+   
+    
+class CustomerListAPIView(APIView):
+    def get(self, request):
+        customers = Customer().all()
+        serializer = CustomerSerializer(customers, many=True)        
+        return Response(serializer.data, status=HTTP_200_OK) 
+
+   
+class CustomerRetrieveAPIView(APIView):
+    def get(self, request, id):
+        customer = Customer().get(id=id)
+        if customer:
+            serializer = CustomerSerializer(customer.__dict__)        
+            return Response(serializer.data, status=HTTP_200_OK)
+                     
+        return Response({"detail": "Not found"}, status=HTTP_404_NOT_FOUND)
+        

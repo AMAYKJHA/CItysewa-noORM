@@ -37,7 +37,7 @@ class User(Table):
     _attrs = {
         "email": str,
         "phone_number": str,
-        "password": str | None,
+        "password": str,
         "is_admin": bool,
         "is_active": bool,
     }
@@ -78,7 +78,28 @@ class Customer(Table):
         "first_name": str,
         "last_name": str,
         "gender": str,
-        "photo_url": bool
+        "photo_url": str
+    }
+    required_fields = ['user_id']
+    
+    def __init__(self):
+        super().__init__()
+        self._attrs.update(super()._attrs)
+       
+    @staticmethod 
+    def abstract_method():
+        pass
+    
+class Provider(Table):
+    table_name = 'providers'
+    _attrs = {
+        "user_id": int,
+        "first_name": str,
+        "last_name": str,
+        "gender": str,
+        "description": str,
+        "photo_url": str,
+        "verified": bool
     }
     required_fields = ['user_id']
     
@@ -92,5 +113,5 @@ class Customer(Table):
         
 
 if __name__ == "__main__":
-    result = User().count(email="awe@test.com", is_active=True)
-    print(result)
+    print(Customer().all())
+    

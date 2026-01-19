@@ -4,12 +4,19 @@ import os
 import sys
 from pathlib import Path
 
+from src.core.db_manager import migrate 
+
 def main():
     """Run administrative tasks."""
     current_path = Path(__file__).parent.resolve()
     sys.path.append(str(current_path / "src"))
     
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    if len(sys.argv) > 1 and sys.argv[1] == "custommigrate":
+        import django
+        django.setup()
+        migrate()
+        return
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
