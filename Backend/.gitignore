@@ -17,3 +17,6 @@ wheels/
 
 # Temporary files
 test.py
+
+# local db file
+db.sqlite3
