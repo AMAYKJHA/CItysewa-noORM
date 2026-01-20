@@ -57,6 +57,7 @@ class CustomerLoginAPIView(APIView):
 @extend_schema(
     summary="List all customers",
     description="Returns a lits of all customers",
+    operation_id="customer_list"
 )   
 class CustomerListAPIView(APIView):
     def get(self, request):
@@ -67,6 +68,7 @@ class CustomerListAPIView(APIView):
 @extend_schema(
     summary="Retrive a customer details",
     description="Returns details of customer using their id.",
+    operation_id='customer_detail'
 )   
 class CustomerRetrieveAPIView(APIView):
     def get(self, request, id):
