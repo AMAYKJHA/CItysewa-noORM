@@ -18,25 +18,28 @@ DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
+CORS_ALLOW_ALL_ORIGINS=env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
+CORS_ALLOWED_ORIGINS=env.list("CORS_ALLOWED_ORIGINS", default=["*"])
 
 # Application definition
-# NO need for default apps in ORM-free setup
 DJANGO_APPS = [
-    # "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
-    # "django.contrib.sessions",
-    # "django.contrib.messages",
     # "django.contrib.staticfiles",
+    
+    "corsheaders"
 ]
 
 LOCAL_APPS = []
 
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    "rest_framework",
+]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -44,6 +47,7 @@ MIDDLEWARE = [
     # "django.contrib.auth.middleware.AuthenticationMiddleware",
     # "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -55,7 +59,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                # "django.template.context_processors.request",
+                "django.template.context_processors.request",
                 # "django.contrib.auth.context_processors.auth",
                 # "django.contrib.messages.context_processors.messages",
             ],
