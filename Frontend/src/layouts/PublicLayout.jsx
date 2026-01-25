@@ -8,7 +8,7 @@ const PublicLayout = () => {
         <main style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%', border:'2px solid white'}}>
             <Navbar type='public'/>
             {/* <section><Outlet/></section> */}
-            {/* <Footer/> */}
+            <Footer/>
         </main>
     );
 };
