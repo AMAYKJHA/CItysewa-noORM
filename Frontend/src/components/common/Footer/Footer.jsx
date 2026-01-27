@@ -20,9 +20,9 @@ const Footer = (props) => {
                 {Object.entries(footerLinks).map(([section, links]) => (
                     <div className="footerColumn" key={section}>
                         <h4>{section.charAt(0).toUpperCase() + section.slice(1)}</h4>
-                        {links.map((item) => (
-                            <Link key={item.label} to={item.path} style={{all:'unset', textDecoration:'underline'}}>{item.label}</Link>
-                        ))}
+                        <span className="linkSpan">{links.map((item) => (
+                            <Link key={item.label} to={item.path} style={{all:'unset', textDecoration:'underline'}} className="link">{item.label}</Link>
+                        ))}</span>
                     </div>
                 ))}
             </section>
