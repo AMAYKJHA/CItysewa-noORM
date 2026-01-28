@@ -89,8 +89,11 @@ else:
             "HOST": env("DB_HOST"),
             "PORT": env("DB_PORT"),
             "OPTIONS": {
-                "sslmode": "require"
-            }
+                "sslmode": "require",
+                "connect_timeout": 10,
+                "options": "-c statement_timeout=30000"
+            },
+            "CONN_MAX_AGE": 0,
         }
     }
 
