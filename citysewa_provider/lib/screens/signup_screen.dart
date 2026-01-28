@@ -9,7 +9,7 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
@@ -63,7 +63,7 @@ class WelcomeText extends StatelessWidget {
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
-  _SignupFormState createState() => _SignupFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
 class _SignupFormState extends State<SignupForm> {
@@ -81,15 +81,15 @@ class _SignupFormState extends State<SignupForm> {
   ) async {
     setState(() => isLoading = true);
 
-    try {
-      final result = await auth.register(fisrtName, lastName, email, password);
-      print("result: $result");
-      if (result != null) {
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      print(e);
+    final result = await auth.register(fisrtName, lastName, email, password);
+
+    if (result.success) {
+      Navigator.pop(context);
     }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
+
     setState(() => isLoading = false);
   }
 
@@ -165,21 +165,10 @@ class _SignupFormState extends State<SignupForm> {
                     lastName.isNotEmpty) {
                   signUp(firstName, lastName, email, password);
                 } else {
-                  String msg = "Please ensure that you filed form correctly.";
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red,
-                      content: Center(
-                        child: Text(
-                          msg,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
+                  String msg = "Please ensure that you filled form correctly.";
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Center(child: Text(msg))));
                 }
               },
             ),

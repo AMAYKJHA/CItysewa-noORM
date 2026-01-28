@@ -1,11 +1,13 @@
+import 'package:citysewa_provider/api/models.dart';
 import "package:flutter/material.dart";
 
 import "package:citysewa_provider/widgets/widgets.dart" show AppLogo;
 import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/api/api.dart' show AuthService;
+import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 
-AuthService auth = AuthService();
+final authService = AuthService();
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -66,7 +68,7 @@ class WelcomeText extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
-  _LoginFormState createState() => _LoginFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
@@ -80,18 +82,17 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       isLoading = true;
     });
-    try {
-      final result = await auth.login(email, password);
-      print("result: $result");
-      if (result != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      }
-    } catch (e) {
-      print("Error: $e");
+    LoginResponse result = await authService.login(email, password);
+
+    if (result.success) {
+      await SessionManager.saveUser(result.user!);
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
     }
+
     setState(() {
       isLoading = false;
     });
@@ -156,15 +157,8 @@ class _LoginFormState extends State<LoginForm> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.red,
                       content: Center(
-                        child: Text(
-                          "Ensure you entered correct credentials.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
+                        child: Text("Please enter a valid email and password."),
                       ),
                     ),
                   );
@@ -189,10 +183,7 @@ class GoToSignup extends StatelessWidget {
         Text("Dont`t have an account? ", style: TextStyle(fontSize: 16)),
         InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignupScreen()),
-            );
+            Navigator.pushNamed(context, '/register');
           },
           child: Text(
             "Sign Up",

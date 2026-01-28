@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:citysewa_provider/api/api.dart' show AuthService;
+
+AuthService auth = AuthService();
+
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({super.key});
 
@@ -89,13 +93,89 @@ class VerificationForm extends StatefulWidget {
 }
 
 class _VerificationFormState extends State<VerificationForm> {
+  bool isLoading = false;
+  String? photoPath;
+  String? docPath;
+  String photoLabel = "Upload your photo";
+  String docLabel = "Upload document";
   List<String> documentType = [
     'Citizenship',
     'Driving Liscense',
     'Voter ID',
     'National ID',
   ];
-  String selectedDocumentType = 'Citizenship';
+  String? selectedDocumentType;
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController docNoController = TextEditingController();
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    docNoController.dispose();
+    super.dispose();
+  }
+
+  Future<XFile?> getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    return image;
+  }
+
+  Future getPhoto() async {
+    final XFile? photo = await getImage();
+    if (photo != null) {
+      setState(() {
+        photoPath = photo.path;
+        photoLabel = photo.name;
+      });
+    }
+  }
+
+  Future getDoc() async {
+    final XFile? doc = await getImage();
+    if (doc != null) {
+      setState(() {
+        docPath = doc.path;
+        docLabel = doc.name;
+      });
+    }
+  }
+
+  void submitForm() {
+    setState(() {
+      isLoading = true;
+    });
+    final phoneNumber = phoneController.text.toString();
+    final docNumber = docNoController.text.toString();
+    final docType = selectedDocumentType;
+    if (phoneNumber.isEmpty ||
+        docNumber.isEmpty ||
+        docType == null ||
+        photoPath == null ||
+        docPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              "Please make sure all fields are filled out correctly.",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      );
+    } else {
+      auth.verifyProvider(
+        phoneNumber,
+        docNumber,
+        docType,
+        photoPath!,
+        docPath!,
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,12 +199,14 @@ class _VerificationFormState extends State<VerificationForm> {
         children: [
           Text("Verify yourself", style: TextStyle(fontSize: 16)),
           TextField(
+            controller: phoneController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(hintText: 'Phone Number'),
           ),
           LayoutBuilder(
             builder: (context, constraints) {
               return DropdownMenuFormField<String>(
+                enableSearch: false,
                 hintText: 'Select a document type',
                 width: double.infinity,
                 menuStyle: MenuStyle(
@@ -143,22 +225,52 @@ class _VerificationFormState extends State<VerificationForm> {
             },
           ),
 
-          TextField(decoration: InputDecoration(hintText: 'Document number')),
+          TextField(
+            controller: docNoController,
+            decoration: InputDecoration(hintText: 'Document number'),
+          ),
           Wrap(
             spacing: 10,
             runSpacing: 10,
             children: [
               OutlinedButton.icon(
-                onPressed: () {},
-                label: Text("Upload your photo"),
+                onPressed: () {
+                  getPhoto();
+                },
+                label: Text(
+                  photoLabel.length > 20
+                      ? photoLabel.substring(0, 20)
+                      : photoLabel,
+                ),
                 icon: Icon(Icons.add_a_photo_rounded),
               ),
               OutlinedButton.icon(
-                onPressed: () {},
-                label: Text("Upload document"),
+                onPressed: () {
+                  getDoc();
+                },
+                label: Text(
+                  docLabel.length > 20 ? docLabel.substring(0, 20) : docLabel,
+                ),
                 icon: Icon(Icons.document_scanner),
               ),
             ],
+          ),
+          TextButton(
+            onPressed: () {
+              submitForm();
+            },
+            style: ButtonStyle(
+              side: WidgetStateProperty.all(
+                BorderSide(width: 1, color: Colors.grey),
+              ),
+            ),
+            child: isLoading
+                ? SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(strokeWidth: 3),
+                  )
+                : Text("Submit"),
           ),
         ],
       ),
