@@ -1,14 +1,14 @@
-import os
+# import os
 import datetime
 from abc import ABC, abstractmethod
 
-import django
+# import django
 from django.db import connection
 
 from .schema import table_queries
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-django.setup()
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+# django.setup()
 
 
 class SchemaManager:
@@ -87,7 +87,7 @@ class Table(ABC):
         pass
     
     def __setattr__(self, key, value):
-        if not isinstance(value, self._attrs[key]):
+        if key in self._attrs and not isinstance(value, self._attrs[key]):
             raise TypeError(f"{key} must be {self._attrs[key].__name__}")
         return super().__setattr__(key, value)
            
@@ -98,7 +98,7 @@ class Table(ABC):
                 raise TypeError(f"Missing required field: {key}")
        
         for key, value in kwargs.items():
-            if key in self._attrs.keys() and key not in self.read_only_fields:
+            if key in self._attrs and key not in self.read_only_fields:
                 self.__setattr__(key, value)
                 
         cols = ", ".join(list(self.__dict__.keys()))
@@ -170,6 +170,8 @@ class Table(ABC):
     
     #R
     def all(self, order_by=None, order_type=0): # 0->ASC 1->DESC
+        if order_by is not None and order_by not in self._attrs:
+            raise ValueError("Invalid order_by field")
         order_type_list = ["ASC", "DESC"]
         query = f"SELECT * FROM {self.table_name}"
         if order_by:
@@ -216,4 +218,4 @@ class Table(ABC):
         return (f"Table instance: {self.table_name}")
 
 if __name__ == "__main__":
-    migrate()
+    migrate()   
