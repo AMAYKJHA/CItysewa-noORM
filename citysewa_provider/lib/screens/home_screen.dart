@@ -15,35 +15,37 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 48,
-        leading: ProfileIcon(),
-        titleSpacing: 0,
-        titleTextStyle: Theme.of(context).textTheme.titleMedium,
-        title: Text(
-          "Ravi Kumar",
-          style: TextStyle(fontSize: 15),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications, color: Colors.black, size: 32),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 48,
+          leading: ProfileIcon(),
+          titleSpacing: 0,
+          titleTextStyle: Theme.of(context).textTheme.titleMedium,
+          title: Text(
+            "Ravi Kumar",
+            style: TextStyle(fontSize: 15),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: ListView(children: [BookingSection()]),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
+          centerTitle: false,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.notifications, color: Colors.black, size: 32),
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(children: [BookingSection()]),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          ],
+        ),
       ),
     );
   }
@@ -107,6 +109,7 @@ class _BookingSectionState extends State<BookingSection> {
           ),
           const SizedBox(height: 12),
           Row(
+            spacing: 10,
             children: const [
               Expanded(
                 child: BookingCard(
@@ -115,6 +118,7 @@ class _BookingSectionState extends State<BookingSection> {
                   titleIcon: Icons.check_circle_outline,
                 ),
               ),
+
               Expanded(
                 child: BookingCard(
                   title: "Pending",
@@ -122,12 +126,11 @@ class _BookingSectionState extends State<BookingSection> {
                   titleIcon: Icons.pending_actions_rounded,
                 ),
               ),
-              Expanded(
-                child: BookingCard(
-                  title: "Active",
-                  value: 0,
-                  titleIcon: Icons.auto_mode_outlined,
-                ),
+
+              BookingCard(
+                title: "Active",
+                value: 0,
+                titleIcon: Icons.auto_mode_outlined,
               ),
             ],
           ),
@@ -154,7 +157,6 @@ class BookingCard extends StatelessWidget {
       onTap: () {},
       child: Container(
         padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(horizontal: 10),
         height: 100,
         decoration: BoxDecoration(
           color: Colors.white,

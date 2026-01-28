@@ -44,7 +44,7 @@ class RootApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.deepOrange,
             minimumSize: Size.fromHeight(50),
             textStyle: TextStyle(fontSize: 18),
           ),
