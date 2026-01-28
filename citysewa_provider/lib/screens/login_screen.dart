@@ -141,7 +141,14 @@ class _LoginFormState extends State<LoginForm> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(),
               child: isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
+                  ? SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    )
                   : const Text(
                       "Login",
                       style: TextStyle(color: Colors.white, fontSize: 18),

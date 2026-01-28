@@ -148,7 +148,14 @@ class _SignupFormState extends State<SignupForm> {
             width: double.infinity,
             child: ElevatedButton(
               child: isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
+                  ? SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    )
                   : Text("Register"),
               onPressed: () {
                 final String firstName = firstNameController.text
