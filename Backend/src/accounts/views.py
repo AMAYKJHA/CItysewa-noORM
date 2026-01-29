@@ -24,7 +24,7 @@ from .serializers import (
     ProviderSerializer,
     ProviderVerificationSerializer,
 )
-from src.utils.storage import upload_file
+
 
 # Admin views
 # -----------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+# from django.contrib.auth import authenticate
 
+from src.utils.storage import Storage
 from .tables import (
     User,
     Token,
@@ -400,6 +401,8 @@ class ProviderVerificationSerializer(serializers.Serializer):
         if document_serialzier.is_valid(raise_exception=True):
             document_serialzier.save()
         
+        if hasattr(provider, "photo"):
+            provider.delete_photo()
         photo_name = provider.upload_photo(photo)
         provider.update(id=provider.id, photo=photo_name)
         

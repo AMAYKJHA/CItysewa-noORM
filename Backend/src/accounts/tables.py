@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.hashers import make_password, check_password
 
 from src.core.db_manager import Table
-from src.utils.storage import upload_file
+from src.utils.storage import Storage
 
 class Token(Table):
     table_name = 'tokens'
@@ -101,7 +101,7 @@ class Customer(Table):
     
     def upload_photo(self, file):
         if hasattr(self, "id"): 
-            file_name = upload_file(
+            file_name = Storage().upload_file(
                 bucket="customer", 
                 folder=f"photos/{self.id}",
                 file=file
@@ -133,7 +133,7 @@ class Provider(Table):
     
     def upload_photo(self, file):
         if hasattr(self, "id"): 
-            file_name = upload_file(
+            file_name = Storage().upload_file(
                 bucket="provider", 
                 folder=f"photos/{self.id}",
                 file=file
@@ -141,6 +141,10 @@ class Provider(Table):
             return file_name
         else:
             raise ValueError("Id missing for this instance.") 
+        
+    def delete_photo(self):
+        if hasattr(self, "photo"):
+            Storage().delete_file(bucket="provider", folder=f"photos/{self.id}", file_name=self.photo)
         
 class Document(Table):
     table_name = 'documents'
@@ -162,7 +166,7 @@ class Document(Table):
         pass
     
     def upload_document(self, provider_id:int, file):
-        file_name = upload_file(
+        file_name = Storage().upload_file(
                 bucket="provider", 
                 folder=f"documents/{provider_id}",
                 file=file
