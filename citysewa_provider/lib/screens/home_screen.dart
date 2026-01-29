@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> loadUser() async {
-    final user = await SessionManager.getUser();
+    User? user = await SessionManager.getUser();
     if (user != null) {
       setState(() {
         userName = "${user.firstName} ${user.lastName}";
@@ -132,7 +132,7 @@ class _BookingSectionState extends State<BookingSection> {
                 child: BookingCard(
                   title: "Completed",
                   value: 3,
-                  titleIcon: Icons.check_circle_outline,
+                  titleIcon: Icons.done_all,
                 ),
               ),
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:citysewa_provider/api/api.dart' show AuthService;
+import 'package:citysewa_provider/api/models.dart'
+    show User, VerificationResponse;
 import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 
 AuthService auth = AuthService();
@@ -14,6 +16,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  User? user;
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  Future loadUser() async {
+    final userLoaded = await SessionManager.getUser();
+    if (userLoaded != null) {
+      setState(() {
+        user = userLoaded;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +40,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           children: [
             SizedBox(height: 10),
-            Header(),
+            Header(user),
             SizedBox(height: 20),
-            VerificationForm(),
+            VerificationForm(user),
           ],
         ),
       ),
@@ -33,7 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class Header extends StatefulWidget {
-  Header({super.key});
+  final User? user;
+  const Header(this.user, {super.key});
 
   @override
   State<Header> createState() => _HeaderState();
@@ -45,20 +64,13 @@ class _HeaderState extends State<Header> {
   @override
   void initState() {
     super.initState();
-    loadUser();
-  }
-
-  Future<void> loadUser() async {
-    final user = await SessionManager.getUser();
-    if (user != null) {
-      setState(() {
-        userName = "${user.firstName} ${user.lastName}";
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    userName = widget.user != null
+        ? "${widget.user!.firstName} ${widget.user!.lastName}"
+        : userName;
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -87,7 +99,7 @@ class _HeaderState extends State<Header> {
               children: [
                 SizedBox(height: 5),
                 Text(
-                  "Ravi Kumar",
+                  userName,
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
@@ -104,7 +116,8 @@ class _HeaderState extends State<Header> {
 }
 
 class VerificationForm extends StatefulWidget {
-  VerificationForm({super.key});
+  final User? user;
+  const VerificationForm(this.user, {super.key});
 
   @override
   State<VerificationForm> createState() => _VerificationFormState();
@@ -159,7 +172,7 @@ class _VerificationFormState extends State<VerificationForm> {
     }
   }
 
-  void submitForm() {
+  Future<void> submitForm() async {
     setState(() {
       isLoading = true;
     });
@@ -182,14 +195,28 @@ class _VerificationFormState extends State<VerificationForm> {
         ),
       );
     } else {
-      auth.verifyProvider(
+      final VerificationResponse result = await auth.verifyProvider(
+        widget.user!.id,
         phoneNumber,
         docNumber,
         docType,
         photoPath!,
         docPath!,
       );
+      if (result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Center(child: Text(result.message)),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
+      }
     }
+
     setState(() {
       isLoading = false;
     });

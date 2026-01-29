@@ -85,6 +85,12 @@ class _LoginFormState extends State<LoginForm> {
     if (result.success) {
       await SessionManager.saveUser(result.user!);
       Navigator.pushReplacementNamed(context, '/home');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Center(child: Text(result.message)),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(
         context,

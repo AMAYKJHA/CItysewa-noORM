@@ -13,6 +13,13 @@ class RegisterResponse {
   RegisterResponse({required this.success, required this.message});
 }
 
+class VerificationResponse {
+  bool success = false;
+  String message;
+
+  VerificationResponse({required this.success, required this.message});
+}
+
 class User {
   final int id;
   final String firstName;

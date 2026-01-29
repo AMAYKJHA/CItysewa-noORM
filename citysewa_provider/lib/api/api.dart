@@ -1,5 +1,5 @@
 import "dart:convert";
-
+import "dart:io";
 import "package:http/http.dart" as http;
 
 import "package:citysewa_provider/api/models.dart";
@@ -48,13 +48,10 @@ class AuthService {
         );
       } else {
         final data = jsonDecode(response.body);
-        print(data);
-        print("------------------------------");
         final r = LoginResponse(
           success: false,
           message: parseErrorMessage(data),
         );
-        print("------------------------------");
         return r;
       }
     } catch (e) {
@@ -105,12 +102,51 @@ class AuthService {
     }
   }
 
-  Future verifyProvider(
+  //Verify provider
+  Future<VerificationResponse> verifyProvider(
+    int id,
     String phoneNumber,
     String docNumber,
     String docType,
     String photoPath,
     String docPath,
-  ) async {}
-  Future resetPassword(String otp, String newPassword) async {}
+  ) async {
+    final url = Uri.parse("$baseUrl/$modUrl/verify");
+    try {
+      var request = http.MultipartRequest('PATCH', url);
+      request.fields['id'] = id.toString();
+      request.fields['phone_number'] = phoneNumber;
+      request.fields['document_number'] = docNumber;
+      request.fields['document_type'] = docType;
+
+      print("API22222---------------------------------------------");
+      request.files.add(await http.MultipartFile.fromPath('photo', photoPath));
+      request.files.add(await http.MultipartFile.fromPath('document', docPath));
+
+      print("API3333---------------------------------------------");
+      final responseStream = await request.send();
+      print("API4444---------------------------------------------");
+      final response = await http.Response.fromStream(responseStream);
+      print("API55555---------------------------------------------");
+      if (response.statusCode == 200) {
+        // final data = jsonDecode(response.body);
+        return VerificationResponse(
+          success: true,
+          message: "Verification successful",
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return VerificationResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      return VerificationResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
 }
