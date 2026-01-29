@@ -179,7 +179,7 @@ class CustomerSerializer(serializers.Serializer):
 
 class ProviderRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     gender = serializers.CharField(required=True)
@@ -216,7 +216,7 @@ class ProviderRegisterSerializer(serializers.Serializer):
         
 class ProviderLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True)
     
     def validate(self, attrs):
         email = attrs.get("email")
