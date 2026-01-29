@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
-// import "package:shared_preferences/shared_preferences.dart"
-//     show SharedPreferences;
 
-import 'package:citysewa_provider/screens/profile_screen.dart'
-    show ProfileScreen;
+import "package:citysewa_provider/session_manager.dart" show SessionManager;
+import "package:citysewa_provider/api/models.dart" show User;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -13,6 +11,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String userName = "Guest";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    final user = await SessionManager.getUser();
+    if (user != null) {
+      setState(() {
+        userName = "${user.firstName} ${user.lastName}";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
           titleSpacing: 0,
           titleTextStyle: Theme.of(context).textTheme.titleMedium,
           title: Text(
-            "Ravi Kumar",
-            style: TextStyle(fontSize: 15),
+            userName,
+            style: TextStyle(fontSize: 15, color: Colors.white),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -65,10 +80,7 @@ class ProfileIcon extends StatelessWidget {
       padding: EdgeInsets.all(8),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileScreen()),
-          );
+          Navigator.pushNamed(context, '/profile');
         },
         child: CircleAvatar(
           radius: 16,

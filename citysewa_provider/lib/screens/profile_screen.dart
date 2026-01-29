@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:citysewa_provider/api/api.dart' show AuthService;
+import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 
 AuthService auth = AuthService();
 
@@ -39,6 +40,23 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
+  String userName = "Guest";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    final user = await SessionManager.getUser();
+    if (user != null) {
+      setState(() {
+        userName = "${user.firstName} ${user.lastName}";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

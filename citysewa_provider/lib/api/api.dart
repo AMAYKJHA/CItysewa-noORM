@@ -85,7 +85,7 @@ class AuthService {
       final response = await http.post(url, body: body);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        // final data = jsonDecode(response.body);
         return RegisterResponse(
           success: true,
           message: "Registration successful",
