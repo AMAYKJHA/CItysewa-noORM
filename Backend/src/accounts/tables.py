@@ -131,17 +131,6 @@ class Provider(Table):
     def abstract_method():
         pass
     
-    def upload_document(self, file):
-        if hasattr(self, "id"): 
-            file_name = upload_file(
-                bucket="provider", 
-                folder=f"documents/{self.id}",
-                file=file
-            )
-            return file_name
-        else:
-            raise  ValueError("Id missing for this instance.") 
-    
     def upload_photo(self, file):
         if hasattr(self, "id"): 
             file_name = upload_file(
@@ -171,7 +160,15 @@ class Document(Table):
     @staticmethod 
     def abstract_method():
         pass
-        
+    
+    def upload_document(self, provider_id:int, file):
+        file_name = upload_file(
+                bucket="provider", 
+                folder=f"documents/{provider_id}",
+                file=file
+            )
+        return file_name    
+             
 
 if __name__ == "__main__":
     print(Customer().all())

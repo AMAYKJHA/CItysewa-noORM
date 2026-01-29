@@ -319,7 +319,7 @@ class DocumentCreateSerializer(serializers.Serializer):
     provider_id = serializers.IntegerField(required=True)
     document_number = serializers.CharField(required=True)
     document_type = serializers.CharField(required=True)
-    file_name = serializers.CharField(required=True)
+    file = serializers.FileField(required=True, validators=[validate_file_size])
     
     def validate(self, attrs):
         provider_id = attrs.get("provider_id")
@@ -335,10 +335,13 @@ class DocumentCreateSerializer(serializers.Serializer):
                 
         return attrs
     
-    def create(self, validated_data):
-        document = validated_data.get("document")
-        
-        if not document:
+    def create(self, validated_data):     
+        document = validated_data.pop("document", None)       
+        if not document:                             
+            provider_id = validated_data.get("provider")      
+            file = validated_data.pop("file", None)
+            file_name = Document().upload(provider_id, file)
+            validated_data["file_name"] = file_name
             document = Document().create(**validated_data)
             
         return {**document.__dict__}
@@ -358,17 +361,25 @@ class ProviderVerificationSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 "message": INVALID_DOCUMENT_TYPE
             })
+            
+        id = attrs.get("id")
+        provider = Provider().get(id=id)
+        if not provider:
+            raise serializers.ValidationError({
+                "message": PROVIDER_PROFILE_DOES_NOT_EXIST
+            })
+            
+        attrs["provider"] = provider
         return attrs
        
     def create(self, validated_data):
-        provider_id = validated_data.get("id")
         phone_number = validated_data.get("phone_number")
         photo = validated_data.get("photo")
         document = validated_data.get("document")
         document_number = validated_data.get("document_number")
         document_type = validated_data.get("document_type")
         
-        provider = Provider().get(id=provider_id)
+        provider = validated_data.get("provider")
         
         user_serializer = UserPatchSerializer(
             instance={"id": provider.user_id},
@@ -378,20 +389,19 @@ class ProviderVerificationSerializer(serializers.Serializer):
         if user_serializer.is_valid(raise_exception=True):
             user_serializer.save()
         
-        file_name = provider.upload_document(document)
         document_serialzier = DocumentCreateSerializer(
             data={
-                "provider_id": provider_id,
+                "provider_id": provider.id,
                 "document_number": document_number,
                 "document_type": document_type,
-                "file_name": file_name
+                "file": document
             }
         )
         if document_serialzier.is_valid(raise_exception=True):
             document_serialzier.save()
         
         photo_name = provider.upload_photo(photo)
-        provider.update(id=provider_id, photo=photo_name)
+        provider.update(id=provider.id, photo=photo_name)
         
         return {"phone_number": phone_number, "document_number": document_number}
         
