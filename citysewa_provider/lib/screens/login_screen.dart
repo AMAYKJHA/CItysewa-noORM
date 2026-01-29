@@ -2,8 +2,6 @@ import 'package:citysewa_provider/api/models.dart';
 import "package:flutter/material.dart";
 
 import "package:citysewa_provider/widgets/widgets.dart" show AppLogo;
-import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
-import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/api/api.dart' show AuthService;
 import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 
@@ -157,10 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                 final email = emailController.text.toString().trim();
                 final password = passController.text.toString().trim();
                 if (email.isNotEmpty && password.isNotEmpty) {
-                  login(
-                    emailController.text.toString(),
-                    passController.text.toString(),
-                  );
+                  login(email, password);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

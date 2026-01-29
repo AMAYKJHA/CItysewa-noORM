@@ -6,19 +6,31 @@ import "package:citysewa_provider/api/models.dart";
 
 const baseUrl = "https://citysewa2.onrender.com/api/v1";
 
+String parseErrorMessage(dynamic error) {
+  if (error is Map) {
+    for (final message in error.values) {
+      if (message is List && message.isNotEmpty) {
+        return message.first.toString();
+      } else if (message is String) {
+        return message;
+      }
+    }
+  }
+  if (error is String) {
+    return error;
+  }
+  return "Something went wrong. Please try again.";
+}
+
 class AuthService {
   final modUrl = "accounts/provider";
 
   // login
   Future<LoginResponse> login(String email, String password) async {
-    final body = jsonEncode({"email": email, "password": password});
+    final body = {"email": email, "password": password};
     final url = Uri.parse("$baseUrl/$modUrl/login");
     try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": 'application/json'},
-        body: body,
-      );
+      final response = await http.post(url, body: body);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -36,12 +48,17 @@ class AuthService {
         );
       } else {
         final data = jsonDecode(response.body);
-        return LoginResponse(
+        print(data);
+        print("------------------------------");
+        final r = LoginResponse(
           success: false,
-          message: data["message"] ?? "Invalid credentials.",
+          message: parseErrorMessage(data),
         );
+        print("------------------------------");
+        return r;
       }
     } catch (e) {
+      print(e);
       return LoginResponse(
         success: false,
         message: "Something went wrong. Please try again.",
@@ -49,6 +66,7 @@ class AuthService {
     }
   }
 
+  //Register
   Future<RegisterResponse> register(
     String firstName,
     String lastName,
@@ -76,7 +94,7 @@ class AuthService {
         final data = jsonDecode(response.body);
         return RegisterResponse(
           success: false,
-          message: data["message"] ?? "Invalid credentials.",
+          message: parseErrorMessage(data),
         );
       }
     } catch (e) {
