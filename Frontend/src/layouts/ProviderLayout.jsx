@@ -1,6 +1,8 @@
 import Navbar from "../components/common/Navbar/NavBar";
 import Footer from "../components/common/Footer/Footer";
 import { Outlet } from "react-router-dom";
+import "../Style/Root.css";
+import "./../Style/Layouts.css";
 
 const ProviderLayout = () => {
     return(
