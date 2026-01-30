@@ -23,19 +23,22 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                AppLogo(size: 50),
-                SizedBox(height: 10),
-                WelcomeText(),
-                SizedBox(height: 20),
-                LoginForm(),
-                SizedBox(height: 20),
-                GoToSignup(),
-              ],
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppLogo(size: 50),
+                  SizedBox(height: 10),
+                  WelcomeText(),
+                  SizedBox(height: 20),
+                  LoginForm(),
+                  SizedBox(height: 20),
+                  GoToSignup(),
+                ],
+              ),
             ),
           ),
         ),
@@ -125,7 +128,6 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
             decoration: InputDecoration(
               hintText: "Password",
-
               prefixIcon: Icon(Icons.lock_outline),
             ),
           ),

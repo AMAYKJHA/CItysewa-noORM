@@ -25,7 +25,7 @@ class RootApp extends StatelessWidget {
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
           centerTitle: true,
-          toolbarHeight: kToolbarHeight,
+          toolbarHeight: 5,
         ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),

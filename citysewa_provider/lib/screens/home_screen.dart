@@ -30,42 +30,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 48,
-          leading: ProfileIcon(),
-          titleSpacing: 0,
-          titleTextStyle: Theme.of(context).textTheme.titleMedium,
-          title: Text(
-            userName,
-            style: TextStyle(fontSize: 15, color: Colors.white),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: kToolbarHeight,
+        leading: ProfileIcon(),
+        titleSpacing: 0,
+        titleTextStyle: Theme.of(context).textTheme.titleMedium,
+        title: Text(
+          userName,
+          style: TextStyle(fontSize: 15, color: Colors.white),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.notifications, color: Colors.black, size: 32),
           ),
-          centerTitle: false,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.notifications, color: Colors.black, size: 32),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: ListView(children: [BookingSection()]),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.book), label: "Bookings"),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.miscellaneous_services_rounded),
-              label: "Services",
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-          ],
-        ),
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: ListView(children: [BookingSection()]),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: "Bookings"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.miscellaneous_services_rounded),
+            label: "Services",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
       ),
     );
   }
@@ -103,7 +101,7 @@ class _BookingSectionState extends State<BookingSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 212, 234, 249),
         borderRadius: BorderRadius.circular(16),
@@ -126,7 +124,7 @@ class _BookingSectionState extends State<BookingSection> {
           ),
           const SizedBox(height: 12),
           Row(
-            spacing: 10,
+            spacing: 5,
             children: const [
               Expanded(
                 child: BookingCard(

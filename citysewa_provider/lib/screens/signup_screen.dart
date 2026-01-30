@@ -22,17 +22,20 @@ class _SignupScreenState extends State<SignupScreen> {
           constraints: BoxConstraints(maxWidth: 400),
           child: Padding(
             padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppLogo(size: 50),
-                SizedBox(height: 10),
-                WelcomeText(),
-                SizedBox(height: 20),
-                SignupForm(),
-                const SizedBox(height: 20),
-                GoToLogin(),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppLogo(size: 50),
+                  SizedBox(height: 10),
+                  WelcomeText(),
+                  SizedBox(height: 20),
+                  SignupForm(),
+                  const SizedBox(height: 20),
+                  GoToLogin(),
+                ],
+              ),
             ),
           ),
         ),
