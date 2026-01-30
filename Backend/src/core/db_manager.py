@@ -181,10 +181,39 @@ class Table(ABC):
         except Exception as e:
             print(f"Error: {e}")
             return
+    
+    #R
+    def join(self, right_table, join_on:tuple, left_attrs:tuple, right_attrs:tuple):
+        if not isinstance(join_on, tuple):
+            raise TypeError("join_on parameter must be a tuple.")
         
-    def join(self, table, join_on:tuple, left_attr:tuple, right_attr:tuple):
-        left_columns = ", ".join(f"X.{attr}" for attr in left_attr)
-        query = f"SELECT X. FROM {self.table_name} as X JOIN {table} as Y ON X.{join_on[0]} = Y.{join_on[1]};"
+        if not hasattr(self, join_on[0]):
+            raise ValueError(f"{self.__class__.__name__} has no attribute {join_on[0]}.")
+        if not hasattr(right_table, join_on[1]):
+            raise ValueError(f"{right_table.__class__.__name__} has no attribute {join_on[1]}.")
+        
+        if not all(isinstance(item, str) for item in join_on):
+            raise TypeError("join attributes must be string.")
+        
+        for left, right in zip(left_attrs, right_attrs):
+            if not hasattr(self, left):
+                raise ValueError(f"{self.__class__.__name__} has no attribute {left}.")
+            if not hasattr(right_table, right):
+                raise ValueError(f"{right_table.__class__.__name__} has no attribute {right}.")
+            
+        left_columns = ", ".join(f"X.{attr}" for attr in left_attrs)
+        right_columns = ", ".join(f"Y.{attr}" for attr in right_attrs)
+        query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]};"
+        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                result = cursor.fetchall()
+                return result
+        except Exception as e:
+            print(f"Error: {e}")
+            return
+
     #U  
     def update(self, **kwargs):
         if kwargs.get("id") is None:
