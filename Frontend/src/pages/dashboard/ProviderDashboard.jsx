@@ -1,6 +1,9 @@
+import "../../Style/Dashboard.css";
 const ProviderDashboard = () => {
     return(
-        <h2>Provider Dashboard</h2>
+        <section className="provider-dashboard">
+            <h2>Provider Dashboard</h2>
+        </section>
     );
 };
 
