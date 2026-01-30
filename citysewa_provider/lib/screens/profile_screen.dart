@@ -104,13 +104,34 @@ class _HeaderState extends State<Header> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 5),
-                Text(
-                  userName,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                Row(
+                  spacing: 4,
+                  children: [
+                    Text(
+                      userName,
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    Visibility(
+                      visible: widget.user!.verified,
+                      child: Icon(
+                        Icons.check_circle_outline_rounded,
+                        size: 16,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   "Carpenter",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(fontSize: 14, color: Colors.black45),
+                ),
+                Visibility(
+                  visible: !widget.user!.verified,
+                  child: Text(
+                    "Verification pending",
+                    style: TextStyle(color: Colors.blue),
+                  ),
                 ),
               ],
             ),

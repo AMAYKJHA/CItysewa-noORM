@@ -37,15 +37,3 @@ class User {
     required this.token,
   });
 }
-
-final loginRes = {
-  "id": 4,
-  "created_at": "2026-01-28T11:16:07.787042Z",
-  "updated_at": "2026-01-28T11:16:07.787042Z",
-  "user_id": 22,
-  "first_name": "Ravi",
-  "last_name": "Kumar",
-  "gender": "Male",
-  "verified": false,
-  "token": "e3f6bfe94404761d35e31415bcc8101c6f0794da",
-};
