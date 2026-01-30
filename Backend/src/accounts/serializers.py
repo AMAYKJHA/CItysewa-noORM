@@ -327,7 +327,7 @@ class DocumentCreateSerializer(serializers.Serializer):
         document_number = attrs.get("document_number")
         document = Document().get(document_number=document_number)
         if document:
-            if provider_id != document.id:
+            if provider_id != document.provider_id:
                 raise serializers.ValidationError({
                     "message": DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC
                 })
@@ -339,9 +339,9 @@ class DocumentCreateSerializer(serializers.Serializer):
     def create(self, validated_data):     
         document = validated_data.pop("document", None)       
         if not document:                             
-            provider_id = validated_data.get("provider")      
+            provider_id = validated_data.get("provider_id")      
             file = validated_data.pop("file", None)
-            file_name = Document().upload(provider_id, file)
+            file_name = Document().upload_file(provider_id, file)
             validated_data["file_name"] = file_name
             document = Document().create(**validated_data)
             

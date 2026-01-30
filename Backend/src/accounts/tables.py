@@ -167,7 +167,7 @@ class Document(Table):
     def abstract_method():
         pass
     
-    def upload_document(self, provider_id:int, file):
+    def upload_file(self, provider_id:int, file):
         file_name = Storage().upload_file(
                 bucket="provider", 
                 folder=f"documents/{provider_id}",
