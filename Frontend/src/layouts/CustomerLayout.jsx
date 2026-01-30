@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/common/Navbar/NavBar";
 import Footer from "../components/common/Footer/Footer";
+import "./../Style/Layouts.css";
 
 const CustomerLayout = () => {
     return(
