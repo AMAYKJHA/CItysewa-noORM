@@ -25,6 +25,7 @@ from .serializers import (
     ProviderSerializer,
     ProviderVerificationSerializer,
     VerificationListSerializer,
+    VerificationRetrieveSerializer,
 )
 
 
@@ -175,5 +176,29 @@ class VerificationListAPIView(APIView):
             transformed_data.append(temp_dict)
 
         serializer = VerificationListSerializer(transformed_data, many=True)
+        
+        return Response(serializer.data, status=HTTP_200_OK)
+    
+class VerificationRetrieveAPIView(APIView):
+    def get(self, request, id):
+        verification_data = Provider().join(
+            right_table=Document(),
+            join_on=("id","provider_id"),
+            left_attrs=("id", "first_name", "last_name", "gender", "photo", "verified"),
+            right_attrs = ("document_type", "document_number", "file_name", "status"),
+            left_conditions={"id":id},
+            right_conditions={"status": 'Pending'}
+            )
+        
+        # Removing the prefixes 'provider_' and 'document_' from keys eg: provider_column_name or
+        transformed_data = {}
+        for key, val in verification_data[0].items():
+                new_key = key.removeprefix(f"{Provider.table_name}_")
+                new_key = new_key.removeprefix(f"{Document.table_name}_")
+                transformed_data[new_key] = val
+                
+        transformed_data["photo"] = Provider().get_photo_url(id=transformed_data["id"], photo_name=transformed_data["photo"])
+        transformed_data["file_name"] = Document().get_file_url(provider_id=transformed_data["id"], file_name=transformed_data["file_name"])
+        serializer = VerificationRetrieveSerializer(transformed_data)
         
         return Response(serializer.data, status=HTTP_200_OK)

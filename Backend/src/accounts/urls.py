@@ -13,6 +13,7 @@ from .views import (
     ProviderRetrieveAPIView,
     ProviderVerificationAPIView,
     VerificationListAPIView,
+    VerificationRetrieveAPIView,
 )
 urlpatterns= [
     path('admin/register', AdminRegisterAPIView.as_view(), name="admin-register"),
@@ -29,5 +30,6 @@ urlpatterns= [
     path('provider/<int:id>', ProviderRetrieveAPIView.as_view(), name="provider-retrieve"),
     path('provider/submit-verification', ProviderVerificationAPIView.as_view(), name="provider-submit-verification"),
     
-    path("provider/verification-data", VerificationListAPIView.as_view(), name="verification-data")
+    path("provider/verification-data", VerificationListAPIView.as_view(), name="verification-data-list"),
+    path("provider/verification-data/<int:id>", VerificationRetrieveAPIView.as_view(), name="verification-data-retrieve"),
 ]

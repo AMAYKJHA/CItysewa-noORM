@@ -338,7 +338,7 @@ class DocumentCreateSerializer(serializers.Serializer):
     
     def create(self, validated_data):     
         document = validated_data.pop("document", None)       
-        if not document:                             
+        if document is None:                             
             provider_id = validated_data.get("provider_id")      
             file = validated_data.pop("file", None)
             file_name = Document().upload_file(provider_id, file)
@@ -414,3 +414,16 @@ class VerificationListSerializer(serializers.Serializer):
     last_name = serializers.CharField(required=True)
     document_number = serializers.CharField(required=True)
     status = serializers.CharField(required=True)
+    
+class VerificationRetrieveSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    gender = serializers.CharField(required=True)
+    photo = serializers.CharField(required=True)
+    verified = serializers.BooleanField(required=True)
+    document_type = serializers.CharField(required=True)
+    document_number = serializers.CharField(required=True)
+    file_name = serializers.CharField(required=True)
+    status = serializers.CharField(required=True)
+    
