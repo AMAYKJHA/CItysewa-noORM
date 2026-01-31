@@ -465,9 +465,9 @@ class VerificationPatchSerializer(serializers.Serializer):
         
         updated_provider = Provider().get(id=provider_id)
         
-        return {
+        return  {
             "id": updated_provider.id,
             "first_name": updated_provider.first_name,
             "last_name": updated_provider.last_name,
             "verified": updated_provider.verified
-            }
+        }

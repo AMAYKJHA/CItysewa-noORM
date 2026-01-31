@@ -284,7 +284,7 @@ class Table(ABC):
             print(f"Error: {e}")
             
     def __str__(self):
-        return (f"Table instance: {self.table_name}")
+        return f"{self.__dict__}"
 
 if __name__ == "__main__":
     migrate()   
