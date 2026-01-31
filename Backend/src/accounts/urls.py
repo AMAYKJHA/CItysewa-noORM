@@ -27,7 +27,7 @@ urlpatterns= [
     path('provider/login', ProviderLoginAPIView.as_view(), name="provider-login"),
     path('provider', ProviderListAPIView.as_view(), name="provider-list"),
     path('provider/<int:id>', ProviderRetrieveAPIView.as_view(), name="provider-retrieve"),
-    path('provider/verify', ProviderVerificationAPIView.as_view(), name="provider-verify"),
+    path('provider/submit-verification', ProviderVerificationAPIView.as_view(), name="provider-submit-verification"),
     
     path("provider/verification-data", VerificationListAPIView.as_view(), name="verification-data")
 ]
