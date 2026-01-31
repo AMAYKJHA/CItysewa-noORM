@@ -12,10 +12,7 @@ class Storage:
         self.access_secret_key = settings.SUPABASE_S3_SECRET_ACCESS_KEY
         self.region_name = settings.SUPABASE_S3_REGION_NAME
         self.endpoint_url = settings.SUPABASE_S3_ENDPOINT_URL
-        self.available_buckets = {
-            "provider": settings.SUPABASE_S3_PROVIDER_BUCKET_NAME,
-            "customer": settings.SUPABASE_S3_CUSTOMER_BUCKET_NAME,
-        }
+        self.available_buckets = settings.STORAGE_BUCKETS
 
     def get_s3_client(self):
         try:
@@ -38,9 +35,7 @@ class Storage:
     def upload_file(self, bucket=None, folder=None, file=None):
         if folder is None or file is None:
             raise ValueError("Both folder and file_name must be provided.")
-        
-        
-        
+              
         if bucket not in self.available_buckets:
             raise ValueError(f"Bucket: {bucket} doesn`t exists.")
         

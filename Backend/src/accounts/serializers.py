@@ -1,7 +1,10 @@
 from rest_framework import serializers
 # from django.contrib.auth import authenticate
 
-from src.utils.storage import Storage
+from src.core.validators import (
+    validate_file_size,
+)
+
 from .tables import (
     User,
     Token,
@@ -26,11 +29,10 @@ from .messages import (
     EMAIL_ALREADY_ASSOCIATED,
     DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC,
 )
-
 from .validators import (
-    validate_file_size,
     validate_phone_number
 )
+
 
 from .constants import (
     DOCUMENT_TYPE
@@ -167,6 +169,9 @@ class CustomerRegisterSerializer(serializers.Serializer):
                 raise serializers.ValidationError({"message": INVALID_PASSWORD})            
             
             attrs["user_id"] = user_id   
+            
+        attrs["first_name"] = attrs["first_name"].title()
+        attrs["last_name"] = attrs["last_name"].title()
         
         return attrs
     
@@ -256,6 +261,8 @@ class ProviderRegisterSerializer(serializers.Serializer):
             
             attrs["user_id"] = user_id   
         
+        attrs["first_name"] = attrs["first_name"].title()
+        attrs["last_name"] = attrs["last_name"].title()
         return attrs
     
     def create(self, validated_data):
