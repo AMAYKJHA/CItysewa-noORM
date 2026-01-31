@@ -210,8 +210,8 @@ class Table(ABC):
             if not hasattr(right_table, right_con):
                 raise ValueError(f"{right_table.__class__.__name__} has no attribute {right_con}.")
             
-        left_columns = ", ".join(f"X.{attr} as {self.table_name.rstrip("s")}_{attr}" for attr in left_attrs)
-        right_columns = ", ".join(f"Y.{attr} as {right_table.table_name.rstrip("s")}_{attr}" for attr in right_attrs)
+        left_columns = ", ".join(f"X.{attr} as {self.table_name}_{attr}" for attr in left_attrs)
+        right_columns = ", ".join(f"Y.{attr} as {right_table.table_name}_{attr}" for attr in right_attrs)
         query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]}"
         
         values = ()

@@ -10,7 +10,8 @@ from drf_spectacular.utils import extend_schema
 
 from .tables import (
     Customer,
-    Provider
+    Provider,
+    Document
 )
 
 from .serializers import (
@@ -23,6 +24,7 @@ from .serializers import (
     ProviderLoginSerializer,
     ProviderSerializer,
     ProviderVerificationSerializer,
+    VerificationListSerializer,
 )
 
 
@@ -148,3 +150,30 @@ class ProviderVerificationAPIView(APIView):
             
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         
+        
+class VerificationListAPIView(APIView):
+    def get(self, request):
+        verification_status = request.query_params.get("status", 'Pending')
+        verification_data = Provider().join(
+            right_table=Document(),
+            join_on=("id","provider_id"),
+            left_attrs=("id", "first_name", "last_name", "gender"),
+            right_attrs = ("document_number", "status",),
+            left_conditions={},
+            right_conditions={"status": verification_status}
+            )
+        
+        # Removing the prefixes 'provider_' and 'document_' from keys eg: provider_column_name or
+        transformed_data = []
+        for item in verification_data:
+            temp_dict = {}
+            for key, val in item.items():
+                new_key = key.removeprefix(f"{Provider.table_name}_")
+                new_key = new_key.removeprefix(f"{Document.table_name}_")
+                temp_dict[new_key] = val
+            
+            transformed_data.append(temp_dict)
+
+        serializer = VerificationListSerializer(transformed_data, many=True)
+        
+        return Response(serializer.data, status=HTTP_200_OK)

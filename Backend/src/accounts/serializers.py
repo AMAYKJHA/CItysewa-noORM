@@ -408,3 +408,9 @@ class ProviderVerificationSerializer(serializers.Serializer):
         
         return {"phone_number": phone_number, "document_number": document_number}
         
+class VerificationListSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    document_number = serializers.CharField(required=True)
+    status = serializers.CharField(required=True)

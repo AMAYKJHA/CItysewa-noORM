@@ -11,7 +11,8 @@ from .views import (
     ProviderLoginAPIView,
     ProviderListAPIView,
     ProviderRetrieveAPIView,
-    ProviderVerificationAPIView
+    ProviderVerificationAPIView,
+    VerificationListAPIView,
 )
 urlpatterns= [
     path('admin/register', AdminRegisterAPIView.as_view(), name="admin-register"),
@@ -27,4 +28,6 @@ urlpatterns= [
     path('provider', ProviderListAPIView.as_view(), name="provider-list"),
     path('provider/<int:id>', ProviderRetrieveAPIView.as_view(), name="provider-retrieve"),
     path('provider/verify', ProviderVerificationAPIView.as_view(), name="provider-verify"),
+    
+    path("provider/verification-data", VerificationListAPIView.as_view(), name="verification-data")
 ]
