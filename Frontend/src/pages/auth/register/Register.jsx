@@ -33,7 +33,8 @@ const Register = () => {
             return;
         }
         try{
-            if(formData.role === "Provider"){
+            const role = formData.role.toLowerCase();
+            if(role === "provider"){
                 await providerRegister({
                     email: formData.email,
                     password: formData.password,
@@ -42,7 +43,7 @@ const Register = () => {
                     gender: formData.gender
                 });
             }
-            if(formData.role === "Customer"){
+            if(role === "customer"){
                 await customerRegister({
                     email: formData.email,
                     password: formData.password,
@@ -52,9 +53,9 @@ const Register = () => {
                 });
             }
             setSucceess(`${formData.role} Registration Successful!`);
-            navigate("/login");
+            setTimeout(()=> navigate("/login"), 1500);
         } catch (err) {
-            setError(err.response?.data?.detail || "Registration Failed!");
+            setError(err.response?.data?.message || "Registration Failed!");
             setFormData({
                 email: "",
                 first_name: "",
@@ -74,7 +75,7 @@ const Register = () => {
                 {success && <p className="success">{success}</p>}
                 <span>
                     <label htmlFor="reg-email">Enter your email</label>
-                    <input type="email" id="red-email" name="email" value={formData.email} onChange={handleChange} required/>
+                    <input type="email" id="reg-email" name="email" value={formData.email} onChange={handleChange} required/>
                 </span>
                 <span>
                     <span>

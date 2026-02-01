@@ -1,6 +1,7 @@
 import "react-phone-number-input/style.css"
 import PhoneInput from "react-phone-number-input";
 import { useState } from "react";
+import {submitForVerification} from "../../../api/client";
 // import { all } from "axios";
 
 const VerificationForm = () => {
@@ -9,27 +10,34 @@ const VerificationForm = () => {
         phone_number: "",
         document_type: "",
         document_number: "",
-        photo: "",
-        document: ""
+        photo: null,
+        document: null
     });
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const handleChange = (e) => {
-        setFromData({
-            ...formData,
-            [e.target.name] : e.target.value
-        });
+        const {name, value, files} = e.target;
+        setFromData((prev) => ({
+            ...prev,
+            [name] : files ? files[0] : value
+        }));
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setSuccess("");
         try{
-
+            const payload = new FormData();
+            payload.append("id", formData.id);
+            payload.append("phone_number", formData.phone_number);
+            payload.append("document_type", formData.document_type);
+            payload.append("document_number", formData.document_number);
+            payload.append("photo", formData.photo);
+            payload.append("document", formData.document);
+            await submitForVerification(payload);
+            setSuccess("Verification submitted successfully");
         } catch(err) {
-            
-        } finally {
-
+            setError(err.response?.data?.message || "Submission failed");
         }
     };
     return(
@@ -37,19 +45,19 @@ const VerificationForm = () => {
             <h3>Verify Your Account</h3>
             <span>
                 <label htmlFor="provider-id">ID</label>
-                <input type="number" name="provider-id" value={formData.id} onChange={handleChange} required/>
+                <input type="number" id="provider-id" name="id" value={formData.id} onChange={handleChange} required/>
             </span>
             <span>
                 <label htmlFor="provider-photo">Upload Your Photo</label>
-                <input type="file" name="provider-photo" accept=".jpg,.jpeg,.png" onChange={handleChange} required/>
+                <input type="file" id="provider-photo" name="photo" accept=".jpg,.jpeg,.png" onChange={handleChange} required/>
             </span>
             <span>
-                <label htmlFor="provider-phone">Phone Number</label>
-                <PhoneInput international defaultCountry="NP" value={formData.phone_number} onChange={handleChange} placeholder="Enter phone number"/>
+                <label>Phone Number</label>
+                <PhoneInput international defaultCountry="NP" value={formData.phone_number} onChange={(value) => setFromData((prev) => ({...prev, phone_number: value}))} placeholder="Enter phone number"/>
             </span>
             <span>
                 <label htmlFor="provider-doc-type">Document Type</label>
-                <select name="provider-doc-type" value={formData.document_type} onChange={handleChange}>
+                <select id="provider-doc-type" name="document_type" value={formData.document_type} onChange={handleChange} required>
                     <option value={""} hidden disabled>Choose Document Type</option>
                     <option value={"NID"}>National Id</option>
                     <option value={"Citizen"}>Citizenship</option>
@@ -60,11 +68,11 @@ const VerificationForm = () => {
             </span>
             <span>
                 <label htmlFor="provider-doc-number">Document Number</label>
-                <input type="number" name="provider-doc-number" value={formData.document_number} onChange={handleChange} required/>
+                <input type="text" id="provider-doc-number" name="document_number" value={formData.document_number} onChange={handleChange} required/>
             </span>
             <span>
                 <label htmlFor="provider-document">Attach Document</label>
-                <input type="file" name="provider-document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} multiple required/>
+                <input type="file" id="provider_document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} multiple required/>
             </span>
             <button type="submit">Submit</button>
         </form>
