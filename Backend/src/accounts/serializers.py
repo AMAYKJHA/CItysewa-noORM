@@ -370,7 +370,7 @@ class ProviderSubmitVerificationSerializer(serializers.Serializer):
         
         if document_type not in DOCUMENT_TYPE:
             raise serializers.ValidationError({
-                "message": INVALID_DOCUMENT_TYPE
+                "message": INVALID_DOCUMENT_TYPE.format(doc_types=DOCUMENT_TYPE)
             })
             
         id = attrs.get("id")
