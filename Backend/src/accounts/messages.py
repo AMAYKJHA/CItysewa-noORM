@@ -14,7 +14,7 @@ PROVIDER_PROFILE_EXISTS = "Provider profile already exists for this email."
 
 ADMIN_ACCESS_DENIED = "No admin privilege for this account."
 
-INVALID_DOCUMENT_TYPE = "Invalid document type."
+INVALID_DOCUMENT_TYPE = "Document type should be one of these {doc_types}"
 
 PHONE_NUMBER_ALREADY_ASSOCIATED = "This phone number is already associated with another account."
 EMAIL_ALREADY_ASSOCIATED = "This email is already associated with another account."

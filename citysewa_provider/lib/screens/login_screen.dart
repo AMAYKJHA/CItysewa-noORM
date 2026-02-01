@@ -69,6 +69,8 @@ class WelcomeText extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
+
+  @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
@@ -87,7 +89,7 @@ class _LoginFormState extends State<LoginForm> {
 
     if (result.success) {
       await SessionManager.saveUser(result.user!);
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/main');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,

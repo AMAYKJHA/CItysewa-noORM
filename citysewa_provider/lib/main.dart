@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:citysewa_provider/screens/login_screen.dart' show LoginScreen;
+import 'package:citysewa_provider/screens/main_screen.dart' show MainScreen;
 import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
-import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/screens/profile_screen.dart'
     show ProfileScreen;
 import 'package:citysewa_provider/screens/verification_screen.dart'
@@ -66,8 +66,8 @@ class RootApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => LoginScreen(),
+        '/main': (context) => MainScreen(),
         '/register': (context) => SignupScreen(),
-        '/home': (context) => HomeScreen(),
         '/profile': (context) => ProfileScreen(),
         '/verify': (context) => VerificationScreen(),
       },

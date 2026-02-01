@@ -81,20 +81,21 @@ CREATE TABLE IF NOT EXISTS documents (
 
     "services": """
 CREATE TABLE IF NOT EXISTS services (
-    id SERIAL PRIMARY KEY,
-    provider_id INT NOT NULL,
-    title VARCHAR(100) DEFAULT 'Service through CitySewa',
-    service_type VARCHAR(50) NOT NULL,
-    description TEXT,
-    price INT NOT NULL,
-    price_unit VARCHAR(20),
-    archived BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CONSTRAINT fk_services_provider
-        FOREIGN KEY (provider_id)
-        REFERENCES providers(id)
-        ON DELETE CASCADE
+	id SERIAL PRIMARY KEY,
+	provider_id INT NOT NULL,
+	title VARCHAR(100) NOT NULL,
+	service_type VARCHAR(50) NOT NULL,
+	description TEXT,
+	thumbnail TEXT,
+	price INT NOT NULL,
+	price_unit VARCHAR(20) NOT NULL,
+	archived BOOLEAN DEFAULT FALSE,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	CONSTRAINT fk_services_provider
+		FOREIGN KEY (provider_id)
+		REFERENCES providers(id)
+		ON DELETE CASCADE
 );
 """,
 

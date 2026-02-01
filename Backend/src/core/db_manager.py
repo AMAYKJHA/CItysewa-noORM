@@ -241,8 +241,8 @@ class Table(ABC):
 
     #U  
     def update(self, **kwargs):
-        if kwargs.get("id") is None:
-            raise ValueError("Cannot update without ID")
+        if kwargs.get("id") is None and self.id is None:
+            raise ValueError("Cannot update fields without ID")
         
         cols = [col for col in kwargs if col in self._attrs and col not in self.read_only_fields]
         values = [kwargs[col] for col in cols]
@@ -284,7 +284,7 @@ class Table(ABC):
             print(f"Error: {e}")
             
     def __str__(self):
-        return (f"Table instance: {self.table_name}")
+        return f"{self.__dict__}"
 
 if __name__ == "__main__":
     migrate()   
