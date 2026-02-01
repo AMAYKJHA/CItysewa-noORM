@@ -29,7 +29,7 @@
     background: rgba(17, 17, 17, 0.15);
 }
 
-.customers, .providers{
+.customers, .providers, .verification-requests{
     /* border: 2px solid red; */
     margin-top: 25px;
     width: 100%;
