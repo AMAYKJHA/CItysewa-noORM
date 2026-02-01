@@ -2,7 +2,6 @@ import "react-phone-number-input/style.css"
 import PhoneInput from "react-phone-number-input";
 import { useState } from "react";
 import {submitForVerification} from "../../../api/client";
-// import { all } from "axios";
 
 const VerificationForm = () => {
     const [formData, setFromData] = useState({
@@ -38,11 +37,14 @@ const VerificationForm = () => {
             setSuccess("Verification submitted successfully");
         } catch(err) {
             setError(err.response?.data?.message || "Submission failed");
+            setFromData({id: "", phone_number: "", document_type: "", document_number: "", photo: null, document: null});
         }
     };
     return(
         <form className="verification-form" onSubmit={handleSubmit}>
             <h3>Verify Your Account</h3>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
             <span>
                 <label htmlFor="provider-id">ID</label>
                 <input type="number" id="provider-id" name="id" value={formData.id} onChange={handleChange} required/>
@@ -60,10 +62,10 @@ const VerificationForm = () => {
                 <select id="provider-doc-type" name="document_type" value={formData.document_type} onChange={handleChange} required>
                     <option value={""} hidden disabled>Choose Document Type</option>
                     <option value={"NID"}>National Id</option>
-                    <option value={"Citizen"}>Citizenship</option>
-                    <option value={"Driving"}>Driving License</option>
-                    <option value={"Voter"}>Voter Card</option>
-                    <option value={"Pan"}>Pan Card</option>
+                    <option value={"Citizenship"}>Citizenship</option>
+                    <option value={"Driving License"}>Driving License</option>
+                    <option value={"Voter Card"}>Voter Card</option>
+                    <option value={"Pan Card"}>Pan Card</option>
                 </select>
             </span>
             <span>
@@ -72,7 +74,7 @@ const VerificationForm = () => {
             </span>
             <span>
                 <label htmlFor="provider-document">Attach Document</label>
-                <input type="file" id="provider_document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} multiple required/>
+                <input type="file" id="provider_document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} required/>
             </span>
             <button type="submit">Submit</button>
         </form>
