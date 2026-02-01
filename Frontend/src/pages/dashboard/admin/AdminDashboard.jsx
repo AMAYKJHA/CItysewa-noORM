@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../../../Style/Dashboard.css";
 import Customers from "./CustomerTable";
 import Providers from "./ProviderTable";
+import VerificationRequests from "./VerificationRequestsTable";
 // import { filteredProviders } from "./ProviderTable";
 import { useOutletContext } from "react-router-dom";
 
@@ -13,6 +14,8 @@ const AdminDashboard = (e) => {
                 return <Customers/>
             case "Providers":
                 return <Providers/>
+            case "Verification":
+                return <VerificationRequests/>
             default:
                 return null;
         }
