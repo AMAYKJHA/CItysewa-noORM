@@ -26,7 +26,6 @@ const VerificationRequests = () => {
         const loadrequests = async () => {
             try{
                 const response = await fetchVerificationData();
-                
                 const sortedrequests = response.data.slice().sort((a,b)=> a.id - b.id);
                 setrequests(sortedrequests);
             } catch (e) {
@@ -45,13 +44,13 @@ const VerificationRequests = () => {
     return(
         <section className="verification-requests">
             <h2>Verification Requests</h2>
-            {/* <input type="text" placeholder={`Search by ${searchBy}`}/>
+            <input type="text" placeholder={`Search by ${searchBy}`}/>
             <select value={searchBy} name="searchBy" onChange={handleChange}>
                 <option disabled hidden value={""}>Search by</option>
                 <option value={"Id"}>Id</option>
                 <option value={"First Name"}>First Name</option>
                 <option value={"Last Name"}>Last Name</option>
-            </select> */}
+            </select>
             {requests.length === 0 ? 
             ( <p> No requests at the moment </p>) :
             ( <p> There are some requests you would like to review</p>)

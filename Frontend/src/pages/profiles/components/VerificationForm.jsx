@@ -35,6 +35,7 @@ const VerificationForm = () => {
             payload.append("document", formData.document);
             await submitForVerification(payload);
             setSuccess("Verification submitted successfully");
+            setFromData({id: "", phone_number: "", document_type: "", document_number: "", photo: null, document: null}); 
         } catch(err) {
             setError(err.response?.data?.message || "Submission failed");
             setFromData({id: "", phone_number: "", document_type: "", document_number: "", photo: null, document: null});
@@ -61,11 +62,11 @@ const VerificationForm = () => {
                 <label htmlFor="provider-doc-type">Document Type</label>
                 <select id="provider-doc-type" name="document_type" value={formData.document_type} onChange={handleChange} required>
                     <option value={""} hidden disabled>Choose Document Type</option>
-                    <option value={"NID"}>National Id</option>
+                    <option value={"National Id"}>National Id</option>
                     <option value={"Citizenship"}>Citizenship</option>
-                    <option value={"Driving License"}>Driving License</option>
-                    <option value={"Voter Card"}>Voter Card</option>
-                    <option value={"Pan Card"}>Pan Card</option>
+                    <option value={"Driving Liscense"}>Driving License</option>
+                    <option value={"Voter Id"}>Voter Id</option>
+                    {/* <option value={"Pan Card"}>Pan Card</option> */}
                 </select>
             </span>
             <span>
