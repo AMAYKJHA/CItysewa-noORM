@@ -3,90 +3,33 @@ import "package:flutter/material.dart";
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
 import "package:citysewa_provider/api/models.dart" show User;
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  String userName = "Guest";
+class _HomePageState extends State<HomePage> {
+  // String userName = "Guest";
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   loadUser();
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    loadUser();
-  }
-
-  Future<void> loadUser() async {
-    User? user = await SessionManager.getUser();
-    if (user != null) {
-      setState(() {
-        userName = "${user.firstName} ${user.lastName}";
-      });
-    }
-  }
+  // Future<void> loadUser() async {
+  //   User? user = await SessionManager.getUser();
+  //   if (user != null) {
+  //     setState(() {
+  //       userName = "${user.firstName} ${user.lastName}";
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: kToolbarHeight,
-        leading: ProfileIcon(),
-        titleSpacing: 0,
-        titleTextStyle: Theme.of(context).textTheme.titleMedium,
-        title: Text(
-          userName,
-          style: TextStyle(fontSize: 15, color: Colors.white),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications, color: Colors.black, size: 32),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: ListView(children: [BookingSection()]),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "Bookings"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.miscellaneous_services_rounded),
-            label: "Services",
-          ),
-          // BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
-    );
-  }
-}
-
-class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/profile');
-        },
-        child: CircleAvatar(
-          radius: 16,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage('assets/images/test.png'),
-        ),
-      ),
-    );
+    return ListView(children: [BookingSection()]);
   }
 }
 
