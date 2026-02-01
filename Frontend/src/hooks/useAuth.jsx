@@ -1,41 +1,22 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-// import {jwtDecode} from "jwt-decode";
+import { createContext, useContext, useState } from "react";
 
-// 1. Create AuthContext
 const AuthContext = createContext(null);
 
-// 2. Provider component
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem('dummyUser');
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
-
-  const login = (username = 'testuser', role = 'customer') => {
-    const dummyUser = { username, role };
-    setUser(dummyUser);
-    localStorage.setItem('dummyUser', JSON.stringify(dummyUser));
-  };
-
+export const AuthProvider = ({children}) => {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const login = (data) => {
+    localStorage.setItem("token", data.token);
+    localStorage.removeItem("user", JSON.stringify(data));
+    setUser(data);
+  }
   const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-    localStorage.removeItem('dummyUser');
-  };
-
-  // Return JSX inside the provider
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+  }
+  return(
+    <AuthContext.Provider value={{user, login, logout}}>{children}</AuthContext.Provider>
   );
 };
 
-// 3. Custom hook to access auth
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
