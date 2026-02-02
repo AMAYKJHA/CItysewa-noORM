@@ -9,6 +9,7 @@ const Customers = () => {
     const [shownIndex, setShownIndex] = useState(0);
     const PAGE_SIZE = 10;
     const customersOnDisplay = customers.slice(shownIndex, shownIndex + PAGE_SIZE);
+    
     // Functions that show records on the table
     const showNextBatch = () => {
         setShownIndex(prev => prev + PAGE_SIZE < customers.length ? prev + PAGE_SIZE : prev);
@@ -16,9 +17,6 @@ const Customers = () => {
     const showPrevBatch = () => {
         setShownIndex(prev => prev - PAGE_SIZE >= 0 ? prev - PAGE_SIZE : 0);
     };
-    // const showAll = () => {
-
-    // };
 
     const handleChange = (e) => {
         setSearchBy(e.target.value);
@@ -57,8 +55,7 @@ const Customers = () => {
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>First name</th>
-                        <th>Last name</th>
+                        <th>Name</th>
                         <th>Gender</th>
                         <th>Email</th>
                     </tr>
@@ -67,8 +64,7 @@ const Customers = () => {
                     {customersOnDisplay.map(customer => (
                         <tr key={customer.id}>
                             <td>{customer.id}</td>
-                            <td>{customer.first_name}</td>
-                            <td>{customer.last_name}</td>
+                            <td>{customer.first_name+" "+customer.last_name}</td>
                             <td>{customer.gender}</td>
                             <td>{customer.email}</td>
                         </tr>

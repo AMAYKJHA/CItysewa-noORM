@@ -9,6 +9,7 @@ const Providers = () => {
     const [shownIndex, setShownIndex] = useState(0);
     const PAGE_SIZE = 10;
     const providersOnDisplay = providers.slice(shownIndex, shownIndex + PAGE_SIZE);
+
     // Functions that show records on the table
     const showNextBatch = () => {
         setShownIndex(prev => prev + PAGE_SIZE < providers.length ? prev + PAGE_SIZE : prev);
@@ -53,8 +54,7 @@ const Providers = () => {
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>First name</th>
-                        <th>Last name</th>
+                        <th>Name</th>
                         <th>Gender</th>
                         <th>Email</th>
                     </tr>
@@ -63,8 +63,7 @@ const Providers = () => {
                     {providersOnDisplay.map(provider => (
                         <tr key={provider.id}>
                             <td>{provider.id}</td>
-                            <td>{provider.first_name}</td>
-                            <td>{provider.last_name}</td>
+                            <td>{provider.first_name+" "+provider.last_name}</td>
                             <td>{provider.gender}</td>
                             <td>{provider.email}</td>
                         </tr>
@@ -77,14 +76,3 @@ const Providers = () => {
 };
 
 export default Providers;
-
-// export const filteredProviders = () => {
-
-//     return(
-        
-//     );
-// };
-    // providers.filter((p)=>{
-    //     if(searchBy === 'Id') return String(p.id).includes(searchText);
-    // });
-
