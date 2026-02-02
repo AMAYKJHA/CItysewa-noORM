@@ -58,7 +58,7 @@ export const fetchVerificationDataById = (id) =>
     api.get(`/accounts/provider/verification-data/${id}`);
 
 export const updateVerificationData = (id, data) => 
-    api.patch(`/accounts/provider/verification-data/${id}`,daat);
+    api.patch(`/accounts/provider/verification-data/${id}`,data);
 
 //Admin login/register
 export const adminLogin = (data) => 
