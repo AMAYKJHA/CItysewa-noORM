@@ -13,7 +13,7 @@
     -webkit-backdrop-filter: blur(12px) saturate(140%);
     box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
     box-sizing: border-box;
-    overflow-x: scroll;
+    overflow: hidden scroll;
     scrollbar-width: none;
 }
 
@@ -29,9 +29,47 @@
     background: rgba(17, 17, 17, 0.15);
 }
 
-.customers, .providers, .verification-requests{
-    /* border: 2px solid red; */
+.customers, .providers, .verification-requests, .VRD-container{
     margin-top: 25px;
+    width: 100%;
+}
+
+.admin-dashboard table{
+    box-sizing: border-box;
+    border-radius: 0.25rem;
+}
+
+.tablewrapper{
+    overflow-x: scroll;
+    scrollbar-width: thin;
+}
+
+.verify-request-data{
+    width: 100%;
+    border: 2px solid rgba(102, 102, 102, 0.75); 
+    background: black; 
+    color: white;
+    z-index: 100; 
+    margin-top: 8px; 
+    padding: 8px;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+    /* position: absolute; */
+}
+
+.verify-request-data p{
+    border: 1px solid #444444;
+    width: 100%;
+    box-sizing: border-box !important;
+    text-overflow: ellipsis !important;
+    padding: 2px;
+}
+
+.verify-request-data img{
     width: 100%;
 }
 
@@ -51,10 +89,12 @@ th{
 td{
     /* border: 2px solid rgba(76, 95, 213, 0.75); */
     border: 2px solid rgba(102, 102, 102, 0.75);
+    cursor: pointer;
 }
 
 th,td{
     padding: 2px;
+    text-align: center;
 }
 
 .admin-dashboard input{
@@ -64,6 +104,18 @@ th,td{
 
 .admin-dashboard select{
     margin-top: 8px;
+}
+
+@media only screen and (min-width: 475px){
+    .verify-request-data img{
+        width: 260px;
+    }
+}
+
+@media only screen and (min-width: 546px){
+    .tablewrapper{
+        scrollbar-width: none;
+    }
 }
 
 @media only screen and (min-width: 768px){
