@@ -5,7 +5,7 @@ const ProtectedRoute = ({allowedRoles}) => {
     const { user } = useAuth();
 
     if(!user || !user.token) {
-        const loginPath = allowedRoles?.includes("admin") ? "/login-admin" : "/login"
+        const loginPath = allowedRoles?.includes("admin") ? "/login-admin" : "/login";
         return <Navigate to={loginPath} replace />
     }
 
