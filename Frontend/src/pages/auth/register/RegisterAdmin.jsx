@@ -31,17 +31,22 @@ const RegisterAdmin = () => {
             return;
         }
         try{
-            if(formData.role === "Admin"){
+            if(formData.role === "admin"){
                 await adminRegister({
                     email: formData.email,
                     password: formData.password,
                 });
             }
             setSucceess("Admin Registration Successful!");
-            navigate("/login");
+            setTimeout(()=>navigate("/login"),1500);
         } catch (err) {
-            setError(err.response?.data?.detail || "Registration Failed!");
-
+            setError(err.response?.data?.message || "Registration Failed!");
+            setFormData({
+                email: "",
+                password: "",
+                confirmPassword: "",
+                role: ""
+            });
         }
     };
     return(
@@ -52,7 +57,7 @@ const RegisterAdmin = () => {
                 {success && <p className="success">{success}</p>}
                 <span>
                     <label htmlFor="reg-email">Enter your email</label>
-                    <input type="email" id="red-email" name="email" value={formData.email} onChange={handleChange} required/>
+                    <input type="email" id="reg-email" name="email" value={formData.email} onChange={handleChange} required/>
                 </span>
                 {/* <span>
                     <label for="reg-username">Username</label>
@@ -69,7 +74,7 @@ const RegisterAdmin = () => {
                 <span>
                     <label htmlFor="select-role">Your Role</label>
                     <select className="select-role" id="select-role" name="role" value={formData.role} onChange={handleChange}>
-                        <option>Admin</option>
+                        <option value={"admin"}>Admin</option>
                     </select>
                 </span>
                 <button type="submit">Register</button>

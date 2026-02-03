@@ -3,14 +3,16 @@ import './../../../Style/Login.css';
 import { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import { adminLogin } from '../../../api/client';
+import {useAuth} from "../../../hooks/useAuth";
 
-const Login = () => {
+const LoginAdmin = () => {
     const [credentials, setCredentials] = useState({
         email: "",
         password: "",
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { login } = useAuth();
     const handleChange = (e) => {
         setCredentials({
             ...credentials,
@@ -21,15 +23,12 @@ const Login = () => {
         e.preventDefault();
         setError("");
         try{
-            const response = await adminLogin({
-                email: credentials.email,
-                password: credentials.password,
-            });
-            localStorage.setItem("token", response.data.access);
+            const response = await adminLogin(credentials);
+            login({...response.data, role: "admin"});
             navigate("/admin");
         } catch (err){
-            setError("Invalid email or password");
-            console.error(err);
+            setError(err.response?.data?.message || "Invalid email or password");
+            setCredentials({email:"", password:""});
         }
     };
     return(
@@ -51,4 +50,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginAdmin;
