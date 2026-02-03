@@ -28,6 +28,7 @@ from .messages import (
     PHONE_NUMBER_ALREADY_ASSOCIATED,
     EMAIL_ALREADY_ASSOCIATED,
     DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC,
+    STATUS_NOT_MATCHED,
 )
 from .validators import (
     validate_phone_number
@@ -35,7 +36,8 @@ from .validators import (
 
 
 from .constants import (
-    DOCUMENT_TYPE
+    DOCUMENT_TYPE,
+    VERIFICATION_STATUS,
 )
 
 # User serializers
@@ -427,6 +429,8 @@ class VerificationListSerializer(serializers.Serializer):
     
 class VerificationRetrieveSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone_number = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     gender = serializers.CharField(required=True)
@@ -443,6 +447,13 @@ class VerificationPatchSerializer(serializers.Serializer):
     document_number = serializers.CharField(required=True)
     status = serializers.CharField(required=True)
    
+    def validate_status(self, value):
+        if value not in VERIFICATION_STATUS:
+            raise serializers.ValidationError({
+                "message": STATUS_NOT_MATCHED.format(status=VERIFICATION_STATUS)
+            })
+        return value
+            
     def validate(self, attrs):
         provider_id = self.instance["id"]
         provider = Provider().get(id=provider_id)

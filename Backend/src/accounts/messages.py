@@ -20,3 +20,5 @@ PHONE_NUMBER_ALREADY_ASSOCIATED = "This phone number is already associated with 
 EMAIL_ALREADY_ASSOCIATED = "This email is already associated with another account."
 
 DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC = "This document number is already associated with another account."
+
+STATUS_NOT_MATCHED = "Verification status should be one of these {status}"
