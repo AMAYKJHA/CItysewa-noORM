@@ -17,6 +17,16 @@
     scrollbar-width: none;
 }
 
+.provider-dashboard, .customer-dashboard{
+    margin-top: 29vh;
+    width: 100vw;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center !important;
+}
+
 .admin-dashboard h1{
     width: fit-content;
     background: linear-gradient(to right, white, grey, brown);

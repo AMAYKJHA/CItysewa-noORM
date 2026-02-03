@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchVerificationData, fetchVerificationDataById} from "../../../api/client";
+import { fetchVerificationData, fetchVerificationDataById, updateVerificationData} from "../../../api/client";
 
 const VerificationRequests = () => {
 
@@ -28,6 +28,7 @@ const VerificationRequests = () => {
         try{
             const response = await fetchVerificationDataById(id);
             setSelectedRequest(response.data);
+            console.log(response);
         } 
         catch(err) {
             setErrorForSingleDataFetch("Failed to fetch request");
@@ -38,20 +39,40 @@ const VerificationRequests = () => {
         setSelectedRequest(null);
     };
 
-    useEffect(()=>{
-        const loadrequests = async () => {
-            try{
-                const response = await fetchVerificationData();
-                const sortedrequests = response.data.slice().sort((a,b)=> a.id - b.id);
-                setrequests(sortedrequests);
-            } catch (e) {
-                setErrorForMultipleDataFetch("Failed to fetch requests");
-                console.error(e);
-            } finally {
-                setLoading(false);
+    const updateVerificationStatus = async (ver_status) => {
+        try{
+            if(!selectedRequest) return;
+            const patchData = {
+                document_number: selectedRequest.document_number,
+                status: ver_status,
+                verified: ver_status === "Verified"
             }
+            await updateVerificationData(selectedRequest.id, patchData);
+            await loadrequests();
+            handleClose();
+            console.log("Updated provider verification status as : "+ver_status);
+        } catch(err) {
+            console.error("Error updating provider:", err.response?.data || err.message);
+        }
+    };
+
+    const loadrequests = async () => {
+        try{
+            const response = await fetchVerificationData();
+            const sortedrequests = response.data.slice().sort((a,b)=> a.id - b.id);
+            setrequests(sortedrequests);
+        } catch (e) {
+            setErrorForMultipleDataFetch("Failed to fetch requests");
+            console.error(e);
+        }
+    };
+
+    useEffect(()=>{
+        const load = async () => {
+            await loadrequests();
+            setLoading(false);
         };
-        loadrequests();
+        load();
     }, []);
 
     useEffect(()=>{
@@ -78,10 +99,14 @@ const VerificationRequests = () => {
                         <p><strong>Provided Document Type: </strong>{selectedRequest.document_type}</p>
                         <p><strong>Document Number: </strong>{selectedRequest.document_number}</p>
                         <p><strong>Document: </strong><a href={selectedRequest.file_name} target="_blank" rel="noreferrer"><img src={selectedRequest.file_name} alt={"Provider Document"}/></a></p>
-                        <p><strong>Is Verified: </strong>{selectedRequest.verified}</p>
+                        <p><strong>Is Verified: </strong>{selectedRequest.verified ? "Yes" : "No"}</p>
                         <p><strong>Verification Status: </strong>{selectedRequest.status}</p>
                     </div>
-                    <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p onClick={handleClose}>Close</p><p>Save</p></span>
+                    <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:'13px'}}>
+                        <button onClick={()=>updateVerificationStatus("Verified")}>Verify</button>
+                        <button onClick={()=>updateVerificationStatus("Not verified")}>Unverify</button>
+                        <button onClick={handleClose}>Close</button>
+                    </span>
                 </section>
             ): ""} 
             <section className="verification-requests">
@@ -93,10 +118,6 @@ const VerificationRequests = () => {
                 <option value={"First Name"}>First Name</option>
                 <option value={"Last Name"}>Last Name</option>
             </select>
-            {requests.length === 0 ? 
-            ( <p> No requests at the moment </p>) :
-            ( <p></p>)
-            }
             <div className="tablewrapper">
                 <table>
                     <thead>
@@ -125,6 +146,10 @@ const VerificationRequests = () => {
                     </tbody>  
                 </table>
             </div>
+            {requests.length === 0 ? 
+            ( <p style={{marginLeft:'8px'}}> No requests at the moment </p>) :
+            ( <p></p>)
+            }
             <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= requests.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
         </section>   
         </>
@@ -132,5 +157,3 @@ const VerificationRequests = () => {
 };
 
 export default VerificationRequests;
-
-//Next step : Replace the <div> of VRD container with table, required <p> under the <div> with input labels and allow updation of the provider verification status 

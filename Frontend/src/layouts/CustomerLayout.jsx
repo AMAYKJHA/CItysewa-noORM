@@ -5,7 +5,7 @@ import "./../Style/Layouts.css";
 
 const CustomerLayout = () => {
     return(
-        <main style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%', border:'2px solid white'}}>
+        <main style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%', border:'2px solid white', flexDirection:'column'}}>
             <Navbar type='customer'/>
             <section><Outlet/></section>
             <Footer type='customer'/>
