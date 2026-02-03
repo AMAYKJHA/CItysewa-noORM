@@ -8,9 +8,7 @@ const ProviderDashboard = () => {
         <section className="provider-dashboard" style={{color:'white'}}>
             <h2>Provider Dashboard</h2>
             <h3>Welcome, {user.first_name} {user.last_name}</h3>
-            {!user.is_verified && (
-                <p style={{color:'orange'}}>Your account is not verified yet</p>
-            )}
+            <p>You are {user.is_verified? "a verified" : "an unverified"} provider</p>
         </section>
     );
 };
