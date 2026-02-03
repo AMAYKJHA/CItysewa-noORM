@@ -183,7 +183,7 @@ class Table(ABC):
             return
     
     #R
-    def join(self, right_table, join_on:tuple, left_attrs:tuple, right_attrs:tuple, left_conditions:dict={}, right_conditions:dict={}):
+    def join(self, right_table, join_on:tuple, left_attrs=("id",), right_attrs=("id",), left_conditions:dict={}, right_conditions:dict={}):
         if not all([isinstance(join_on, tuple), isinstance(left_attrs, tuple), isinstance(right_attrs, tuple), isinstance(left_conditions, dict), isinstance(right_conditions, dict)]):
             raise TypeError("Arguments type mismatch.")
         
@@ -195,13 +195,15 @@ class Table(ABC):
         if not all(isinstance(item, str) for item in join_on):
             raise TypeError("join attributes must be string.")
         
-        for left in left_attrs:
-            if not hasattr(self, left):
-                raise ValueError(f"{self.__class__.__name__} has no attribute {left}.")
+        if left_attrs:
+            for left in left_attrs:
+                if not hasattr(self, left):
+                    raise ValueError(f"{self.__class__.__name__} has no attribute {left}.")
         
-        for right in right_attrs:  
-            if not hasattr(right_table, right):
-                raise ValueError(f"{right_table.__class__.__name__} has no attribute {right}.")
+        if right_attrs:
+            for right in right_attrs:  
+                if not hasattr(right_table, right):
+                    raise ValueError(f"{right_table.__class__.__name__} has no attribute {right}.")
            
         for left_con in left_conditions:
             if not hasattr(self, left_con):
@@ -211,8 +213,10 @@ class Table(ABC):
             if not hasattr(right_table, right_con):
                 raise ValueError(f"{right_table.__class__.__name__} has no attribute {right_con}.")
             
+            
         left_columns = ", ".join(f"X.{attr} as {self.table_name}_{attr}" for attr in left_attrs)
         right_columns = ", ".join(f"Y.{attr} as {right_table.table_name}_{attr}" for attr in right_attrs)
+
         query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]}"
         
         values = ()

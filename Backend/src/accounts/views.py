@@ -9,6 +9,8 @@ from rest_framework.status import (
 from drf_spectacular.utils import extend_schema
 
 from .tables import (
+    Token,
+    User,
     Customer,
     Provider,
     Document
@@ -29,6 +31,13 @@ from .serializers import (
     VerificationPatchSerializer,
 )
 
+from .constants import (
+    VERIFICATION_STATUS
+)
+
+from .messages import (
+    STATUS_NOT_MATCHED
+)
 
 # Admin views
 # -----------------------------------------------------------------------------------------
@@ -182,27 +191,44 @@ class VerificationListAPIView(APIView):
     
 class VerificationRetrieveAPIView(APIView):
     def get(self, request, id):
+        verification_status = request.query_params.get("status", "Pending")
+        if verification_status not in VERIFICATION_STATUS:
+            return Response(
+                {"message": [STATUS_NOT_MATCHED.format(VERIFICATION_STATUS)]}
+            )
         verification_data = Provider().join(
             right_table=Document(),
             join_on=("id","provider_id"),
             left_attrs=("id", "first_name", "last_name", "gender", "photo", "verified"),
             right_attrs = ("document_type", "document_number", "file_name", "status"),
             left_conditions={"id":id},
-            right_conditions={"status": 'Pending'}
+            right_conditions={"status": verification_status}
             )
         
-        # Removing the prefixes 'provider_' and 'document_' from keys eg: provider_column_name or
-        transformed_data = {}
-        for key, val in verification_data[0].items():
-                new_key = key.removeprefix(f"{Provider.table_name}_")
-                new_key = new_key.removeprefix(f"{Document.table_name}_")
-                transformed_data[new_key] = val
-                
-        transformed_data["photo"] = Provider().get_photo_url(id=transformed_data["id"], photo_name=transformed_data["photo"])
-        transformed_data["file_name"] = Document().get_file_url(provider_id=transformed_data["id"], file_name=transformed_data["file_name"])
-        serializer = VerificationRetrieveSerializer(transformed_data)
-        
-        return Response(serializer.data, status=HTTP_200_OK)
+        # Removing the prefixes 'provider_' and 'document_' from keys eg: provider_column_name or        
+        if len(verification_data)>0:
+            transformed_data = {}
+            for key, val in verification_data[0].items():
+                    new_key = key.removeprefix(f"{Provider.table_name}_")
+                    new_key = new_key.removeprefix(f"{Document.table_name}_")
+                    transformed_data[new_key] = val
+                    
+            transformed_data["photo"] = Provider().get_photo_url(id=transformed_data["id"], photo_name=transformed_data["photo"])
+            transformed_data["file_name"] = Document().get_file_url(provider_id=transformed_data["id"], file_name=transformed_data["file_name"])
+            user_data = User().join(
+                right_table=Provider(),
+                join_on=("id","user_id"),
+                left_attrs=("email", "phone_number"),
+                left_conditions={},
+                right_conditions={"id": id}
+            )
+            transformed_data["email"] = user_data[0].get("users_email")
+            transformed_data["phone_number"] = user_data[0].get("users_phone_number")
+           
+            serializer = VerificationRetrieveSerializer(transformed_data)
+            
+            return Response(serializer.data, status=HTTP_200_OK)
+        return Response({"message": ["No pending verification request found for this provider."]}, status=HTTP_400_BAD_REQUEST)
     
     def patch(self, request, id):
         provider_id = id
