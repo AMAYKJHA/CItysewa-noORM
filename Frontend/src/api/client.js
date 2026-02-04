@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 // Base axios instance
 const api = axios.create({
@@ -8,12 +10,31 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
-        if(token){
+        const isAuthRoute = config.url?.includes("/login") || config.url?.includes("/register");
+        if(token && !isAuthRoute){
+            config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
     (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if(error.response?.status === 401) {
+            localStorage.removeItem("token");
+            try{
+                const navigate = useNavigate();
+                navigate("/login");
+            } catch(err) {
+                console.error(err);
+                window.location.href = "/login";
+            }
+        }
+        return Promise.reject(error);
+    }
 );
 
 /* Accounts */
@@ -48,7 +69,11 @@ export const fetchProviderById = (id) =>
 
 //Provider verification
 export const submitForVerification = (data) =>
-    api.post("/accounts/provider/submit-verification",data);
+    api.post("/accounts/provider/submit-verification",data,{
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    });
 
 //Provider verification in Admin side
 export const fetchVerificationData = () => 
