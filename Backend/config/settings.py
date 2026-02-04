@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import sentry_sdk
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -93,7 +94,7 @@ else:
                 "connect_timeout": 10,
                 "options": "-c statement_timeout=30000"
             },
-            "CONN_MAX_AGE": 0,
+            "CONN_MAX_AGE": 30,
         }
     }
 
@@ -160,6 +161,12 @@ REST_FRAMEWORK = {
     
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+
+sentry_sdk.init(
+    dsn=env.str("SENTRY_DSN"),
+    send_default_pii=True,
+)
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'CitySewa API',
