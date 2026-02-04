@@ -12,6 +12,7 @@ const VerificationRequests = () => {
     const PAGE_SIZE = 10;
     const requestsOnDisplay = requests.slice(shownIndex, shownIndex + PAGE_SIZE);
     const [selectedRequest, setSelectedRequest] = useState(null);
+    
     // Functions that show records on the table
     const showNextBatch = () => {
         setShownIndex(prev => prev + PAGE_SIZE < requests.length ? prev + PAGE_SIZE : prev);
@@ -95,7 +96,7 @@ const VerificationRequests = () => {
                         <p><strong>Id: </strong>{selectedRequest.id}</p>
                         <p><strong>Name: </strong>{selectedRequest.first_name+" "+selectedRequest.last_name}</p>
                         <p><strong>Gender: </strong>{selectedRequest.gender}</p>
-                        <p><strong>Phone Number: </strong>{selectedRequest.phone_number || "Amay le rakheko xaina"}</p>
+                        <p><strong>Phone Number: </strong>{selectedRequest.phone_number}</p>
                         <p><strong>Provided Document Type: </strong>{selectedRequest.document_type}</p>
                         <p><strong>Document Number: </strong>{selectedRequest.document_number}</p>
                         <p><strong>Document: </strong><a href={selectedRequest.file_name} target="_blank" rel="noreferrer"><img src={selectedRequest.file_name} alt={"Provider Document"}/></a></p>
