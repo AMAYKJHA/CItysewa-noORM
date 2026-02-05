@@ -321,6 +321,7 @@ class ProviderLoginSerializer(serializers.Serializer):
                     
         provider = validated_data.get("provider")
         provider_serializer = ProviderSerializer(provider.__dict__)
+        
         return {**provider_serializer.data, "token": token.token}
         
     
@@ -332,6 +333,15 @@ class ProviderSerializer(serializers.Serializer):
     verified = serializers.BooleanField()
     description = serializers.CharField(required=False)
     photo = serializers.CharField(required=False)
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        if data.get("photo"):
+            data["photo"] = Provider().get_photo_url(data.get("id"), data.get("photo"))
+            
+        return data
+    
     
 class DocumentCreateSerializer(serializers.Serializer):
     provider_id = serializers.IntegerField(required=True)
