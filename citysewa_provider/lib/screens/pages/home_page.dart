@@ -1,32 +1,16 @@
 import "package:flutter/material.dart";
 
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show User;
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final bool verified;
+  const HomePage({super.key, this.verified = false});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  // String userName = "Guest";
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadUser();
-  // }
-
-  // Future<void> loadUser() async {
-  //   User? user = await SessionManager.getUser();
-  //   if (user != null) {
-  //     setState(() {
-  //       userName = "${user.firstName} ${user.lastName}";
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ListView(children: [BookingSection()]);

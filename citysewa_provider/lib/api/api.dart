@@ -42,6 +42,8 @@ class AuthService {
             gender: data["gender"],
             verified: data["verified"],
             token: data["token"],
+            photo: data["photo"],
+            description: data["description"],
           ),
         );
       } else {
@@ -53,7 +55,6 @@ class AuthService {
         return r;
       }
     } catch (e) {
-      print(e);
       return LoginResponse(
         success: false,
         message: "Something went wrong. Please try again.",
@@ -100,6 +101,34 @@ class AuthService {
     }
   }
 
+  //fetch provider
+  Future<User?> getProvider(int id) async {
+    final url = Uri.parse("$baseUrl/$modUrl/$id");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        User user = User(
+          id: data["id"],
+          firstName: data["first_name"],
+          lastName: data["last_name"],
+          gender: data["gender"],
+          verified: data["verified"],
+          token: data["token"],
+          photo: data["photo"],
+          description: data["description"],
+        );
+        return user;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("$e");
+      return null;
+    }
+  }
+
   //Verify provider
   Future<VerificationResponse> verifyProvider(
     int id,
@@ -109,7 +138,7 @@ class AuthService {
     String photoPath,
     String docPath,
   ) async {
-    final url = Uri.parse("$baseUrl/$modUrl/verify");
+    final url = Uri.parse("$baseUrl/$modUrl/submit-verification");
     try {
       var request = http.MultipartRequest('POST', url);
       request.fields['id'] = id.toString();

@@ -25,7 +25,7 @@ class VerifyYourselfBanner extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(150, 98, 243, 173),
+          color: const Color.fromARGB(148, 105, 255, 182),
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
