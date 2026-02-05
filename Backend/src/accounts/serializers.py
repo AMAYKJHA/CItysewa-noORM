@@ -29,6 +29,7 @@ from .messages import (
     EMAIL_ALREADY_ASSOCIATED,
     DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC,
     STATUS_NOT_MATCHED,
+    DOCUMENT_ALREADY_SUBMITTED
 )
 from .validators import (
     validate_phone_number
@@ -336,6 +337,11 @@ class DocumentCreateSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         provider_id = attrs.get("provider_id")
+        provider = Provider().get(id=provider_id)
+        if provider:
+            raise serializers.ValidationError({
+                "message": DOCUMENT_ALREADY_SUBMITTED
+            })
         document_number = attrs.get("document_number")
         document = Document().get(document_number=document_number)
         if document:
