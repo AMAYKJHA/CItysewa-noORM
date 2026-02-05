@@ -213,8 +213,6 @@ class VerificationRetrieveAPIView(APIView):
                     new_key = new_key.removeprefix(f"{Document.table_name}_")
                     transformed_data[new_key] = val
                     
-            transformed_data["photo"] = Provider().get_photo_url(id=transformed_data["id"], photo_name=transformed_data["photo"])
-            transformed_data["file_name"] = Document().get_file_url(provider_id=transformed_data["id"], file_name=transformed_data["file_name"])
             user_data = User().join(
                 right_table=Provider(),
                 join_on=("id","user_id"),
