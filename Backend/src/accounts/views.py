@@ -128,7 +128,7 @@ class ProviderLoginAPIView(APIView):
 
 @extend_schema(
     summary="List all providers",
-    description="Returns a lits of all customers",
+    description="Returns a lits of all providers",
     operation_id="provider_list"
 )   
 class ProviderListAPIView(APIView):

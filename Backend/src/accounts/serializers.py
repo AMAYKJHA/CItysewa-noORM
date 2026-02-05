@@ -320,7 +320,8 @@ class ProviderLoginSerializer(serializers.Serializer):
             token = Token().create(user_id=user_id)
                     
         provider = validated_data.get("provider")
-        return {**provider.__dict__, "token": token.token}
+        provider_serializer = ProviderSerializer(provider.__dict__)
+        return {**provider_serializer.data, "token": token.token}
         
     
 class ProviderSerializer(serializers.Serializer):
@@ -328,6 +329,9 @@ class ProviderSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     gender = serializers.CharField()
+    verified = serializers.BooleanField()
+    description = serializers.CharField(required=False)
+    photo = serializers.CharField(required=False)
     
 class DocumentCreateSerializer(serializers.Serializer):
     provider_id = serializers.IntegerField(required=True)
