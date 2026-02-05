@@ -1,24 +1,27 @@
-INVALID_PASSWORD = "Password is incorrect."
+from django.utils.translation import gettext_lazy as _
 
-USER_NOT_FOUND = "No account associated with this email."
-CUSTOMER_NOT_FOUND = "Customer not found."
-PROVIDER_NOT_FOUND = "Provider not found."
-DOCUMENT_NOT_FOUND = "Document not found."
+INVALID_PASSWORD = _("Password is incorrect.")
 
-CUSTOMER_PROFILE_DOES_NOT_EXIST = "No customer profile associated with this email."
-PROVIDER_PROFILE_DOES_NOT_EXIST = "No provider profile associated with this email."
+USER_NOT_FOUND = _("No account associated with this email.")
+CUSTOMER_NOT_FOUND = _("Customer not found.")
+PROVIDER_NOT_FOUND = _("Provider not found.")
+DOCUMENT_NOT_FOUND = _("Document not found.")
 
-USER_ALREADY_EXISTS = "User profile already exists for this email."
-CUSTOMER_PROFILE_EXISTS = "Customer profile already exists for this email."
-PROVIDER_PROFILE_EXISTS = "Provider profile already exists for this email."
+CUSTOMER_PROFILE_DOES_NOT_EXIST = _("No customer profile associated with this email.")
+PROVIDER_PROFILE_DOES_NOT_EXIST = _("No provider profile associated with this email.")
 
-ADMIN_ACCESS_DENIED = "No admin privilege for this account."
+USER_ALREADY_EXISTS = _("User profile already exists for this email.")
+CUSTOMER_PROFILE_EXISTS = _("Customer profile already exists for this email.")
+PROVIDER_PROFILE_EXISTS = _("Provider profile already exists for this email.")
 
-INVALID_DOCUMENT_TYPE = "Document type should be one of these {doc_types}"
+ADMIN_ACCESS_DENIED = _("No admin privilege for this account.")
 
-PHONE_NUMBER_ALREADY_ASSOCIATED = "This phone number is already associated with another account."
-EMAIL_ALREADY_ASSOCIATED = "This email is already associated with another account."
+INVALID_DOCUMENT_TYPE = _("Document type should be one of these {doc_types}.")
 
-DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC = "This document number is already associated with another account."
+PHONE_NUMBER_ALREADY_ASSOCIATED = _("This phone number is already associated with another account.")
+EMAIL_ALREADY_ASSOCIATED = _("This email is already associated with another account.")
 
-STATUS_NOT_MATCHED = "Verification status should be one of these {status}"
+DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC = _("This document number is already associated with another account.")
+
+DOCUMENT_ALREADY_SUBMITTED = _("Document has already been submitted for this provider.")
+STATUS_NOT_MATCHED = _("Verification status should be one of these {status}.")

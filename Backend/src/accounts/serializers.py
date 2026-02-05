@@ -29,6 +29,7 @@ from .messages import (
     EMAIL_ALREADY_ASSOCIATED,
     DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC,
     STATUS_NOT_MATCHED,
+    DOCUMENT_ALREADY_SUBMITTED
 )
 from .validators import (
     validate_phone_number
@@ -44,8 +45,8 @@ from .constants import (
 # ----------------------------------------------------------------------------------------------------------
 
 class UserRegisterSeriaizer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    email = serializers.EmailField()
+    password = serializers.CharField( write_only=True)
     def validate(self, attrs):
         email = attrs.get("email")
         user = User().get(email=email)
@@ -65,7 +66,7 @@ class UserRegisterSeriaizer(serializers.Serializer):
    
 class UserPatchSerializer(serializers.Serializer):
     phone_number = serializers.CharField(required=False, validators=[validate_phone_number])
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField()
     password = serializers.CharField(required=False)
     is_active = serializers.BooleanField(required=False, default=True)
     is_admin = serializers.BooleanField(required=False)
@@ -105,8 +106,8 @@ class UserPatchSerializer(serializers.Serializer):
 # ----------------------------------------------------------------------------------------------------------
       
 class AdminLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    email = serializers.EmailField()
+    password = serializers.CharField( write_only=True)
     
     def validate(self, attrs):
         email = attrs.get('email')
@@ -150,11 +151,11 @@ class AdminLoginSerializer(serializers.Serializer):
 # ----------------------------------------------------------------------------------------------------------
 
 class CustomerRegisterSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    gender = serializers.CharField(required=True)
+    email = serializers.EmailField()
+    password = serializers.CharField( write_only=True)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    gender = serializers.CharField()
     
     def validate(self, attrs):
         email = attrs.get('email')
@@ -190,8 +191,8 @@ class CustomerRegisterSerializer(serializers.Serializer):
         
         
 class CustomerLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    email = serializers.EmailField()
+    password = serializers.CharField( write_only=True)
     
     def validate(self, attrs):
         email = attrs.get("email")
@@ -241,11 +242,11 @@ class CustomerSerializer(serializers.Serializer):
 # ----------------------------------------------------------------------------------------------------------
 
 class ProviderRegisterSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    gender = serializers.CharField(required=True)
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    gender = serializers.CharField()
     
     def validate(self, attrs):
         email = attrs.get('email')
@@ -282,8 +283,8 @@ class ProviderPatchSerializer(serializers.Serializer):
     ...       
         
 class ProviderLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True)
+    email = serializers.EmailField()
+    password = serializers.CharField()
     
     def validate(self, attrs):
         email = attrs.get("email")
@@ -319,7 +320,9 @@ class ProviderLoginSerializer(serializers.Serializer):
             token = Token().create(user_id=user_id)
                     
         provider = validated_data.get("provider")
-        return {**provider.__dict__, "token": token.token}
+        provider_serializer = ProviderSerializer(provider.__dict__)
+        
+        return {**provider_serializer.data, "token": token.token}
         
     
 class ProviderSerializer(serializers.Serializer):
@@ -327,15 +330,32 @@ class ProviderSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     gender = serializers.CharField()
+    verified = serializers.BooleanField()
+    description = serializers.CharField(required=False)
+    photo = serializers.CharField(required=False)
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        if data.get("photo"):
+            data["photo"] = Provider().get_photo_url(data.get("id"), data.get("photo"))
+            
+        return data
+    
     
 class DocumentCreateSerializer(serializers.Serializer):
-    provider_id = serializers.IntegerField(required=True)
-    document_number = serializers.CharField(required=True)
-    document_type = serializers.CharField(required=True)
-    file = serializers.FileField(required=True, validators=[validate_file_size])
+    provider_id = serializers.IntegerField()
+    document_number = serializers.CharField()
+    document_type = serializers.CharField()
+    file = serializers.FileField( validators=[validate_file_size])
     
     def validate(self, attrs):
         provider_id = attrs.get("provider_id")
+        provider = Provider().get(id=provider_id)
+        if provider:
+            raise serializers.ValidationError({
+                "message": DOCUMENT_ALREADY_SUBMITTED
+            })
         document_number = attrs.get("document_number")
         document = Document().get(document_number=document_number)
         if document:
@@ -360,12 +380,12 @@ class DocumentCreateSerializer(serializers.Serializer):
         return {**document.__dict__}
     
 class ProviderSubmitVerificationSerializer(serializers.Serializer):
-    id = serializers.IntegerField(required=True)
-    phone_number = serializers.CharField(required=True, validators = [validate_phone_number])
-    document_type = serializers.CharField(required=True)
-    document_number = serializers.CharField(required=True)
-    photo = serializers.ImageField(required=True, validators = [validate_file_size])
-    document = serializers.FileField(required=True,  validators = [validate_file_size])
+    id = serializers.IntegerField()
+    phone_number = serializers.CharField( validators = [validate_phone_number])
+    document_type = serializers.CharField()
+    document_number = serializers.CharField()
+    photo = serializers.ImageField( validators = [validate_file_size])
+    document = serializers.FileField(  validators = [validate_file_size])
     
     def validate(self, attrs):
         document_type = attrs.get("document_type")
@@ -421,31 +441,38 @@ class ProviderSubmitVerificationSerializer(serializers.Serializer):
         return {"phone_number": phone_number, "document_number": document_number}
         
 class VerificationListSerializer(serializers.Serializer):
-    id = serializers.IntegerField(required=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    document_number = serializers.CharField(required=True)
-    status = serializers.CharField(required=True)
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    document_number = serializers.CharField()
+    status = serializers.CharField()
     
 class VerificationRetrieveSerializer(serializers.Serializer):
-    id = serializers.IntegerField(required=True)
-    email = serializers.EmailField(required=True)
-    phone_number = serializers.CharField(required=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    gender = serializers.CharField(required=True)
-    photo = serializers.CharField(required=True)
-    verified = serializers.BooleanField(required=True)
-    document_type = serializers.CharField(required=True)
-    document_number = serializers.CharField(required=True)
-    file_name = serializers.CharField(required=True)
-    status = serializers.CharField(required=True)
+    id = serializers.IntegerField()
+    email = serializers.EmailField()
+    phone_number = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    gender = serializers.CharField()
+    photo = serializers.CharField()
+    verified = serializers.BooleanField()
+    document_type = serializers.CharField()
+    document_number = serializers.CharField()
+    file_name = serializers.CharField()
+    status = serializers.CharField()
+    
+    
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)        
+        data["photo"] = Provider().get_photo_url(data["id"], data["photo"])
+        data["file_name"] = Document().get_file_url(data["id"], data["file_name"])         
+        return data
 
     
 class VerificationPatchSerializer(serializers.Serializer):
-    verified = serializers.BooleanField(required=True)
-    document_number = serializers.CharField(required=True)
-    status = serializers.CharField(required=True)
+    verified = serializers.BooleanField()
+    document_number = serializers.CharField()
+    status = serializers.CharField()
    
     def validate_status(self, value):
         if value not in VERIFICATION_STATUS:
