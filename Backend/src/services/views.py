@@ -40,8 +40,12 @@ class ServiceListAPIView(APIView):
         order_dir = request.query_params.get("order_dir")
         direction = 0
         if order_dir:
-            direction = 1 if order_dir.lower() == 'desc' else 0
-        services = Service().all(order_by=order_by, order_dir=direction)
+            direction = 1 if order_dir.lower() == 'desc' else 0        
+        
+        service_type = request.query_params.get("service_type") 
+        service_type = service_type.title() if service_type else service_type
+       
+        services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type)
         
         serializer = ServiceListSerializer(services, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
@@ -55,6 +59,6 @@ class ServiceRetrieveAPIView(APIView):
     def get(self, request, id):        
         service = Service().get(id=id)
         if service:
-            serializer = ServiceListSerializer(service)
+            serializer = ServiceRetrieveSerializer(service.__dict__)
             return Response(serializer.data, status=HTTP_200_OK)
         return Response({"detail": SERVICE_NOT_FOUND}, status=HTTP_400_BAD_REQUEST)

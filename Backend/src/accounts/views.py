@@ -140,7 +140,7 @@ class ProviderLoginAPIView(APIView):
     operation_id="provider_list"
 )   
 class ProviderListAPIView(APIView):
-    def get(self, request):
+    def get(self, request):        
         order_by = request.query_params.get("order_by")
         order_dir = request.query_params.get("order_dir")
         direction = 0
