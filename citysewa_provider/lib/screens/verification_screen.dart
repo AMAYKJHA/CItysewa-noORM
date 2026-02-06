@@ -158,6 +158,16 @@ class _VerificationFormState extends State<VerificationForm> {
       borderSide: BorderSide(color: Colors.deepOrange.shade200),
     );
 
+    final inputDecoration = InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      border: inputBorder,
+      enabledBorder: inputBorder,
+      focusedBorder: inputBorder.copyWith(
+        borderSide: BorderSide(color: Colors.deepOrange.shade400),
+      ),
+    );
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration(
@@ -191,15 +201,8 @@ class _VerificationFormState extends State<VerificationForm> {
           TextField(
             controller: phoneController,
             keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
+            decoration: inputDecoration.copyWith(
               hintText: 'Phone Number',
-              filled: true,
-              fillColor: Colors.white,
-              border: inputBorder,
-              enabledBorder: inputBorder,
-              focusedBorder: inputBorder.copyWith(
-                borderSide: BorderSide(color: Colors.deepOrange.shade400),
-              ),
               prefixIcon: const Icon(Icons.phone_rounded),
             ),
           ),
@@ -239,15 +242,8 @@ class _VerificationFormState extends State<VerificationForm> {
 
           TextField(
             controller: docNoController,
-            decoration: InputDecoration(
+            decoration: inputDecoration.copyWith(
               hintText: 'Document number',
-              filled: true,
-              fillColor: Colors.white,
-              border: inputBorder,
-              enabledBorder: inputBorder,
-              focusedBorder: inputBorder.copyWith(
-                borderSide: BorderSide(color: Colors.deepOrange.shade400),
-              ),
               prefixIcon: const Icon(Icons.badge_outlined),
             ),
           ),

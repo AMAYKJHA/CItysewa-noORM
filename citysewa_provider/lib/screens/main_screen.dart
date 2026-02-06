@@ -11,7 +11,6 @@ import "package:citysewa_provider/screens/pages/booking_page.dart"
     show BookingPage;
 import "package:citysewa_provider/screens/pages/service_page.dart"
     show ServicePage;
-import "package:http/http.dart";
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -63,6 +62,8 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> fetchBookings() async {}
+
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
@@ -74,21 +75,42 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,
         leading: ProfileIcon(),
-        titleSpacing: 0,
+        titleSpacing: 8,
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
-        title: Text(
-          "${user!.firstName} ${user!.lastName}",
-          style: TextStyle(fontSize: 15, color: Colors.white),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        title: Row(
+          children: [
+            Flexible(
+              child: Text(
+                "${user!.firstName} ${user!.lastName}",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (user!.verified) ...[
+              const SizedBox(width: 6),
+              const Icon(Icons.verified_rounded, size: 18, color: Colors.white),
+            ],
+          ],
         ),
         centerTitle: false,
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.notifications, color: Colors.black, size: 32),
+            icon: Icon(Icons.notifications_rounded, color: Colors.white),
+            splashRadius: 22,
+            tooltip: 'Notification',
           ),
+          const SizedBox(width: 4),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: Colors.white.withAlpha(25)),
+        ),
       ),
       floatingActionButton: Visibility(
         visible: currentPageIndex == 2,
@@ -107,24 +129,27 @@ class _MainScreenState extends State<MainScreen> {
           child: pages[currentPageIndex],
         ),
         onRefresh: () {
-          if (currentPageIndex == 0) {
+          if (!user!.verified || currentPageIndex == 0) {
             return fetchUser();
           } else if (currentPageIndex == 1) {
-            return fetchUser();
+            return fetchBookings();
+          } else {
+            return fetchServices();
           }
-          return fetchUser();
         },
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: 0,
+        index: currentPageIndex,
+        height: 56,
         color: Colors.deepOrange,
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Colors.deepOrange,
+        buttonBackgroundColor: Colors.deepOrange.shade600,
+        animationCurve: Curves.easeOutCubic,
 
-        items: <Widget>[
-          Icon(Icons.home_rounded, size: 28, color: Colors.white),
-          Icon(Icons.receipt_long_rounded, size: 28, color: Colors.white),
-          Icon(Icons.handyman_rounded, size: 28, color: Colors.white),
+        items: const <Widget>[
+          Icon(Icons.home_rounded, size: 26, color: Colors.white),
+          Icon(Icons.receipt_long_rounded, size: 26, color: Colors.white),
+          Icon(Icons.handyman_rounded, size: 26, color: Colors.white),
         ],
         onTap: (value) {
           if (value == currentPageIndex) return;
