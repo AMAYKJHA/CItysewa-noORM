@@ -20,6 +20,18 @@ class VerificationResponse {
   VerificationResponse({required this.success, required this.message});
 }
 
+class ServiceResponse {
+  bool success = false;
+  String message;
+  List<Service>? serviceList;
+
+  ServiceResponse({
+    required this.success,
+    required this.message,
+    this.serviceList,
+  });
+}
+
 class User {
   final int id;
   final String firstName;
@@ -38,6 +50,28 @@ class User {
     required this.verified,
     this.token,
     this.photo,
+    this.description,
+  });
+}
+
+class Service {
+  final int id;
+  int? providerId;
+  final String title;
+  final String serviceType;
+  final int price;
+  final String priceUnit;
+  String? thumbnail;
+  String? description;
+
+  Service({
+    required this.id,
+    required this.title,
+    required this.serviceType,
+    required this.price,
+    required this.priceUnit,
+    this.thumbnail,
+    this.providerId,
     this.description,
   });
 }

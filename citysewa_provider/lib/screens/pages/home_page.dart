@@ -28,15 +28,20 @@ class _BookingSectionState extends State<BookingSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 205, 232, 249),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFF3EE), Color(0xFFFDE7DE)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0xFFF3C2B3)),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(30),
-            blurRadius: 14,
-            offset: const Offset(0, 3),
+            color: Colors.deepOrange.withAlpha(25),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -49,31 +54,31 @@ class _BookingSectionState extends State<BookingSection> {
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Row(
-            spacing: 5,
+            spacing: 4,
             children: const [
-              Expanded(
+              Flexible(
                 child: BookingCard(
                   title: "Completed",
                   value: 3,
-                  titleIcon: Icons.done_all,
+                  titleIcon: Icons.verified_rounded,
                 ),
               ),
 
-              Expanded(
+              Flexible(
                 child: BookingCard(
                   title: "Pending",
                   value: 5,
-                  titleIcon: Icons.pending_actions_rounded,
+                  titleIcon: Icons.hourglass_top_rounded,
                 ),
               ),
 
-              Expanded(
+              Flexible(
                 child: BookingCard(
                   title: "Active",
                   value: 0,
-                  titleIcon: Icons.auto_mode_outlined,
+                  titleIcon: Icons.play_circle,
                 ),
               ),
             ],
@@ -124,7 +129,7 @@ class BookingCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -30,11 +30,41 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          spacing: 5,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [AppLogo(size: 60), Text("Local Service, Made Simple")],
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFFFF3EE), Color(0xFFFDE7DE)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              AppLogo(size: 90),
+              SizedBox(height: 12),
+              Text(
+                "Local Service, Made Simple",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                height: 22,
+                width: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Colors.deepOrange,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

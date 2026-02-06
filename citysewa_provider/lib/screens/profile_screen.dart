@@ -9,7 +9,7 @@ import 'package:citysewa_provider/widgets/widgets.dart'
 AuthService auth = AuthService();
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -37,18 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(16),
         child: ListView(
           children: [
-            SizedBox(height: 10),
             Header(user),
-            Visibility(
-              visible: !user!.verified,
-              child: Column(
-                children: [SizedBox(height: 20), VerifyYourselfBanner()],
-              ),
-            ),
-            SizedBox(height: 20),
+            if (!user!.verified) ...[
+              SizedBox(height: 20),
+              VerifyYourselfBanner(),
+            ],
+            SizedBox(height: 24),
             SettingsContainer(),
           ],
         ),
@@ -57,84 +54,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class Header extends StatefulWidget {
+class Header extends StatelessWidget {
   final User? user;
   const Header(this.user, {super.key});
 
   @override
-  State<Header> createState() => _HeaderState();
-}
-
-class _HeaderState extends State<Header> {
-  String userName = "Guest";
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    userName = widget.user != null
-        ? "${widget.user!.firstName} ${widget.user!.lastName}"
-        : userName;
+    final userName = user != null
+        ? "${user!.firstName} ${user!.lastName}"
+        : "Guest";
+
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white54,
-        border: BoxBorder.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFF3EE), Color(0xFFFDE7DE)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: BoxBorder.all(color: const Color(0xFFF3C2B3)),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(30),
-            blurRadius: 14,
+            color: Colors.deepOrange.withAlpha(25),
+            blurRadius: 12,
             offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 40,
+            radius: 45,
             backgroundColor: Colors.white,
-            backgroundImage: AssetImage('assets/images/test.png'),
+            backgroundImage: AssetImage(
+              user!.photo ?? 'assets/images/test.png',
+            ),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 5),
                 Row(
-                  spacing: 4,
+                  spacing: 6,
                   children: [
                     Text(
                       userName,
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    Visibility(
-                      visible: widget.user!.verified,
-                      child: Icon(
-                        Icons.check_circle_outline_rounded,
-                        size: 16,
-                        color: Colors.green,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    if (user!.verified)
+                      const Icon(
+                        Icons.verified_rounded,
+                        size: 18,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w600,
+                      ),
                   ],
                 ),
+                const SizedBox(height: 4),
                 Text(
                   "Carpenter",
-                  style: TextStyle(fontSize: 14, color: Colors.black45),
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
                 ),
-                Visibility(
-                  visible: !widget.user!.verified,
-                  child: Text(
+                if (!user!.verified) ...[
+                  const SizedBox(height: 4),
+                  const Text(
                     "Verification pending",
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.deepOrange,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -150,17 +148,34 @@ class SettingsContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white38,
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Settings", style: TextStyle(color: Colors.grey, fontSize: 16)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+            child: Text(
+              "Settings",
+              style: TextStyle(
+                color: Colors.deepOrange.shade700,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const Divider(height: 1),
           SettingTab("Account", "/account_settings"),
           SettingTab("Address", "/address_settings"),
           SettingTab("Profile", "/profile_settings"),
@@ -180,9 +195,27 @@ class SettingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
+      borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 2),
-        child: Text(name, style: TextStyle(fontSize: 16)),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: Colors.deepOrange.shade300,
+            ),
+          ],
+        ),
       ),
     );
   }

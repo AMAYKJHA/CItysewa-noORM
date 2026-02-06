@@ -1,15 +1,17 @@
 import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
-import "package:citysewa_provider/api/api.dart" show AuthService;
+import "package:citysewa_provider/api/api.dart"
+    show AuthService, ServiceManager;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show User;
+import "package:citysewa_provider/api/models.dart" show Service, User;
 
 import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
 import "package:citysewa_provider/screens/pages/booking_page.dart"
     show BookingPage;
 import "package:citysewa_provider/screens/pages/service_page.dart"
     show ServicePage;
+import "package:http/http.dart";
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,6 +23,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   User? user;
   int currentPageIndex = 0;
+  List<Service> serviceList = [];
 
   @override
   void initState() {
@@ -49,12 +52,23 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> fetchServices() async {
+    final serviceManager = ServiceManager();
+    final response = await serviceManager.listServices(user!.id);
+
+    if (response.success) {
+      setState(() {
+        serviceList = response.serviceList!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomePage(verified: user!.verified),
       BookingPage(verified: user!.verified),
-      ServicePage(verified: user!.verified),
+      ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Colors.deepOrange,
           shape: CircleBorder(),
           onPressed: () {
-            print("clicked");
+            Navigator.pushNamed(context, '/add-service');
           },
           child: Icon(Icons.add, size: 32, color: Colors.white),
         ),
@@ -93,6 +107,11 @@ class _MainScreenState extends State<MainScreen> {
           child: pages[currentPageIndex],
         ),
         onRefresh: () {
+          if (currentPageIndex == 0) {
+            return fetchUser();
+          } else if (currentPageIndex == 1) {
+            return fetchUser();
+          }
           return fetchUser();
         },
       ),
@@ -100,16 +119,12 @@ class _MainScreenState extends State<MainScreen> {
         index: 0,
         color: Colors.deepOrange,
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Colors.deepOrange, //Colors.grey.withAlpha(60),
+        buttonBackgroundColor: Colors.deepOrange,
 
         items: <Widget>[
-          Icon(Icons.home, size: 28, color: Colors.white),
-          Icon(Icons.book_outlined, size: 28, color: Colors.white),
-          Icon(
-            Icons.miscellaneous_services_outlined,
-            size: 28,
-            color: Colors.white,
-          ),
+          Icon(Icons.home_rounded, size: 28, color: Colors.white),
+          Icon(Icons.receipt_long_rounded, size: 28, color: Colors.white),
+          Icon(Icons.handyman_rounded, size: 28, color: Colors.white),
         ],
         onTap: (value) {
           if (value == currentPageIndex) return;

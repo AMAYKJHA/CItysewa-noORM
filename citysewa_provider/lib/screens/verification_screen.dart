@@ -37,13 +37,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       appBar: AppBar(),
       body: Padding(
         padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Text("Fill out this verification form."),
-            SizedBox(height: 5),
-            VerificationForm(user),
-          ],
-        ),
+        child: ListView(children: [VerificationForm(user)]),
       ),
     );
   }
@@ -157,37 +151,75 @@ class _VerificationFormState extends State<VerificationForm> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: Colors.deepOrange.shade200),
+    );
+
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(width: 1, color: Colors.grey),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFF3EE), Color(0xFFFDE7DE)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0xFFF3C2B3)),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(30),
-            offset: Offset(0, 6),
-            blurRadius: 6,
+            color: Colors.deepOrange.withAlpha(25),
+            offset: const Offset(0, 6),
+            blurRadius: 12,
           ),
         ],
       ),
       child: Column(
-        spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Verify yourself", style: TextStyle(fontSize: 16)),
+          Text(
+            "Verify yourself",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: Colors.deepOrange.shade800,
+            ),
+          ),
+          const SizedBox(height: 16),
+
           TextField(
             controller: phoneController,
             keyboardType: TextInputType.phone,
-            decoration: InputDecoration(hintText: 'Phone Number'),
+            decoration: InputDecoration(
+              hintText: 'Phone Number',
+              filled: true,
+              fillColor: Colors.white,
+              border: inputBorder,
+              enabledBorder: inputBorder,
+              focusedBorder: inputBorder.copyWith(
+                borderSide: BorderSide(color: Colors.deepOrange.shade400),
+              ),
+              prefixIcon: const Icon(Icons.phone_rounded),
+            ),
           ),
+          const SizedBox(height: 14),
+
           LayoutBuilder(
             builder: (context, constraints) {
               return DropdownMenuFormField<String>(
                 enableSearch: false,
                 hintText: 'Select a document type',
                 width: double.infinity,
+                inputDecorationTheme: InputDecorationTheme(
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: inputBorder,
+                  enabledBorder: inputBorder,
+                  focusedBorder: inputBorder.copyWith(
+                    borderSide: BorderSide(color: Colors.deepOrange.shade400),
+                  ),
+                ),
                 menuStyle: MenuStyle(
                   minimumSize: WidgetStateProperty.all(
                     Size(constraints.maxWidth, 0),
@@ -203,53 +235,98 @@ class _VerificationFormState extends State<VerificationForm> {
               );
             },
           ),
+          const SizedBox(height: 14),
 
           TextField(
             controller: docNoController,
-            decoration: InputDecoration(hintText: 'Document number'),
+            decoration: InputDecoration(
+              hintText: 'Document number',
+              filled: true,
+              fillColor: Colors.white,
+              border: inputBorder,
+              enabledBorder: inputBorder,
+              focusedBorder: inputBorder.copyWith(
+                borderSide: BorderSide(color: Colors.deepOrange.shade400),
+              ),
+              prefixIcon: const Icon(Icons.badge_outlined),
+            ),
           ),
+          const SizedBox(height: 16),
+
           Wrap(
             spacing: 10,
             runSpacing: 10,
             children: [
               OutlinedButton.icon(
-                onPressed: () {
-                  getPhoto();
-                },
-                label: Text(
-                  photoLabel.length > 20
-                      ? photoLabel.substring(0, 20)
-                      : photoLabel,
+                onPressed: getPhoto,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.deepOrange.shade200),
+                  foregroundColor: Colors.deepOrange.shade700,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                 ),
-                icon: Icon(Icons.add_a_photo_rounded),
+                icon: const Icon(Icons.add_a_photo_rounded, size: 20),
+                label: Text(
+                  photoLabel.length > 18
+                      ? '${photoLabel.substring(0, 15)}...'
+                      : photoLabel,
+                  style: const TextStyle(fontSize: 13),
+                ),
               ),
               OutlinedButton.icon(
-                onPressed: () {
-                  getDoc();
-                },
-                label: Text(
-                  docLabel.length > 20 ? docLabel.substring(0, 20) : docLabel,
+                onPressed: getDoc,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.deepOrange.shade200),
+                  foregroundColor: Colors.deepOrange.shade700,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                 ),
-                icon: Icon(Icons.document_scanner),
+                icon: const Icon(Icons.document_scanner, size: 20),
+                label: Text(
+                  docLabel.length > 18
+                      ? '${docLabel.substring(0, 15)}...'
+                      : docLabel,
+                  style: const TextStyle(fontSize: 13),
+                ),
               ),
             ],
           ),
-          TextButton(
-            onPressed: () {
-              submitForm();
-            },
-            style: ButtonStyle(
-              side: WidgetStateProperty.all(
-                BorderSide(width: 1, color: Colors.grey),
+          const SizedBox(height: 20),
+
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: isLoading ? null : submitForm,
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+                disabledBackgroundColor: Colors.deepOrange.withAlpha(150),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
+              child: isLoading
+                  ? const SizedBox(
+                      height: 22,
+                      width: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text(
+                      "Submit",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
-            child: isLoading
-                ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 3),
-                  )
-                : Text("Submit"),
           ),
         ],
       ),

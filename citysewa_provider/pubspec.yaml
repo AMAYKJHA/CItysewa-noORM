@@ -41,6 +41,7 @@ dependencies:
   curved_navigation_bar: ^1.0.6
   circle_nav_bar: ^2.2.0
   curved_labeled_navigation_bar: ^2.0.6
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -76,3 +77,8 @@ flutter:
           weight: 600
         - asset: assets/fonts/inter/Inter-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/test.png"
