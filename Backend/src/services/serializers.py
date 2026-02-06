@@ -50,9 +50,9 @@ class ServiceCreateSeriazlier(serializers.Serializer):
         
         service = Service().create(**validated_data)
         if thumbnail:
-            file_name = service.upload_thumbnail(thumbnail)     
-            service.update(id=service.id, thumbnail=file_name)      
-            service.thumbnail = service.get_thumbnail_url(file_name)
+            thumbnail_name = service.upload_thumbnail(thumbnail)     
+            service.update(id=service.id, thumbnail=thumbnail_name)      
+            service.thumbnail = service.get_thumbnail_url(service.id, thumbnail_name)
         return service.__dict__
  
  
@@ -67,7 +67,7 @@ class ServiceListSerializer(serializers.Serializer):
     def to_representation(self, instance):
         data =  super().to_representation(instance)
         if instance.get("thumbnail"):
-            data["thumbnail"] = Service().get_thumbnail_url(instance.get("id"), instance("thumbnail"))
+            data["thumbnail"] = Service().get_thumbnail_url(instance.get("id"), instance.get("thumbnail"))
         return data 
    
 class ServiceRetrieveSerializer(serializers.Serializer):

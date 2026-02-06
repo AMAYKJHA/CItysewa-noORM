@@ -163,18 +163,22 @@ class _LoginFormState extends State<LoginForm> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
               onPressed: () {
-                final email = emailController.text.toString().trim();
-                final password = passController.text.toString().trim();
-                if (email.isNotEmpty && password.isNotEmpty) {
-                  login(email, password);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Center(
-                        child: Text("Please enter a valid email and password."),
+                if (!isLoading) {
+                  final email = emailController.text.toString().trim();
+                  final password = passController.text.toString().trim();
+                  if (email.isNotEmpty && password.isNotEmpty) {
+                    login(email, password);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(
+                          child: Text(
+                            "Please enter a valid email and password.",
+                          ),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
             ),

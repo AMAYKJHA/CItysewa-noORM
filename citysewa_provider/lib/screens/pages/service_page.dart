@@ -62,8 +62,8 @@ class ServiceTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.deepOrange.withAlpha(25),
-              blurRadius: 12,
+              color: Colors.black12,
+              blurRadius: 6,
               offset: const Offset(0, 6),
             ),
           ],
