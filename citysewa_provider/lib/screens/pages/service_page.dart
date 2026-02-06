@@ -20,9 +20,14 @@ class ServicePage extends StatefulWidget {
 class _ServicePageState extends State<ServicePage> {
   @override
   Widget build(BuildContext context) {
-    return !widget.verified
-        ? Align(alignment: Alignment.topCenter, child: VerifyYourselfBanner())
-        : ListView(children: [Text("Service page")]);
+    return ListView(
+      children: [
+        if (widget.verified)
+          Center(child: Text("Service Page"))
+        else
+          Align(alignment: Alignment.topCenter, child: VerifyYourselfBanner()),
+      ],
+    );
   }
 }
 

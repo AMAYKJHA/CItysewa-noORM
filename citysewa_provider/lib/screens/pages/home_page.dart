@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 
-import "package:citysewa_provider/session_manager.dart" show SessionManager;
-
 class HomePage extends StatefulWidget {
   final bool verified;
   const HomePage({super.key, this.verified = false});
