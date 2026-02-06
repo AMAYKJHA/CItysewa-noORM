@@ -163,13 +163,13 @@ class Table(ABC):
             return
     
     #R
-    def all(self, order_by=None, order_type=0): # 0->ASC 1->DESC
+    def all(self, order_by=None, order_dir=0): # 0->ASC 1->DESC
         if order_by is not None and order_by not in self._attrs:
             raise ValueError("Invalid order_by field")
-        order_type_list = ["ASC", "DESC"]
+        order_directions = ["ASC", "DESC"]
         query = f"SELECT * FROM {self.table_name}"
         if order_by:
-            query = f"{query} ORDER BY {order_by} {order_type_list[order_type]}"
+            query = f"{query} ORDER BY {order_by} {order_directions[order_dir]}"
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query)

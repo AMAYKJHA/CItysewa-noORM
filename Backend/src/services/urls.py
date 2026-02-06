@@ -1,9 +1,13 @@
 from django.urls import path
 
 from .views import (
-    ServiceCreateAPIView
+    ServiceCreateAPIView, 
+    ServiceListAPIView,
+    ServiceRetrieveAPIView
 )
 
 urlpatterns = [
-    path('', ServiceCreateAPIView.as_view(), name="service-create"),
+    path('/register', ServiceCreateAPIView.as_view(), name="service-create"),
+    path('', ServiceListAPIView.as_view(), name="service-list"),
+    path('/<int:id>', ServiceRetrieveAPIView.as_view(), name="service-retrieve")
 ]
