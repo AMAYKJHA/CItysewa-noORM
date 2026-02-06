@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
+import "package:citysewa_provider/api/api.dart" show AuthService;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
 import "package:citysewa_provider/api/models.dart" show User;
 
@@ -18,10 +19,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String userName = "Guest";
+  User? user;
   int currentPageIndex = 0;
 
-  List<Widget> pages = [HomePage(), BookingPage(), ServicePage()];
   @override
   void initState() {
     super.initState();
@@ -29,16 +29,33 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> loadUser() async {
-    User? user = await SessionManager.getUser();
-    if (user != null) {
+    final userLoaded = await SessionManager.getUser();
+    setState(() {
+      user = userLoaded;
+    });
+  }
+
+  Future<void> fetchUser() async {
+    final auth = AuthService();
+    final userLoaded = await auth.getProvider(user!.id);
+
+    if (userLoaded != null) {
+      await SessionManager.saveUser(userLoaded);
+
+      final newUser = await SessionManager.getUser();
       setState(() {
-        userName = "${user.firstName} ${user.lastName}";
+        user = newUser;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      HomePage(verified: user!.verified),
+      BookingPage(verified: user!.verified),
+      ServicePage(verified: user!.verified),
+    ];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,
@@ -46,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
         titleSpacing: 0,
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
         title: Text(
-          userName,
+          "${user!.firstName} ${user!.lastName}",
           style: TextStyle(fontSize: 15, color: Colors.white),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -59,24 +76,40 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        shape: CircleBorder(),
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButton: Visibility(
+        visible: currentPageIndex == 2,
+        child: FloatingActionButton(
+          backgroundColor: Colors.deepOrange,
+          shape: CircleBorder(),
+          onPressed: () {
+            print("clicked");
+          },
+          child: Icon(Icons.add, size: 32, color: Colors.white),
+        ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: pages[currentPageIndex],
+      body: RefreshIndicator(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: pages[currentPageIndex],
+        ),
+        onRefresh: () {
+          return fetchUser();
+        },
       ),
       bottomNavigationBar: CurvedNavigationBar(
         index: 0,
         color: Colors.deepOrange,
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Colors.grey.withAlpha(60),
+        buttonBackgroundColor: Colors.deepOrange, //Colors.grey.withAlpha(60),
+
         items: <Widget>[
-          Icon(Icons.home, size: 28),
-          Icon(Icons.book_outlined, size: 28),
-          Icon(Icons.miscellaneous_services_outlined, size: 28),
+          Icon(Icons.home, size: 28, color: Colors.white),
+          Icon(Icons.book_outlined, size: 28, color: Colors.white),
+          Icon(
+            Icons.miscellaneous_services_outlined,
+            size: 28,
+            color: Colors.white,
+          ),
         ],
         onTap: (value) {
           if (value == currentPageIndex) return;

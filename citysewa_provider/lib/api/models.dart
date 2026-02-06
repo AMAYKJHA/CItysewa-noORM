@@ -26,7 +26,9 @@ class User {
   final String lastName;
   final String gender;
   bool verified;
-  String token;
+  String? token;
+  String? photo;
+  String? description;
 
   User({
     required this.id,
@@ -34,6 +36,8 @@ class User {
     required this.lastName,
     required this.gender,
     required this.verified,
-    required this.token,
+    this.token,
+    this.photo,
+    this.description,
   });
 }

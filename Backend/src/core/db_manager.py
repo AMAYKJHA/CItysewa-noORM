@@ -147,7 +147,7 @@ class Table(ABC):
     #R
     def count(self, **kwargs):
         query = f"SELECT COUNT(*) FROM {self.table_name}"
-        cols = [col for col in kwargs.keys() if col in self._attrs]
+        cols = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
         values = ()
         if cols:
             condition = " AND ".join([f"{col} = %s" for col in cols])
@@ -163,16 +163,27 @@ class Table(ABC):
             return
     
     #R
-    def all(self, order_by=None, order_type=0): # 0->ASC 1->DESC
+    def all(self, order_by=None, order_dir=0, **kwargs): # 0->ASC 1->DESC
         if order_by is not None and order_by not in self._attrs:
             raise ValueError("Invalid order_by field")
-        order_type_list = ["ASC", "DESC"]
+        
+        order_directions = ["ASC", "DESC"]
         query = f"SELECT * FROM {self.table_name}"
+        
+        # Conditions
+        cols = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
+        values = ()
+        if cols:
+            condition = " AND ".join([f"{col} = %s" for col in cols])
+            values = tuple([kwargs[col] for col in cols])
+            query = f"{query} WHERE {condition}"
+            
         if order_by:
-            query = f"{query} ORDER BY {order_by} {order_type_list[order_type]}"
+            query = f"{query} ORDER BY {order_by} {order_directions[order_dir]}"    
+        
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                cursor.execute(query, values)
                 rows = cursor.fetchall()
                 cols = [col[0] for col in cursor.description]
                 result = [dict(zip(cols, row)) for row in rows]                

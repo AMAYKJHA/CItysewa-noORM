@@ -66,6 +66,8 @@ class WelcomeText extends StatelessWidget {
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
+
+  @override
   State<SignupForm> createState() => _SignupFormState();
 }
 
@@ -190,7 +192,7 @@ class _SignupFormState extends State<SignupForm> {
 }
 
 class GoToLogin extends StatelessWidget {
-  GoToLogin({super.key});
+  const GoToLogin({super.key});
 
   @override
   Widget build(BuildContext context) {

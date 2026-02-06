@@ -88,6 +88,7 @@ class _LoginFormState extends State<LoginForm> {
     LoginResponse result = await authService.login(email, password);
 
     if (result.success) {
+      await SessionManager.saveLogin();
       await SessionManager.saveUser(result.user!);
       Navigator.pushReplacementNamed(context, '/main');
       ScaffoldMessenger.of(context).showSnackBar(

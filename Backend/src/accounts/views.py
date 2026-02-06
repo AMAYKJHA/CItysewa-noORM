@@ -36,7 +36,9 @@ from .constants import (
 )
 
 from .messages import (
-    STATUS_NOT_MATCHED
+    STATUS_NOT_MATCHED,
+    CUSTOMER_NOT_FOUND,
+    PROVIDER_NOT_FOUND
 )
 
 # Admin views
@@ -87,7 +89,12 @@ class CustomerLoginAPIView(APIView):
 )   
 class CustomerListAPIView(APIView):
     def get(self, request):
-        customers = Customer().all()
+        order_by = request.query_params.get("order_by")
+        order_dir = request.query_params.get("order_dir")
+        direction = 0
+        if order_dir:
+            direction = 1 if order_dir.lower() == 'desc' else 0
+        customers = Customer().all(order_by=order_by, order_dir=direction)
         serializer = CustomerSerializer(customers, many=True)        
         return Response(serializer.data, status=HTTP_200_OK) 
 
@@ -103,7 +110,7 @@ class CustomerRetrieveAPIView(APIView):
             serializer = CustomerSerializer(customer.__dict__)        
             return Response(serializer.data, status=HTTP_200_OK)
                      
-        return Response({"detail": "Not found"}, status=HTTP_404_NOT_FOUND)
+        return Response({"detail": CUSTOMER_NOT_FOUND}, status=HTTP_404_NOT_FOUND)
     
         
 # Provider views
@@ -116,6 +123,7 @@ class ProviderRegisterAPIView(APIView):
             data = serializer.save()
             return Response(data, status=HTTP_200_OK)        
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
     
 class ProviderLoginAPIView(APIView):
     def post(self, request):
@@ -132,10 +140,16 @@ class ProviderLoginAPIView(APIView):
     operation_id="provider_list"
 )   
 class ProviderListAPIView(APIView):
-    def get(self, request):
-        providers = Provider().all()
+    def get(self, request):        
+        order_by = request.query_params.get("order_by")
+        order_dir = request.query_params.get("order_dir")
+        direction = 0
+        if order_dir:
+            direction = 1 if order_dir.lower() == 'desc' else 0
+        providers = Provider().all(order_by=order_by, order_dir=direction)
         serializer = ProviderSerializer(providers, many=True)        
         return Response(serializer.data, status=HTTP_200_OK) 
+
 
 @extend_schema(
     summary="Retrive a provider details",
@@ -149,7 +163,7 @@ class ProviderRetrieveAPIView(APIView):
             serializer = ProviderSerializer(provider.__dict__)        
             return Response(serializer.data, status=HTTP_200_OK)
                      
-        return Response({"detail": "Not found"}, status=HTTP_404_NOT_FOUND)
+        return Response({"detail": PROVIDER_NOT_FOUND}, status=HTTP_404_NOT_FOUND)
     
     
 class ProviderSubmitVerificationAPIView(APIView):
@@ -188,6 +202,7 @@ class VerificationListAPIView(APIView):
         serializer = VerificationListSerializer(transformed_data, many=True)
         
         return Response(serializer.data, status=HTTP_200_OK)
+ 
     
 class VerificationRetrieveAPIView(APIView):
     def get(self, request, id):
