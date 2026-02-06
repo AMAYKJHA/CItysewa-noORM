@@ -51,7 +51,7 @@ class ServiceCreateSeriazlier(serializers.Serializer):
         service = Service().create(**validated_data)
         if thumbnail:
             file_name = service.upload_thumbnail(thumbnail)     
-            service.update(thumbnail=file_name)      
+            service.update(id=service.id, thumbnail=file_name)      
             service.thumbnail = service.get_thumbnail_url(file_name)
         return service.__dict__
  
