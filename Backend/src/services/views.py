@@ -21,6 +21,8 @@ from .messages import (
     SERVICE_NOT_FOUND
 )
 
+# Service views
+# -------------------------------------------------------------------------------------------------
 class ServiceCreateAPIView(APIView):
     def post(self, request):
         serializer = ServiceCreateSeriazlier(data=request.data)
@@ -28,7 +30,8 @@ class ServiceCreateAPIView(APIView):
             serializer.save()
             return Response(data=serializer.data, status=HTTP_200_OK)
         return Response(serializer.errors, HTTP_400_BAD_REQUEST)
-  
+ 
+ 
 @extend_schema(
     summary="List all services",
     description="Returns a lits of all services",
@@ -43,12 +46,17 @@ class ServiceListAPIView(APIView):
             direction = 1 if order_dir.lower() == 'desc' else 0        
         
         service_type = request.query_params.get("service_type") 
-        service_type = service_type.title() if service_type else service_type
-       
-        services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type)
+        service_type = service_type.capitalize() if service_type is not None else None
+        provider_id = request.query_params.get("provider_id")
+        try:
+            provider_id = int(provider_id) if provider_id is not None else None
+        except ValueError:
+            provider_id = None
+        services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type, provider_id=provider_id)
         
         serializer = ServiceListSerializer(services, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
+
 
 @extend_schema(
     summary="Retrieve a service",

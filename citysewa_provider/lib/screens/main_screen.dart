@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
-import "package:citysewa_provider/api/api.dart" show AuthService;
+import "package:citysewa_provider/api/api.dart"
+    show AuthService, ServiceManager;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show User;
+import "package:citysewa_provider/api/models.dart" show Service, User;
 
 import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
 import "package:citysewa_provider/screens/pages/booking_page.dart"
@@ -21,6 +22,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   User? user;
   int currentPageIndex = 0;
+  List<Service> serviceList = [];
 
   @override
   void initState() {
@@ -49,32 +51,66 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> fetchServices() async {
+    final serviceManager = ServiceManager();
+    final response = await serviceManager.listServices(user!.id);
+
+    if (response.success) {
+      setState(() {
+        serviceList = response.serviceList!;
+      });
+    }
+  }
+
+  Future<void> fetchBookings() async {}
+
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomePage(verified: user!.verified),
       BookingPage(verified: user!.verified),
-      ServicePage(verified: user!.verified),
+      ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,
         leading: ProfileIcon(),
-        titleSpacing: 0,
+        titleSpacing: 8,
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
-        title: Text(
-          "${user!.firstName} ${user!.lastName}",
-          style: TextStyle(fontSize: 15, color: Colors.white),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        title: Row(
+          children: [
+            Flexible(
+              child: Text(
+                "${user!.firstName} ${user!.lastName}",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (user!.verified) ...[
+              const SizedBox(width: 6),
+              const Icon(Icons.verified_rounded, size: 18, color: Colors.white),
+            ],
+          ],
         ),
         centerTitle: false,
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.notifications, color: Colors.black, size: 32),
+            icon: Icon(Icons.notifications_rounded, color: Colors.white),
+            splashRadius: 22,
+            tooltip: 'Notification',
           ),
+          const SizedBox(width: 4),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: Colors.white.withAlpha(25)),
+        ),
       ),
       floatingActionButton: Visibility(
         visible: currentPageIndex == 2,
@@ -82,7 +118,7 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Colors.deepOrange,
           shape: CircleBorder(),
           onPressed: () {
-            print("clicked");
+            Navigator.pushNamed(context, '/add-service');
           },
           child: Icon(Icons.add, size: 32, color: Colors.white),
         ),
@@ -93,23 +129,27 @@ class _MainScreenState extends State<MainScreen> {
           child: pages[currentPageIndex],
         ),
         onRefresh: () {
-          return fetchUser();
+          if (!user!.verified || currentPageIndex == 0) {
+            return fetchUser();
+          } else if (currentPageIndex == 1) {
+            return fetchBookings();
+          } else {
+            return fetchServices();
+          }
         },
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: 0,
+        index: currentPageIndex,
+        height: 56,
         color: Colors.deepOrange,
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: Colors.deepOrange, //Colors.grey.withAlpha(60),
+        buttonBackgroundColor: Colors.deepOrange.shade600,
+        animationCurve: Curves.easeOutCubic,
 
-        items: <Widget>[
-          Icon(Icons.home, size: 28, color: Colors.white),
-          Icon(Icons.book_outlined, size: 28, color: Colors.white),
-          Icon(
-            Icons.miscellaneous_services_outlined,
-            size: 28,
-            color: Colors.white,
-          ),
+        items: const <Widget>[
+          Icon(Icons.home_rounded, size: 26, color: Colors.white),
+          Icon(Icons.receipt_long_rounded, size: 26, color: Colors.white),
+          Icon(Icons.handyman_rounded, size: 26, color: Colors.white),
         ],
         onTap: (value) {
           if (value == currentPageIndex) return;

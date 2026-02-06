@@ -58,7 +58,7 @@ class RootApp extends StatelessWidget {
           ),
         ),
         snackBarTheme: SnackBarThemeData(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Colors.deepOrange,
           contentTextStyle: TextStyle(fontSize: 14, color: Colors.white),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(

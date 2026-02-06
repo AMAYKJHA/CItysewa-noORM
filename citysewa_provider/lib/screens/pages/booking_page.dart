@@ -14,8 +14,13 @@ class BookingPage extends StatefulWidget {
 class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
-    return !widget.verified
-        ? Align(alignment: Alignment.topCenter, child: VerifyYourselfBanner())
-        : ListView(children: [Center(child: Text("Booking Page"))]);
+    return ListView(
+      children: [
+        if (widget.verified)
+          Center(child: Text("Booking Page"))
+        else
+          Align(alignment: Alignment.topCenter, child: VerifyYourselfBanner()),
+      ],
+    );
   }
 }

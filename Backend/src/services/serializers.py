@@ -40,7 +40,7 @@ class ServiceCreateSeriazlier(serializers.Serializer):
             })
 
         attrs["title"] = attrs.get("title").strip().capitalize()
-        attrs["service_type"] = attrs.get("service_type").strip().title()
+        attrs["service_type"] = attrs.get("service_type").strip().capitalize()
         attrs["description"] = attrs.get("description").strip().capitalize()
         
         return attrs
@@ -51,7 +51,7 @@ class ServiceCreateSeriazlier(serializers.Serializer):
         service = Service().create(**validated_data)
         if thumbnail:
             file_name = service.upload_thumbnail(thumbnail)     
-            service.update(thumbnail=file_name)      
+            service.update(id=service.id, thumbnail=file_name)      
             service.thumbnail = service.get_thumbnail_url(file_name)
         return service.__dict__
  
@@ -61,8 +61,14 @@ class ServiceListSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=100)
     service_type = serializers.CharField()
     price = serializers.IntegerField(min_value=MIN_SERVICE_PRICE)
-    price_unit = serializers.CharField()
-     
+    price_unit = serializers.CharField()    
+    thumbnail = serializers.ImageField(required=False, validators=[validate_file_size])
+    
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)
+        if instance.get("thumbnail"):
+            data["thumbnail"] = Service().get_thumbnail_url(instance.get("id"), instance("thumbnail"))
+        return data 
    
 class ServiceRetrieveSerializer(serializers.Serializer):
     id = serializers.IntegerField()

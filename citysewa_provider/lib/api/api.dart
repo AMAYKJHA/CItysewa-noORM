@@ -153,7 +153,6 @@ class AuthService {
       final response = await http.Response.fromStream(responseStream);
 
       if (response.statusCode == 200) {
-        // final data = jsonDecode(response.body);
         return VerificationResponse(
           success: true,
           message: "Verification form submitted successfully.",
@@ -171,6 +170,46 @@ class AuthService {
         success: false,
         message: "Something went wrong. Please try again.",
       );
+    }
+  }
+}
+
+class ServiceManager {
+  final modUrl = "services";
+
+  // list services
+  Future<ServiceResponse> listServices(int providerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl?provider_id=$providerId");
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        List<Service> serviceList = [];
+        for (Map<String, dynamic> item in data) {
+          Service service = Service(
+            id: item["id"],
+            title: item["title"],
+            serviceType: item["service_type"],
+            price: item["price"],
+            priceUnit: item["price_unit"],
+          );
+          serviceList.add(service);
+        }
+        return ServiceResponse(
+          success: true,
+          message: "Services requested are here.",
+          serviceList: serviceList,
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return ServiceResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
+      }
+    } catch (e) {
+      print(e);
+      return ServiceResponse(success: false, message: "Something went wrong.");
     }
   }
 }

@@ -25,12 +25,12 @@ class VerifyYourselfBanner extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(148, 105, 255, 182),
-          border: Border.all(color: Colors.grey),
+          color: const Color(0xFFFCE8E1),
+          border: Border.all(color: const Color(0xFFF5B7A3)),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(30),
+              color: Colors.black.withAlpha(20),
               offset: Offset(0, 6),
               blurRadius: 6,
             ),
@@ -39,11 +39,15 @@ class VerifyYourselfBanner extends StatelessWidget {
         child: RichText(
           text: const TextSpan(
             text: 'You are not verified yet. Please submit the ',
-            style: TextStyle(fontSize: 15, color: Colors.blueGrey),
+            style: TextStyle(fontSize: 15, color: Color(0xFF7A2F1C)),
             children: [
               TextSpan(
                 text: "verification form.",
-                style: TextStyle(decoration: TextDecoration.underline),
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Color(0xFFCC4C2B),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
