@@ -13,9 +13,27 @@
   -moz-osx-font-smoothing: grayscale;
 } */
 
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700&display=swap");
+
+:root{
+    --bg-900: #0b0f14;
+    --bg-800: #10151b;
+    --bg-700: #151c24;
+    --ink-100: #f3f1ea;
+    --ink-300: #c7c1b4;
+    --ink-500: #8f8a80;
+    --accent-500: #b84a2b;
+    --accent-700: #7a2f1c;
+    --glass: rgba(20, 24, 31, 0.7);
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+    --font-display: "DM Serif Display", "Georgia", serif;
+}
+
 *{
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 
 /* Suitable for first feature branch */
@@ -30,13 +48,15 @@
 } */
 
 body{
-    /* border: 2px solid green; */
     display: flex;
     place-content: center;
-    /* background-color: #000000; */
-    background: url(../assets/bgb.png) center no-repeat;
-    background-size: cover;
-    backdrop-filter: brightness(0.25);
+    font-family: var(--font-body);
+    color: var(--ink-100);
+    background:
+        radial-gradient(1200px 600px at 15% 10%, rgba(184, 74, 43, 0.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 30%, rgba(89, 136, 180, 0.2), transparent 55%),
+        linear-gradient(180deg, var(--bg-900), var(--bg-800) 45%, var(--bg-700));
+    background-attachment: fixed;
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
@@ -46,6 +66,10 @@ body{
     min-height: 100vh;
     display: flex;
     place-items: center;
-    /* border: 2px solid lightsalmon; */
     overflow-x: hidden;
+}
+
+h1, h2, h3, h4{
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
 }

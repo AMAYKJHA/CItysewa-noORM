@@ -21,7 +21,7 @@ const Footer = (props) => {
                     <div className="footerColumn" key={section}>
                         <h4>{section.charAt(0).toUpperCase() + section.slice(1)}</h4>
                         <span className="linkSpan">{links.map((item) => (
-                            <Link key={item.label} to={item.path} style={{all:'unset', textDecoration:'underline'}} className="link">{item.label}</Link>
+                            <Link key={item.label} to={item.path} className="link">{item.label}</Link>
                         ))}</span>
                     </div>
                 ))}
