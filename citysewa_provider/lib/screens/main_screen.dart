@@ -20,20 +20,28 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   User? user;
-  String userName = "Guest";
   int currentPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    fetchUser();
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    final userLoaded = await SessionManager.getUser();
+    setState(() {
+      user = userLoaded;
+    });
   }
 
   Future<void> fetchUser() async {
     final auth = AuthService();
     final userLoaded = await auth.getProvider(user!.id);
+
     if (userLoaded != null) {
       await SessionManager.saveUser(userLoaded);
+
       final newUser = await SessionManager.getUser();
       setState(() {
         user = newUser;

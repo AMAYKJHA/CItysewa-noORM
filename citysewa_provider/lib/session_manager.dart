@@ -47,6 +47,16 @@ class SessionManager {
     );
   }
 
+  static Future saveLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("loggedIn", true);
+  }
+
+  static Future<bool> getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("loggedIn") ?? false;
+  }
+
   static Future logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
