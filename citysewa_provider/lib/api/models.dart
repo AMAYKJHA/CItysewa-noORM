@@ -1,3 +1,10 @@
+class ApiResponse {
+  bool success = false;
+  String message;
+
+  ApiResponse({required this.success, required this.message});
+}
+
 class LoginResponse {
   bool success = false;
   String message;
@@ -20,12 +27,12 @@ class VerificationResponse {
   VerificationResponse({required this.success, required this.message});
 }
 
-class ServiceResponse {
+class ServiceListResponse {
   bool success = false;
   String message;
   List<Service>? serviceList;
 
-  ServiceResponse({
+  ServiceListResponse({
     required this.success,
     required this.message,
     this.serviceList,

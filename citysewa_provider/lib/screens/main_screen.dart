@@ -118,7 +118,11 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Colors.deepOrange,
           shape: CircleBorder(),
           onPressed: () {
-            Navigator.pushNamed(context, '/add-service');
+            Navigator.pushNamed(
+              context,
+              '/add-service',
+              arguments: {"providerId": user!.id},
+            );
           },
           child: Icon(Icons.add, size: 32, color: Colors.white),
         ),

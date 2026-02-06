@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:image_picker/image_picker.dart';
 
+import "package:citysewa_provider/api/api.dart" show ServiceManager;
+
 class AddServiceScreen extends StatefulWidget {
   const AddServiceScreen({super.key});
 
@@ -9,9 +11,16 @@ class AddServiceScreen extends StatefulWidget {
 }
 
 class _AddServiceScreenState extends State<AddServiceScreen> {
+  int? providerId;
   bool isLoading = false;
-  String? photoPath;
+  String? thumbnailPath;
   String photoLabel = "Upload a thumbnail";
+
+  final titleController = TextEditingController();
+  final serviceTypeController = TextEditingController();
+  final descController = TextEditingController();
+  final priceController = TextEditingController();
+  final priceUnitController = TextEditingController();
 
   Future<XFile?> getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -23,16 +32,103 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     final XFile? photo = await getImage();
     if (photo != null) {
       setState(() {
-        photoPath = photo.path;
+        thumbnailPath = photo.path;
         photoLabel = photo.name;
       });
     }
   }
 
-  void addService() {}
+  void addService() async {
+    setState(() {
+      isLoading = true;
+    });
+    final title = titleController.text.toString();
+    final serviceType = serviceTypeController.text.toString().trim();
+    final description = descController.text.toString().trim();
+    final price = priceController.text.toString().trim();
+    final priceUnit = priceUnitController.text.toString().trim();
+
+    if (title.isEmpty ||
+        serviceType.isEmpty ||
+        description.isEmpty ||
+        price.isEmpty ||
+        priceUnit.isEmpty ||
+        thumbnailPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              "Please make sure all fields are filled out correctly.",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      );
+    } else {
+      final integerPrice = int.tryParse(price);
+      if (integerPrice == null || integerPrice < 100) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                "Price must be greater than or equal to Rs.100 and non-decimal.",
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+        );
+      } else {
+        final serviceManager = ServiceManager();
+        final response = await serviceManager.addService(
+          providerId!,
+          title,
+          serviceType,
+          description,
+          integerPrice,
+          "/$priceUnit",
+          thumbnailPath!,
+        );
+
+        if (response.success) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              content: Center(
+                child: Text(response.message, style: TextStyle(fontSize: 16)),
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(response.message, style: TextStyle(fontSize: 16)),
+              ),
+            ),
+          );
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    serviceTypeController.dispose();
+    descController.dispose();
+    priceController.dispose();
+    priceUnitController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    providerId = args["providerId"];
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.deepOrange.shade200),
@@ -89,6 +185,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
+                  controller: titleController,
                   decoration: inputDecoration.copyWith(
                     hintText: "Service Title",
                     prefixIcon: Icon(Icons.title_rounded),
@@ -96,6 +193,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 ),
                 const SizedBox(height: 14),
                 TextField(
+                  controller: serviceTypeController,
                   decoration: inputDecoration.copyWith(
                     hintText: "Service Type (e.g., Carpenter)",
                     prefixIcon: const Icon(Icons.category_rounded),
@@ -103,6 +201,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 ),
                 const SizedBox(height: 14),
                 TextField(
+                  controller: descController,
                   maxLines: 3,
                   decoration: inputDecoration.copyWith(
                     hintText: 'Description',
@@ -115,6 +214,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     Expanded(
                       flex: 2,
                       child: TextField(
+                        controller: priceController,
                         keyboardType: TextInputType.number,
                         decoration: inputDecoration.copyWith(
                           hintText: "Price",
@@ -125,6 +225,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: TextField(
+                        controller: priceUnitController,
                         decoration: InputDecoration(
                           hintText: "Unit",
                           filled: true,

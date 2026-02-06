@@ -163,24 +163,27 @@ class _SignupFormState extends State<SignupForm> {
                     )
                   : Text("Register"),
               onPressed: () {
-                final String firstName = firstNameController.text
-                    .toString()
-                    .trim();
-                final String lastName = lastNameController.text
-                    .toString()
-                    .trim();
-                final String email = emailController.text.toString().trim();
-                final String password = passController.text.toString().trim();
-                if (email.isNotEmpty &&
-                    password.isNotEmpty &&
-                    firstName.isNotEmpty &&
-                    lastName.isNotEmpty) {
-                  signUp(firstName, lastName, email, password);
-                } else {
-                  String msg = "Please ensure that you filled form correctly.";
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Center(child: Text(msg))));
+                if (!isLoading) {
+                  final String firstName = firstNameController.text
+                      .toString()
+                      .trim();
+                  final String lastName = lastNameController.text
+                      .toString()
+                      .trim();
+                  final String email = emailController.text.toString().trim();
+                  final String password = passController.text.toString().trim();
+                  if (email.isNotEmpty &&
+                      password.isNotEmpty &&
+                      firstName.isNotEmpty &&
+                      lastName.isNotEmpty) {
+                    signUp(firstName, lastName, email, password);
+                  } else {
+                    String msg =
+                        "Please ensure that you filled form correctly.";
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Center(child: Text(msg))));
+                  }
                 }
               },
             ),

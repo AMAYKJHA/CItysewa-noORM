@@ -124,7 +124,6 @@ class AuthService {
         return null;
       }
     } catch (e) {
-      print("$e");
       return null;
     }
   }
@@ -165,7 +164,6 @@ class AuthService {
         );
       }
     } catch (e) {
-      print("Error: $e");
       return VerificationResponse(
         success: false,
         message: "Something went wrong. Please try again.",
@@ -178,7 +176,7 @@ class ServiceManager {
   final modUrl = "services";
 
   // list services
-  Future<ServiceResponse> listServices(int providerId) async {
+  Future<ServiceListResponse> listServices(int providerId) async {
     final url = Uri.parse("$baseUrl/$modUrl?provider_id=$providerId");
     try {
       final response = await http.get(url);
@@ -195,21 +193,66 @@ class ServiceManager {
           );
           serviceList.add(service);
         }
-        return ServiceResponse(
+        return ServiceListResponse(
           success: true,
           message: "Services requested are here.",
           serviceList: serviceList,
         );
       } else {
         final data = jsonDecode(response.body);
-        return ServiceResponse(
+        return ServiceListResponse(
           success: false,
           message: parseErrorMessage(data),
         );
       }
     } catch (e) {
-      print(e);
-      return ServiceResponse(success: false, message: "Something went wrong.");
+      return ServiceListResponse(
+        success: false,
+        message: "Something went wrong.",
+      );
+    }
+  }
+
+  Future<ApiResponse> addService(
+    int providerId,
+    String title,
+    String serviceType,
+    String description,
+    int price,
+    String priceUnit,
+    String thumbnailPath,
+  ) async {
+    final url = Uri.parse("$baseUrl/$modUrl/register");
+    try {
+      var request = http.MultipartRequest('POST', url);
+      request.fields["provider_id"] = providerId.toString();
+      request.fields["title"] = title;
+      request.fields["service_type"] = serviceType;
+      request.fields["description"] = description;
+      request.fields["price"] = price.toString();
+      request.fields["price_unit"] = priceUnit;
+
+      request.files.add(
+        await http.MultipartFile.fromPath("thumbnail", thumbnailPath),
+      );
+
+      final responseStream = await request.send();
+      final response = await http.Response.fromStream(responseStream);
+
+      if (response.statusCode == 200) {
+        return ApiResponse(
+          success: true,
+          message: "Service added successfully.",
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return ApiResponse(success: false, message: parseErrorMessage(data));
+      }
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
     }
   }
 }
