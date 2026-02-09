@@ -163,10 +163,11 @@ REST_FRAMEWORK = {
 }
 
 
-sentry_sdk.init(
-    dsn=env.str("SENTRY_DSN"),
-    send_default_pii=True,
-)
+if env.bool("USE_SENTRY", default=True):
+    sentry_sdk.init(
+        dsn=env.str("SENTRY_DSN"),
+        send_default_pii=True,
+    )
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'CitySewa API',

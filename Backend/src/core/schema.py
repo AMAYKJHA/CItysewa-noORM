@@ -120,7 +120,9 @@ CREATE TABLE IF NOT EXISTS locations (
     CONSTRAINT fk_locations_district
         FOREIGN KEY (district_id)
         REFERENCES districts(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT unq_city_ward_area
+		UNIQUE(city, ward, area)
 );
 """,
 

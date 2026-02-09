@@ -270,12 +270,13 @@ class Table(ABC):
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
+                rows_updated = cursor.rowcount
             connection.commit()
-            print(f"Record updated successfully in the {self.table_name}.")
+            return rows_updated
               
         except Exception as e:
             print(f"Error: {e}")
-            
+                        
                 
     #D
     def delete(self, **kwargs):
@@ -293,7 +294,7 @@ class Table(ABC):
                 cursor.execute(query, values)
                 rows_deleted = cursor.rowcount
             connection.commit()
-            print(f"{rows_deleted} records deleted from the {self.table_name}.")
+            return rows_deleted
             
         except Exception as e:
             print(f"Error: {e}")
