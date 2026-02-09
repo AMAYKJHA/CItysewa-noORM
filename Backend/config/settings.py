@@ -163,13 +163,29 @@ REST_FRAMEWORK = {
 }
 
 
-sentry_sdk.init(
-    dsn=env.str("SENTRY_DSN"),
-    send_default_pii=True,
-)
+# Email settings for Brevo SMTP
+if env.bool("USE_SMTP", False):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = env.str("EMAIL_HOST")
+    EMAIL_PORT = env.int("EMAIL_PORT")
+    EMAIL_USE_TLS = True                         
+
+    EMAIL_HOST_USER = env.str("EMAIL_LOGIN")
+    EMAIL_HOST_PASSWORD = env.str("EMAIL_SMTP_KEY")
+    DEFAULT_FROM_EMAIL = env.str("FROM_EMAIL")
+
+
+
+if env.bool("USE_SENTRY", default=True):
+    sentry_sdk.init(
+        dsn=env.str("SENTRY_DSN"),
+        send_default_pii=True,
+    )
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'CitySewa API',
     'DESCRIPTION': 'API documentation',
     'VERSION': '1.0.0',
 }
+
+
