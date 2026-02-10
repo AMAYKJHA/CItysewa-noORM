@@ -14,12 +14,16 @@ from .tables import (
 from .serializers import (
     DistrictSerializer,
     DistrictCreateSerializer,
+    LocationSerializer,
     LocationCreateSerializer,
-    AddressCreateSerializer
+    AddressSerializer,
+    AddressCreateSerializer    
 )
 
 from .messages import (
-    DISTRICT_NOT_FOUND
+    DISTRICT_NOT_FOUND,
+    ADDRESS_NOT_FOUND,
+    LOCATION_NOT_FOUND
 )
 
 
@@ -61,7 +65,49 @@ class DistrictAPIView(APIView):
         
 class LocationAPIView(APIView):
     def get(self, request, id=None):
-        ...
+        if id:
+            location = Location().get(id=id)
+            if location:
+                serializer = LocationSerializer(location.__dict__)
+                return Response(serializer.data, status=HTTP_200_OK)
+            else:
+                return Response({"detail": LOCATION_NOT_FOUND}, status=HTTP_400_BAD_REQUEST)
+        
+        order_by = request.query_params.get("order_by")
+        order_by = order_by if order_by else "city"
+        try:
+            locations = Location().all(order_by=order_by)
+        except ValueError:
+            return Response({"detail": "Invalid order_by field."}, status=HTTP_200_OK)
+        
+        serializer = LocationSerializer(locations, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+    
+    def post(self, request):
+        serializer = LocationCreateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.save()
+            return Response(data=data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+
+class AddressAPIView(APIView):
+    def get(self, request, id=None):
+        if id:
+            address = Address().get(id=id)
+            if address:
+                serializer = AddressSerializer(address.__dict__)
+                return Response(serializer.data, status=HTTP_200_OK)
+            else:
+                return Response({"detail": ADDRESS_NOT_FOUND}, status=HTTP_400_BAD_REQUEST)
+          
+        addresses = Address().all()
+        serializer = AddressSerializer(addresses, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
         
     def post(self, request):
-        ...
+        serializer = AddressCreateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.save()
+            return Response(data=data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

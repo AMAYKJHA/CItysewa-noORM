@@ -36,7 +36,13 @@ class DistrictCreateSerializer(serializers.Serializer):
     
 class DistrictSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    name = serializers.CharField()    
+    name = serializers.CharField(required=False, max_length=50)    
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if not data.get("name"):
+            data["name"] = District().get(id=instance.get("id"))
+        return data
     
 class LocationCreateSerializer(serializers.Serializer):
     area = serializers.CharField(max_length=100)
@@ -66,7 +72,20 @@ class LocationCreateSerializer(serializers.Serializer):
             location = Location().create(**validated_data)
         
         return location.__dict__
+   
     
+class LocationSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    area = serializers.CharField(max_length=100)
+    ward = serializers.IntegerField(min_value=MIN_WARD_VALUE, max_value=MAX_WARD_VALUE)
+    city = serializers.CharField(max_length=50)
+    district_id = serializers.IntegerField()
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        district_serializer = DistrictSerializer(id=instance.get("district_id"))
+        data["district"] = district_serializer.data.get("name")
+        return data
 
 
 class AddressCreateSerializer(serializers.Serializer):
@@ -87,3 +106,17 @@ class AddressCreateSerializer(serializers.Serializer):
     def create(self, validated_data):
         address = Address().create(**validated_data)
         return address.__dict__
+
+   
+class AddressSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    location_id = serializers.IntegerField()
+    landmarks = serializers.CharField(max_length=150)
+    
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)
+        location = Location().get(id=instance.get("location_id"))
+        location_serializer = LocationSerializer(location.__dict__)
+        data["location"] = location_serializer.data
+        return data
+    
