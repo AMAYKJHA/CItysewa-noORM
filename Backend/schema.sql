@@ -104,7 +104,9 @@ CREATE TABLE locations (
 	CONSTRAINT fk_locations_district
 		FOREIGN KEY (district_id)
 		REFERENCES districts(id)
-		ON DELETE CASCADE
+		ON DELETE CASCADE,
+	CONSTRAINT unq_city_ward_area
+		UNIQUE(city, ward, area)
 );
 
 CREATE TABLE addresses (
@@ -146,3 +148,58 @@ CREATE TABLE IF NOT EXISTS bookings (
 		FOREIGN KEY (address_id)
 		REFERENCES addresses(id)
 );
+
+
+-- Triggers: Currently VIBE
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE create_updated_at_triggers()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    table_record RECORD;
+    new_trigger_name TEXT;
+    trigger_exists BOOLEAN;
+BEGIN
+    FOR table_record IN 
+        SELECT DISTINCT table_schema, table_name
+        FROM information_schema.columns
+        WHERE column_name = 'updated_at'
+          AND table_schema = 'public'
+    LOOP
+
+        new_trigger_name := 'trg_' || table_record.table_schema || '_' || table_record.table_name || '_updated_at';
+        SELECT EXISTS (
+            SELECT 1 
+            FROM information_schema.triggers tg
+            WHERE tg.event_object_schema = table_record.table_schema
+              AND tg.event_object_table = table_record.table_name
+              AND tg.trigger_name = new_trigger_name
+        ) INTO trigger_exists;
+
+        IF trigger_exists THEN
+            EXECUTE format('DROP TRIGGER %I ON %I.%I', 
+                           new_trigger_name, 
+                           table_record.table_schema, 
+                           table_record.table_name);
+        END IF;
+
+        EXECUTE format('CREATE TRIGGER %I
+                       BEFORE UPDATE ON %I.%I
+                       FOR EACH ROW
+                       EXECUTE FUNCTION set_updated_at()',
+                       new_trigger_name,
+                       table_record.table_schema,
+                       table_record.table_name);
+    END LOOP;
+END;
+$$;
+
+CALL create_updated_at_triggers();

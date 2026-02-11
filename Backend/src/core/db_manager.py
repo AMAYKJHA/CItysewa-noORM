@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from django.db import connection
 
-from .schema import table_queries
+from .schema import table_queries, create_triggers
 
 class SchemaManager:
     def test_connection(self):
@@ -54,12 +54,30 @@ class SchemaManager:
             connection.rollback()
             print(f"Error: Unable to delete table. {e}")
             return
+    
+    # For test purpose, not standard     
+    def run_query(self, query):
+        if not self.test_connection():
+            print("Error: Couldn`t connect to the database.")
+            return
+        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+            connection.commit()
+            print("Query executed successfully.")
+            return
+            
+        except Exception as e:
+            print(f"Error: {e}")
+            return
 
 # method for migrating tables to database
 def migrate():
     manager = SchemaManager()
     for table_name in table_queries.keys():
         manager.create_table(table_name, table_queries[table_name])
+    manager.run_query(create_triggers)
         
 
 class Table(ABC):
