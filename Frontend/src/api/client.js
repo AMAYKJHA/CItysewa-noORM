@@ -1,39 +1,8 @@
-// import axios from 'axios';
-
-// // Base axios instance
-// const api = axios.create({
-//     baseURL: 'http://localhost:8000/api', //Backend url
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-// });
-
-// //Accounts
-// export const loginUser = (data) => api.post('/accounts/login/', data);
-// export const registerUser = (data) => api.post('/accounts/register/', data);
-
-// //Bookings
-// export const fetchBookings = () => api.get('/bookings/');
-// export const createBooking = (data) => api.post('/bookings/', data);
-
-// //Services
-// export const fetchServices = () => api.get('/services/');
-// export const createServices = (data) => api.post('/services/', data);
-
-// //Addresses
-// export const fetchAddresses = () => api.get('/addresses/');
-// export const createAddress = (data) => api.post('/addresses/', data);
-
-// export default api;
-
 import axios from 'axios';
 
 // Base axios instance
 const api = axios.create({
     baseURL: 'https://citysewa2.onrender.com/api/v1', //Backend url
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
 
 api.interceptors.request.use(
@@ -76,6 +45,20 @@ export const fetchProviders = () =>
 
 export const fetchProviderById = (id) => 
     api.get(`/accounts/provider/${id}`);
+
+//Provider verification
+export const submitForVerification = (data) =>
+    api.post("/accounts/provider/submit-verification",data);
+
+//Provider verification in Admin side
+export const fetchVerificationData = () => 
+    api.get("/accounts/provider/verification-data");
+
+export const fetchVerificationDataById = (id) =>
+    api.get(`/accounts/provider/verification-data/${id}`);
+
+export const updateVerificationData = (id, data) => 
+    api.patch(`/accounts/provider/verification-data/${id}`,data);
 
 //Admin login/register
 export const adminLogin = (data) => 

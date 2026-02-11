@@ -1,49 +1,48 @@
-nav{
-    width: 90vw;
-    padding: 4px;
-    border: 2px solid #444444;
-    border-radius: 1rem;
+.navbar{
+    width: min(1180px, 92vw);
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    row-gap: 4px;
+    row-gap: 6px;
     overflow: hidden;
-    transition: all 0.4s ease-in-out;
-    /* background: rgba(128, 128, 128, 0.26); */
-    background: #000000;
+    transition: all 0.35s ease-in-out;
+    background: rgba(12, 15, 20, 0.92);
+    backdrop-filter: blur(12px);
     position: fixed;
-    top: 25px;
+    top: 24px;
     z-index: 4;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
-nav:hover{
-    /* background: #333333; */
-    background: #111111;
+.navbar:hover{
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .nav-menu{
-    padding: 13px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 17px;
+    gap: 12px;
 }
 
 .navItem{
-    color: white;
-    padding: 0px 8px 0px 8px;
-    min-width: 11ch;
-    height: 40px;
-    border: 2px solid #666666;
-    border-radius: 1rem;
+    color: #f7f3ea;
+    padding: 0;
+    min-width: 10ch;
+    height: auto;
+    border: none;
+    border-radius: 0.9rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: content-box;
     cursor: pointer;
 }
 
@@ -51,15 +50,13 @@ nav:hover{
     display: flex;
     justify-content: center;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 10px;
 }
 
-h1{
-    font-size: x-large;
-    background: linear-gradient(to right, white, grey, brown);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.nav-logo-section h1{
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    color: #f4efe4;
     cursor: default;
 }
 
@@ -68,30 +65,20 @@ h1{
     aspect-ratio: 1;
     background: url(../assets/cs.png) center center no-repeat;
     background-size: cover;
-    border: 2px solid black;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
 }
 
-.siteLogo:hover{
-    border: 2px solid white ;
-}
-
-h1:hover{
-    background: linear-gradient(to right, skyblue, crimson);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-nav.scrolled{
-    background: #333333;
+.navbar.scrolled{
+    background: rgba(18, 22, 28, 0.94);
 }
 
 .handheld-menu{
     width: 100%;
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.4s ease-in-out;
+    transition: max-height 0.35s ease-in-out;
 }
 
 .handheld-menu.open{
@@ -104,6 +91,7 @@ nav.scrolled{
 
 .hamburger{
     cursor: pointer;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
 }
 
 @media only screen and (min-width: 375px){
@@ -113,83 +101,61 @@ nav.scrolled{
 }
 
 @media only screen and (min-width:647px){
-    nav{
-        width: 80vw;
-        justify-content: space-around;
+    .navbar{
+        width: min(1200px, 86vw);
     }
     .nav-menu{
-        width: 80%;
+        width: 90%;
         place-self: center;
         justify-content: space-around;
     }
 }
 
 @media only screen and (min-width: 768px){
-    nav{
-        width: 90vw;
-        padding: 13px;
-        justify-content: space-between;
-        row-gap: 13px;
+    .navbar{
+        padding: 14px 24px;
+        row-gap: 12px;
     }
     .siteLogo{
-        width: 50px;
+        width: 46px;
     }
     .hamburger{
-        width: 40px;
+        width: 34px;
     }
     .nav-menu{
         width: auto;
         padding: 0px;
-        gap: 13px;
+        gap: 10px;
         display: flex;
         justify-content: space-evenly;
     }
-    .navItem{
-        border: none;
-    }
     .navItem span{
-        font-size: large;
-        min-width: 11ch;
-        padding: 0px 13px 0px 13px;
-        height: 40px;
-        border-radius: 0.75rem;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 2px solid #888888;
-        background: linear-gradient(to right, white, grey, brown);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-size: 0.95rem;
+        min-width: 9ch;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.02);
+        transition: all 0.25s ease;
+        color: #f1ede3;
     }
     .navItem span:hover{
-        background: linear-gradient(to right, skyblue, crimson);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .navItem:hover{
-        background-color: #222222;
+        border-color: rgba(184, 74, 43, 0.6);
+        background: rgba(184, 74, 43, 0.12);
+        color: #ffe9da;
     }
 }
 
 @media only screen and (min-width: 1024px){
-    nav{
-        justify-content: space-around;
-        padding: 13px 0px 13px 0px;
-        border-radius: 1rem 0.26rem 1rem 0.26rem;
-    }
-    h1{
-        display: block !important;
+    .navbar{
+        padding: 16px 28px;
     }
     .nav-logo-section{
-        width: 24%;
-        column-gap: 15px;
+        column-gap: 16px;
     }
     .nav-menu{
         display: flex;
-        gap: 17px;
+        gap: 12px;
     }
     .navItem:nth-of-type(2), .navItem:nth-of-type(5){
         display: none;
@@ -206,29 +172,20 @@ nav.scrolled{
 }
 
 @media only screen and (min-width: 1252px){
-    nav{
-        padding: 25px 0px 25px 0px;
-        justify-content: space-around;
+    .navbar{
+        padding: 18px 30px;
+        justify-content: space-between;
     }
     .nav-menu{
-        padding: 0px 25px 0px 25px;
-    }
-    .nav-logo-section{
-        width: 17%;
+        padding: 0px 18px 0px 18px;
     }
     .navItem:nth-of-type(2), .navItem:nth-of-type(5){
         display: block;
     }
-    .navItem{
-        padding: 4px;
-    }
-    h1{
-        font-size: xx-large;
-    }
     .navItem span{
-        letter-spacing: 1px;
+        letter-spacing: 0.02em;
     }
     .nav-menu{
-        gap: 25px;
+        gap: 16px;
     }
 }

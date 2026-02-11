@@ -1,50 +1,49 @@
 import { useEffect, useState } from "react";
-import {fetchCustomers} from "../../../api/client";
+import {fetchProviders} from "../../../api/client";
 
-const Customers = () => {
-    const [customers, setCustomers] = useState([]);
+const Providers = () => {
+    const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchBy, setSearchBy] = useState("Id");
     const [shownIndex, setShownIndex] = useState(0);
     const PAGE_SIZE = 10;
-    const customersOnDisplay = customers.slice(shownIndex, shownIndex + PAGE_SIZE);
-    
+    const providersOnDisplay = providers.slice(shownIndex, shownIndex + PAGE_SIZE);
+
     // Functions that show records on the table
     const showNextBatch = () => {
-        setShownIndex(prev => prev + PAGE_SIZE < customers.length ? prev + PAGE_SIZE : prev);
+        setShownIndex(prev => prev + PAGE_SIZE < providers.length ? prev + PAGE_SIZE : prev);
     };
     const showPrevBatch = () => {
         setShownIndex(prev => prev - PAGE_SIZE >= 0 ? prev - PAGE_SIZE : 0);
     };
-
     const handleChange = (e) => {
         setSearchBy(e.target.value);
     };
 
     useEffect(()=>{
-        const loadCustomers = async () => {
+        const loadProviders = async () => {
             try{
-                const response = await fetchCustomers();
-                const sortedCustomers = response.data.slice().sort((a,b)=> a.id - b.id);
-                setCustomers(sortedCustomers);
+                const response = await fetchProviders();
+                const sortedProviders = response.data.slice().sort((a,b) => a.id - b.id);
+                setProviders(sortedProviders);
             } catch (e) {
-                setError("Failed to fetch customers");
+                setError("Failed to fetch providers");
                 console.error(e);
             } finally {
                 setLoading(false);
             }
         };
-        loadCustomers();
+        loadProviders();
     }, []);
 
-    if (loading) return <p>Loading Customers ...</p>;
+    if (loading) return <p>Loading Providers ...</p>;
     if (error) return <p>{error}</p>
 
     return(
-        <section className="customers">
-            <h2>Customers</h2>
-            <input type="text" placeholder={`Search by ${searchBy}`}/>
+        <section className="providers">
+            <h2>Providers</h2>
+            <input type="text" placeholder={`Search by ${searchBy}`} id="searchBar"/>
             <select value={searchBy} name="searchBy" onChange={handleChange}>
                 <option disabled hidden value={""}>Search by</option>
                 <option value={"Id"}>Id</option>
@@ -61,19 +60,19 @@ const Customers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {customersOnDisplay.map(customer => (
-                        <tr key={customer.id}>
-                            <td>{customer.id}</td>
-                            <td>{customer.first_name+" "+customer.last_name}</td>
-                            <td>{customer.gender}</td>
-                            <td>{customer.email}</td>
+                    {providersOnDisplay.map(provider => (
+                        <tr key={provider.id}>
+                            <td>{provider.id}</td>
+                            <td>{provider.first_name+" "+provider.last_name}</td>
+                            <td>{provider.gender}</td>
+                            <td>{provider.email}</td>
                         </tr>
                     ))}
                 </tbody>  
             </table>
-            <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= customers.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
+            <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= providers.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
         </section>
     );
 };
 
-export default Customers;
+export default Providers;

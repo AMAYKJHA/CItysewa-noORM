@@ -1,154 +1,117 @@
 .register-form, .register-admin-form{
-    width: 90vw; 
-    aspect-ratio: 2/3; 
-    padding: 25px 13px 25px 13px;
-    margin: 13px;
-    letter-spacing: 1px;
-    border: 2px solid #4C5FD5;
-    border-radius: 1rem;
+    width: min(520px, 92vw);
+    padding: 32px 26px;
+    margin: 18px;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
     display: flex;
-    color: rgba(255, 255, 255, 0.75);
-    background: rgba(76, 95, 213, 0.15);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+    color: rgba(244, 236, 223, 0.86);
+    background: rgba(12, 16, 23, 0.9);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
 .register-form fieldset, .register-admin-form fieldset{
     width: 100%;
-    padding: 0px 13px 0 13px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-left: none;
-    border-right: none;
+    padding: 0;
+    border: none;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: flex-start;
+    gap: 16px;
 }
 
 .register-form fieldset legend, .register-admin-form fieldset legend{
-    width: 35%;
+    width: 100%;
     text-align: center;
-    font-Size: x-large;
-}
-
-.register-admin-form fieldset legend{
-    width: 80%;
+    font-size: 1.6rem;
+    color: #f6efe3;
+    padding-bottom: 8px;
 }
 
 .register-form fieldset span, .register-admin-form fieldset span{
     min-width: 100%;
     display: flex;
     flex-direction: column;
-    /* border: 2px solid red; */
+    gap: 8px;
 }
 
 .register-form fieldset span:nth-of-type(2){
     flex-direction: row;
-    column-gap: 25px;
+    column-gap: 16px;
 }
 
 .register-form fieldset span:nth-of-type(2) span{
     min-width: 30%;
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
 label{
-    font-size: larger;
+    font-size: 0.95rem;
+    color: rgba(236, 228, 214, 0.85);
 }
 
 input{
     all: unset;
     width: 100%;
-    margin-top: 8px;
-    border: 2px solid rgba(135, 206, 235, 0.5);
-    padding: 8px 13px 8px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 10px 14px;
     box-sizing: border-box;
-    border-radius: 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #f8f1e6;
 }
 
 input:focus{
-    border: 2px solid rgba(135, 206, 235, 0.75);
-    background: rgba(135, 206, 235, 0.05);
-}
-
-.register-form fieldset span:nth-of-type(5){
-    flex-direction: row;
-    gap: 25px;
+    border: 1px solid rgba(184, 74, 43, 0.6);
+    background: rgba(184, 74, 43, 0.12);
 }
 
 select{
-    font-size: large;
-    min-width: 40%;
-    max-width: 130px;
-    padding: 4px;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
     outline: none;
-    border: 2px solid rgba(135, 206, 235, 0.5);
-    border-radius: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #f3ecdf;
 }
 
 button{
     all: unset;
-    border: 2px solid rgba(135, 206, 235, 0.75);
-    border-radius: 0.75rem;
-    padding: 8px 13px 8px 13px;
-    align-self: flex-end;
-    box-sizing: border-box;
+    border-radius: 999px;
+    padding: 10px 18px;
     align-self: center;
-    font-size: large;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
     cursor: pointer;
+    background: linear-gradient(120deg, #b84a2b, #7a2f1c);
+    color: #fdf4e8;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
 }
 
 button:hover{
-    border: 2px solid rgba(135, 206, 235, 1);
-    background: rgba(135, 206, 235, 0.26);
-    color: white;
-}
-
-@media only screen and (min-width: 321px){
-    .register-form, .register-admin-form{
-        aspect-ratio: 3/4;
-    }
+    filter: brightness(1.05);
+    transform: translateY(-1px);
 }
 
 @media only screen and (min-width: 375px){
-    .register-form, .register-admin-form{
-        aspect-ratio: 4/5;
+    .register-form fieldset legend, .register-admin-form fieldset legend{
+        font-size: 1.8rem;
     }
-    legend{
-        font-size: xx-large;
-    }
-    .register-admin-form fieldset legend{
-        font-size: xx-large;
-        width: 62%;
-    }
-    label{
-        font-size: x-large;
-    }
-    input{
-        font-size: larger;
-    }
-    button{
-        font-size: x-large;
-    }
-}
-
-@media only screen and (min-width: 426px){
-    .register-form, .register-admin-form{
-        width: 60vw;
-        max-height: 60vh;
+    input, select{
+        font-size: 1rem;
     }
 }
 
 @media only screen and (min-width: 768px){
     .register-form, .register-admin-form{
-        width: 490px;
-        margin: 25px;
-        padding: 40px;
-    }
-    legend{
-        width: 31%;
+        padding: 38px 36px;
     }
 }
 

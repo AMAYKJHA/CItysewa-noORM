@@ -1,14 +1,19 @@
 import "../../../Style/Dashboard.css";
 import Customers from "./CustomerTable";
+import Providers from "./ProviderTable";
+import VerificationRequests from "./VerificationRequestsTable";
 import { useOutletContext } from "react-router-dom";
 
-const AdminDashboard = () => {
+const AdminDashboard = (e) => {
     const {activeSection} = useOutletContext();
     const renderContext = () => {
         switch(activeSection){
             case "Customers":
                 return <Customers/>
-            // Similarly put cases for other sidebar options
+            case "Providers":
+                return <Providers/>
+            case "Verification":
+                return <VerificationRequests/>
             default:
                 return null;
         }

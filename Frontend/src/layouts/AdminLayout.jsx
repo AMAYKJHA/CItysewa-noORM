@@ -1,15 +1,17 @@
-import Navbar from "../components/common/Navbar/NavBar";
 import Footer from "../components/common/Footer/Footer";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/admin/sidebar";
 import { useState } from "react";
+import "./../Style/Layouts.css";
 
 const AdminLayout = () => {
     const [activeSection, setActiveSection] = useState("Customers");
     return(
-        <main className="admin-layout" style={{display:'flex', justifyContent:'space-evenly', alignItems:'center', border:'2px solid yellow', width:'100%'}}>
-            <Sidebar setActiveSection={setActiveSection}/>
-            <Outlet context={{activeSection}}/>
+        <main className="admin-layout">
+            <span className="admin-panel">
+                <Sidebar setActiveSection={setActiveSection}/>
+                <Outlet context={{activeSection}}/>
+            </span>
             <Footer type='admin'/>
         </main>
     );
