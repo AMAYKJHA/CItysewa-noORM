@@ -2,11 +2,12 @@ from django.utils.translation import gettext_lazy as _
 
 INVALID_PASSWORD = _("Password is incorrect.")
 
-USER_NOT_FOUND = _("No account associated with this email.")
+USER_NOT_FOUND = _("User not found.")
 CUSTOMER_NOT_FOUND = _("Customer not found.")
 PROVIDER_NOT_FOUND = _("Provider not found.")
 DOCUMENT_NOT_FOUND = _("Document not found.")
 
+USER_DOES_NOT_EXIST = _("No account associated with this email.")
 CUSTOMER_PROFILE_DOES_NOT_EXIST = _("No customer profile associated with this email.")
 PROVIDER_PROFILE_DOES_NOT_EXIST = _("No provider profile associated with this email.")
 

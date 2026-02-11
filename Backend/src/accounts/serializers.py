@@ -17,7 +17,7 @@ from .messages import (
     CUSTOMER_PROFILE_EXISTS,
     PROVIDER_PROFILE_EXISTS,
     INVALID_PASSWORD,
-    USER_NOT_FOUND,
+    USER_DOES_NOT_EXIST,
     CUSTOMER_NOT_FOUND,
     DOCUMENT_NOT_FOUND,
     PROVIDER_NOT_FOUND,
@@ -90,7 +90,7 @@ class UserPatchSerializer(serializers.Serializer):
                     })
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })            
         return attrs
     
@@ -126,7 +126,7 @@ class AdminLoginSerializer(serializers.Serializer):
         
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
@@ -213,7 +213,7 @@ class CustomerLoginSerializer(serializers.Serializer):
                     
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
@@ -305,7 +305,7 @@ class ProviderLoginSerializer(serializers.Serializer):
                     
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
