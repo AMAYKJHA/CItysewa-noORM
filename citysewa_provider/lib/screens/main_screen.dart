@@ -4,7 +4,8 @@ import "package:curved_navigation_bar/curved_navigation_bar.dart";
 import "package:citysewa_provider/api/api.dart"
     show AuthService, ServiceManager, BookingManager;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show Service, User, Booking;
+import "package:citysewa_provider/api/models.dart"
+    show Service, User, Booking, BookingStats;
 
 import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
 import "package:citysewa_provider/screens/pages/booking_page.dart"
@@ -24,6 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   int currentPageIndex = 0;
   List<Service> serviceList = [];
   List<Booking> bookingList = [];
+  BookingStats bookingStats = BookingStats(success: false, message: "");
 
   @override
   void initState() {
@@ -74,9 +76,28 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> fetchBookingStats() async {
+    final bookingManager = BookingManager();
+    final bookingStats = await bookingManager.bookingStats(user!.id);
+
+    if (bookingStats.success) {
+      setState(() {
+        this.bookingStats = bookingStats;
+      });
+    }
+  }
+
+  Future<void> refreshHomePage() async {
+    fetchUser();
+    fetchBookingStats();
+  }
+
   void bottomNavigation(int value) {
     if (value == currentPageIndex) return;
 
+    if (value == 0) {
+      fetchBookingStats();
+    }
     if (value == 1 && bookingList.isEmpty) {
       fetchBookings();
     }
@@ -91,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomePage(verified: user!.verified),
+      HomePage(verified: user!.verified, bookingStats: bookingStats),
       BookingPage(verified: user!.verified, bookingList: bookingList),
       ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
@@ -158,7 +179,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         onRefresh: () {
           if (!user!.verified || currentPageIndex == 0) {
-            return fetchUser();
+            return refreshHomePage();
           } else if (currentPageIndex == 1) {
             return fetchBookings();
           } else {

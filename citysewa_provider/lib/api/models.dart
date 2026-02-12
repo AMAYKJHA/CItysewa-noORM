@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class ApiResponse {
   bool success = false;
   String message;
@@ -46,6 +48,22 @@ class BookingListResponse extends ApiResponse {
     required super.success,
     required super.message,
     this.bookingList,
+  });
+}
+
+class BookingStats {
+  bool success = false;
+  String message;
+  int pending;
+  int completed;
+  int cancelled;
+
+  BookingStats({
+    required this.success,
+    required this.message,
+    this.pending = 0,
+    this.completed = 0,
+    this.cancelled = 0,
   });
 }
 

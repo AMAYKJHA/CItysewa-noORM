@@ -1,8 +1,15 @@
 import "package:flutter/material.dart";
 
+import "package:citysewa_provider/api/models.dart" show BookingStats;
+
 class HomePage extends StatefulWidget {
   final bool verified;
-  const HomePage({super.key, this.verified = false});
+  final BookingStats bookingStats;
+  const HomePage({
+    super.key,
+    this.verified = false,
+    required this.bookingStats,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -11,12 +18,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [BookingSection()]);
+    return ListView(
+      children: [BookingSection(bookingStats: widget.bookingStats)],
+    );
   }
 }
 
 class BookingSection extends StatefulWidget {
-  const BookingSection({super.key});
+  final BookingStats bookingStats;
+  const BookingSection({super.key, required this.bookingStats});
 
   @override
   State<BookingSection> createState() => _BookingSectionState();
@@ -55,11 +65,11 @@ class _BookingSectionState extends State<BookingSection> {
           const SizedBox(height: 10),
           Row(
             spacing: 4,
-            children: const [
+            children: [
               Flexible(
                 child: BookingCard(
                   title: "Completed",
-                  value: 3,
+                  value: widget.bookingStats.completed,
                   titleIcon: Icons.verified_rounded,
                 ),
               ),
@@ -67,16 +77,16 @@ class _BookingSectionState extends State<BookingSection> {
               Flexible(
                 child: BookingCard(
                   title: "Pending",
-                  value: 5,
+                  value: widget.bookingStats.pending,
                   titleIcon: Icons.hourglass_top_rounded,
                 ),
               ),
 
               Flexible(
                 child: BookingCard(
-                  title: "Active",
-                  value: 0,
-                  titleIcon: Icons.play_circle,
+                  title: "Cancelled",
+                  value: widget.bookingStats.cancelled,
+                  titleIcon: Icons.cancel_presentation_rounded,
                 ),
               ),
             ],
