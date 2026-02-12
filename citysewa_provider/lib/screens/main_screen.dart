@@ -64,6 +64,16 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> fetchBookings() async {}
 
+  void bottomNavigation(int value) {
+    if (value == currentPageIndex) return;
+    if (value == 2 && serviceList.isEmpty) {
+      fetchServices();
+    }
+    setState(() {
+      currentPageIndex = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
@@ -156,10 +166,7 @@ class _MainScreenState extends State<MainScreen> {
           Icon(Icons.handyman_rounded, size: 26, color: Colors.white),
         ],
         onTap: (value) {
-          if (value == currentPageIndex) return;
-          setState(() {
-            currentPageIndex = value;
-          });
+          bottomNavigation(value);
         },
       ),
     );
