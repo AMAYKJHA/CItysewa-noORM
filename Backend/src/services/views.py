@@ -34,7 +34,7 @@ class ServiceCreateAPIView(APIView):
  
 @extend_schema(
     summary="List all services",
-    description="Returns a lits of all services",
+    description="Returns a list of all services",
     operation_id="service_list"
 )   
 class ServiceListAPIView(APIView):
