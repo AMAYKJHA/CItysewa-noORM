@@ -2,9 +2,9 @@ import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
 import "package:citysewa_provider/api/api.dart"
-    show AuthService, ServiceManager;
+    show AuthService, ServiceManager, BookingManager;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show Service, User;
+import "package:citysewa_provider/api/models.dart" show Service, User, Booking;
 
 import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
 import "package:citysewa_provider/screens/pages/booking_page.dart"
@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   User? user;
   int currentPageIndex = 0;
   List<Service> serviceList = [];
+  List<Booking> bookingList = [];
 
   @override
   void initState() {
@@ -62,13 +63,36 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Future<void> fetchBookings() async {}
+  Future<void> fetchBookings() async {
+    final bookingManager = BookingManager();
+    final response = await bookingManager.listBookings(user!.id);
+
+    if (response.success) {
+      setState(() {
+        bookingList = response.bookingList!;
+      });
+    }
+  }
+
+  void bottomNavigation(int value) {
+    if (value == currentPageIndex) return;
+
+    if (value == 1 && bookingList.isEmpty) {
+      fetchBookings();
+    }
+    if (value == 2 && serviceList.isEmpty) {
+      fetchServices();
+    }
+    setState(() {
+      currentPageIndex = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomePage(verified: user!.verified),
-      BookingPage(verified: user!.verified),
+      BookingPage(verified: user!.verified, bookingList: bookingList),
       ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
     return Scaffold(
@@ -156,10 +180,7 @@ class _MainScreenState extends State<MainScreen> {
           Icon(Icons.handyman_rounded, size: 26, color: Colors.white),
         ],
         onTap: (value) {
-          if (value == currentPageIndex) return;
-          setState(() {
-            currentPageIndex = value;
-          });
+          bottomNavigation(value);
         },
       ),
     );

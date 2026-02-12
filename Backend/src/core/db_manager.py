@@ -195,7 +195,7 @@ class Table(ABC):
             con_list = []
             raw_values = []
             for col in columns:
-                if not isinstance(kwargs[col], tuple):
+                if not isinstance(kwargs[col], (tuple, type(None))):
                     con_list.append(f"{col} = %s")
                     raw_values.append(kwargs[col])
                 elif isinstance(kwargs[col], tuple):
