@@ -165,12 +165,25 @@ class Table(ABC):
     #R
     def count(self, **kwargs):
         query = f"SELECT COUNT(*) FROM {self.table_name}"
-        cols = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
-        values = ()
-        if cols:
-            condition = " AND ".join([f"{col} = %s" for col in cols])
-            values = tuple([kwargs[col] for col in cols])
+        
+        # Conditions
+        columns = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
+        values = tuple()
+        if columns:
+            con_list = []
+            raw_values = []
+            for col in columns:
+                if not isinstance(kwargs[col], (tuple, type(None))):
+                    con_list.append(f"{col} = %s")
+                    raw_values.append(kwargs[col])
+                elif isinstance(kwargs[col], tuple):
+                    con_list.append(f"{col} IN ({", ".join(['%s' for _ in kwargs[col]])})")
+                    raw_values += kwargs[col]
+                   
+            condition = " AND ".join(con_list)
+            values = tuple(raw_values)
             query = f"{query} WHERE {condition}"
+            
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
@@ -199,7 +212,7 @@ class Table(ABC):
                     con_list.append(f"{col} = %s")
                     raw_values.append(kwargs[col])
                 elif isinstance(kwargs[col], tuple):
-                    con_list.append(f"{col} IN ({", ".join(['%s' for item in kwargs[col]])})")
+                    con_list.append(f"{col} IN ({", ".join(['%s' for _ in kwargs[col]])})")
                     raw_values += kwargs[col]
                    
             condition = " AND ".join(con_list)
