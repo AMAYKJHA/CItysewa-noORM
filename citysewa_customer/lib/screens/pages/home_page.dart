@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "package:citysewa_provider/api/models.dart" show BookingStats;
+import "package:citysewa_customer/api/models.dart" show BookingStats;
 
 class HomePage extends StatefulWidget {
   final bool verified;

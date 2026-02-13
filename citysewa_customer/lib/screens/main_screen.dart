@@ -1,16 +1,16 @@
 import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
-import "package:citysewa_provider/api/api.dart"
+import "package:citysewa_customer/api/api.dart"
     show AuthService, ServiceManager, BookingManager;
-import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart"
+import "package:citysewa_customer/session_manager.dart" show SessionManager;
+import "package:citysewa_customer/api/models.dart"
     show Service, User, Booking, BookingStats;
 
-import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
-import "package:citysewa_provider/screens/pages/booking_page.dart"
+import "package:citysewa_customer/screens/pages/home_page.dart" show HomePage;
+import "package:citysewa_customer/screens/pages/booking_page.dart"
     show BookingPage;
-import "package:citysewa_provider/screens/pages/service_page.dart"
+import "package:citysewa_customer/screens/pages/service_page.dart"
     show ServicePage;
 
 class MainScreen extends StatefulWidget {

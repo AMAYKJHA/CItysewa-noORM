@@ -1,7 +1,7 @@
 import "dart:convert";
 import "package:http/http.dart" as http;
 
-import "package:citysewa_provider/api/models.dart";
+import "package:citysewa_customer/api/models.dart";
 
 const baseUrl = "https://citysewa2.onrender.com/api/v1";
 
