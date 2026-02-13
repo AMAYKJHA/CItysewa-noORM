@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App Demo Showcase</title>
+  <style>
+    :root {
+      --bg-1: #f6f9ff;
+      --bg-2: #e8efff;
+      --text: #16203b;
+      --card: #ffffff;
+      --edge: #d3dbef;
+      --shadow: 0 20px 40px rgba(18, 37, 75, 0.12);
+      --phone-border: #0f172f;
+      --accent: #1f6feb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 20%, #ffffff 0%, transparent 45%),
+        radial-gradient(circle at 85% 10%, #ffffff 0%, transparent 50%),
+        linear-gradient(140deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(1100px, 100%);
+      background: color-mix(in srgb, var(--card) 85%, transparent);
+      border: 1px solid var(--edge);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .title {
+      margin: 0 0 16px;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 0 0 22px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    .phones {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      align-items: start;
+    }
+
+    .phone-card h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--accent);
+    }
+
+    .phone-shell {
+      background: var(--phone-border);
+      border-radius: 34px;
+      padding: 12px;
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto;
+      box-shadow: 0 24px 45px rgba(0, 0, 0, 0.22);
+    }
+
+    .phone-screen {
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 9 / 19.5;
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 34%;
+      height: 16px;
+      border-radius: 14px;
+      background: #0d1428;
+      z-index: 2;
+    }
+
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1 class="title">App Demo Showcase</h1>
+    <p class="subtitle">Preview both app experiences in a mobile-style frame.</p>
+
+    <section class="phones">
+      <article class="phone-card">
+        <h2>Customer App</h2>
+        <div class="phone-shell">
+          <div class="phone-screen">
+            <div class="notch" aria-hidden="true"></div>
+            <iframe
+              title="Customer App Demo"
+              src="customer-login.html"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </article>
+
+      <article class="phone-card">
+        <h2>Provider App</h2>
+        <div class="phone-shell">
+          <div class="phone-screen">
+            <div class="notch" aria-hidden="true"></div>
+            <iframe
+              title="Provider App Demo"
+              src="provider-login.html"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
