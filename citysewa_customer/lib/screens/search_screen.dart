@@ -19,10 +19,8 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 0, backgroundColor: Colors.red),
-      backgroundColor: Color(0xfffbf0f9),
-      body: Container(
-        height: double.infinity,
+      appBar: AppBar(),
+      body: Padding(
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
@@ -68,8 +66,6 @@ class _SearchBarState extends State<SearchBar> {
       ),
       child: TextField(
         autofocus: true,
-        cursorColor: Colors.red,
-        enableSuggestions: true,
         keyboardType: TextInputType.text,
         onSubmitted: (value) {
           widget.onSubmit(value);
@@ -141,7 +137,7 @@ class _SearchResultState extends State<SearchResult> {
                   price: serviceList[index].price,
                   pricingType: serviceList[index].priceUnit,
                   thumbnail: serviceList[index].thumbnail,
-                  providerName: "Unknown provider",
+                  providerName: serviceList[index].providerName,
                 );
               },
             );

@@ -78,7 +78,7 @@ class RootApp extends StatelessWidget {
         '/register': (context) => SignupScreen(),
         '/profile': (context) => ProfileScreen(),
         '/search': (context) => SearchScreen(),
-        '/service': (context) => ServiceScreen(serviceId: 8),
+        '/service': (context) => ServiceScreen(),
         '/booking': (context) => BookingScreen(),
         '/address': (context) => AddressScreen(),
       },

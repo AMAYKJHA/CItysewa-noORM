@@ -41,6 +41,14 @@ class ServiceListResponse {
   });
 }
 
+class ServiceResponse {
+  bool success = false;
+  String message;
+  Service? service;
+
+  ServiceResponse({required this.success, required this.message, this.service});
+}
+
 class BookingListResponse extends ApiResponse {
   List<Booking>? bookingList;
 
@@ -91,6 +99,7 @@ class Service {
   final String serviceType;
   final int price;
   final String priceUnit;
+  String providerName;
   String? thumbnail;
   String? description;
 
@@ -100,6 +109,7 @@ class Service {
     required this.serviceType,
     required this.price,
     required this.priceUnit,
+    this.providerName = "Unknown",
     this.thumbnail,
     this.description,
   });
