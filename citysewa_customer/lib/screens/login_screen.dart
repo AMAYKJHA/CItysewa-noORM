@@ -8,10 +8,10 @@ import 'package:citysewa_customer/session_manager.dart' show SessionManager;
 final authService = AuthService();
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -90,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
     if (result.success) {
       await SessionManager.saveLogin();
       await SessionManager.saveUser(result.user!);
-      Navigator.pushReplacementNamed(context, '/main');
+      Navigator.pushReplacementNamed(context, '/home');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -190,7 +190,7 @@ class _LoginFormState extends State<LoginForm> {
 }
 
 class GoToSignup extends StatelessWidget {
-  GoToSignup({super.key});
+  const GoToSignup({super.key});
 
   @override
   Widget build(BuildContext context) {

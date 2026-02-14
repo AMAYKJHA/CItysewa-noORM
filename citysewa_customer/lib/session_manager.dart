@@ -10,15 +10,11 @@ class SessionManager {
     prefs.setString("firstName", user.firstName);
     prefs.setString("lastName", user.lastName);
     prefs.setString("gender", user.gender);
-    prefs.setBool("verified", user.verified);
     if (user.token != null) {
       prefs.setString("token", user.token!);
     }
     if (user.photo != null) {
       prefs.setString("photo", user.photo!);
-    }
-    if (user.description != null) {
-      prefs.setString("description", user.description!);
     }
   }
 
@@ -30,20 +26,16 @@ class SessionManager {
     final firstName = prefs.getString("firstName");
     final lastName = prefs.getString("lastName");
     final gender = prefs.getString("gender");
-    final verified = prefs.getBool("verified");
     final token = prefs.getString("token");
     final photo = prefs.getString("photo");
-    final description = prefs.getString("description");
 
     return User(
       id: id,
       firstName: firstName!,
       lastName: lastName!,
       gender: gender!,
-      verified: verified!,
       token: token,
       photo: photo,
-      description: description,
     );
   }
 

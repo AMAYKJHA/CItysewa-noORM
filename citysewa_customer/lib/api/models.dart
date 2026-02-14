@@ -72,20 +72,16 @@ class User {
   final String firstName;
   final String lastName;
   final String gender;
-  bool verified;
   String? token;
   String? photo;
-  String? description;
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
     required this.gender,
-    required this.verified,
     this.token,
     this.photo,
-    this.description,
   });
 }
 
