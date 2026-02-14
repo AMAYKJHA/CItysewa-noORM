@@ -58,12 +58,19 @@ class ServiceCreateSeriazlier(serializers.Serializer):
  
 class ServiceListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+    provider_id = serializers.IntegerField(write_only=True)
     title = serializers.CharField(max_length=100)
     service_type = serializers.CharField()
     price = serializers.IntegerField(min_value=MIN_SERVICE_PRICE)
     price_unit = serializers.CharField()    
     thumbnail = serializers.ImageField(required=False, validators=[validate_file_size])
+    provider_name = serializers.SerializerMethodField()    
     
+    def get_provider_name(self, obj):
+        provider = Provider().get(id=obj.get("provider_id"))
+        provider_name = f"{provider.first_name} {provider.last_name}" if provider is not None else "Unknown"
+        return provider_name
+        
     def to_representation(self, instance):
         data =  super().to_representation(instance)
         if instance.get("thumbnail"):
@@ -79,9 +86,16 @@ class ServiceRetrieveSerializer(serializers.Serializer):
     price = serializers.IntegerField(min_value=MIN_SERVICE_PRICE)
     price_unit = serializers.CharField()
     thumbnail = serializers.ImageField(required=False, validators=[validate_file_size])
+    provider_name = serializers.SerializerMethodField()
     
+    
+    def get_provider_name(self, obj):
+        provider = Provider().get(id=obj.get("provider_id"))
+        provider_name = f"{provider.first_name} {provider.last_name}" if provider is not None else "Unknown"
+        return provider_name
+        
     def to_representation(self, instance):
         data =  super().to_representation(instance)
         if instance.get("thumbnail"):
-            data["thumbnail"] = Service().get_thumbnail_url(instance.get("id"), instance("thumbnail"))
+            data["thumbnail"] = Service().get_thumbnail_url(instance.get("id"), instance.get("thumbnail"))
         return data
