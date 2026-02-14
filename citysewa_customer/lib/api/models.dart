@@ -32,12 +32,12 @@ class VerificationResponse {
 class ServiceListResponse {
   bool success = false;
   String message;
-  List<Service>? serviceList;
+  List<Service> serviceList;
 
   ServiceListResponse({
     required this.success,
     required this.message,
-    this.serviceList,
+    this.serviceList = const [],
   });
 }
 
@@ -87,7 +87,6 @@ class User {
 
 class Service {
   final int id;
-  int? providerId;
   final String title;
   final String serviceType;
   final int price;
@@ -102,7 +101,6 @@ class Service {
     required this.price,
     required this.priceUnit,
     this.thumbnail,
-    this.providerId,
     this.description,
   });
 }

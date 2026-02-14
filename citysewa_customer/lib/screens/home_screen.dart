@@ -55,9 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!isLoggedIn && (value == 1 || value == 2)) {
       goToLogin();
     } else if (value == 1) {
-      Navigator.pushNamed(context, '/booking');
+      Navigator.pushNamed(context, '/booking', arguments: {"user": user});
     } else if (value == 2) {
-      Navigator.pushNamed(context, '/address');
+      Navigator.pushNamed(context, '/address', arguments: {"user": user});
     }
   }
 
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushNamed(
       context,
       '/login',
-      arguments: {"afterLogin": refreshHomePage, "testString": "Its working."},
+      arguments: {"afterLogin": refreshHomePage},
     );
   }
 

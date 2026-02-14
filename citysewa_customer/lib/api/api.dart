@@ -172,8 +172,8 @@ class ServiceManager {
   final modUrl = "services";
 
   // list services
-  Future<ServiceListResponse> listServices(int providerId) async {
-    final url = Uri.parse("$baseUrl/$modUrl?provider_id=$providerId");
+  Future<ServiceListResponse> listServices(String serviceType) async {
+    final url = Uri.parse("$baseUrl/$modUrl?service_type=$serviceType");
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
