@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
-import "package:cached_network_image/cached_network_image.dart";
+import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
-import "package:citysewa_customer/widgets/widgets.dart" show ServiceCarousel;
-// import "package:citysewa_customer/screens/constants.dart";
+import "package:citysewa_customer/session_manager.dart" show SessionManager;
+import "package:citysewa_customer/api/models.dart" show User;
+import "package:citysewa_customer/widgets/widgets.dart"
+    show ProfileIcon, CustomAppBar, ServiceSearchBar, ServiceCarousel;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,316 +14,159 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isLoggedIn = false;
+  User? user;
+  int currentPageIndex = 0;
   List featuredService = [];
-  // Future<List?> getServiceCarousel() async {
-  //   try {
-  //     final result = await service.serviceCarousel();
-  //     return result['results'];
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return null;
-  // }
 
-  // Future<List?> getFeaturedService() async {
-  //   try {
-  //     final result = await service.featuredService();
-  //     return result['results'];
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return null;
-  // }
+  Future<List?> getServiceCarousel() async {
+    return null;
+  }
+
+  Future<List?> getFeaturedService() async {
+    return null;
+  }
 
   @override
   void initState() {
     super.initState();
   }
 
+  Future<void> checkLogin() async {
+    final isLoggedIn = await SessionManager.getLogin();
+    if (isLoggedIn) {
+      final user = await SessionManager.getUser();
+      setState(() {
+        this.isLoggedIn = true;
+        this.user = user;
+      });
+    }
+  }
+
+  void bottomNavigation(int value) {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      backgroundColor: Color(0xfffbf0f9),
-      body: Column(
-        children: [
-          Header(),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                children: [
-                  SizedBox(height: 10),
-                  SearchBar(),
-                  const SizedBox(height: 15),
-                  // FutureBuilder(
-                  //   future: getServiceCarousel(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       if (snapshot.data != null) {
-                  //         return ConstrainedBox(
-                  //           constraints: BoxConstraints(maxHeight: 200),
-                  //           child: ServiceCarousel(
-                  //             context: context,
-                  //             itemList: snapshot.data!,
-                  //           ),
-                  //         );
-                  //       }
-                  //     }
-                  //     return SizedBox(width: 0, height: 0);
-                  //   },
-                  // ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Featured services",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: const Color.fromARGB(255, 41, 41, 41),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  // FutureBuilder(
-                  //   future: getFeaturedService(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData && snapshot.data != null) {
-                  //       final itemList = snapshot.data!;
-                  //       return SizedBox(
-                  //         height: 80,
-                  //         child: ListView.builder(
-                  //           scrollDirection: Axis.horizontal,
-                  //           itemCount: itemList.length,
-                  //           itemBuilder: (context, index) {
-                  //             return InkWell(
-                  //               onTap: () {
-                  //                 Navigator.push(
-                  //                   context,
-                  //                   MaterialPageRoute(
-                  //                     builder: (context) => ServiceScreen(
-                  //                       serviceId: itemList[index]["service"],
-                  //                     ),
-                  //                   ),
-                  //                 );
-                  //               },
-                  //               child: Padding(
-                  //                 padding: EdgeInsets.only(right: 8),
-                  //                 child: ClipRRect(
-                  //                   borderRadius: BorderRadius.circular(5),
-                  //                   child: Image.network(
-                  //                     itemList[index]["thumbnail"]["image"],
-                  //                     fit: BoxFit.cover,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             );
-                  //           },
-                  //         ),
-                  //       );
-                  //     }
-                  //     return SizedBox(width: 0, height: 0);
-                  //   },
-                  // ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Popular services",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: const Color.fromARGB(255, 41, 41, 41),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Header extends StatefulWidget {
-  Header({super.key});
-
-  @override
-  _HeaderState createState() => _HeaderState();
-}
-
-class _HeaderState extends State<Header> {
-  String userFirstName = "Guest";
-  String? userPhoto;
-  bool isLoggedIn = false;
-  Icon photoIcon = Icon(
-    Icons.face,
-    shadows: [
-      BoxShadow(
-        color: Colors.black.withValues(alpha: 0.3),
-        offset: Offset(0, 4),
-        blurRadius: 5,
-        spreadRadius: 0,
-      ),
-    ],
-    size: 30,
-    color: const Color.fromARGB(255, 239, 62, 50),
-  );
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
-  void _loadUserData() async {
-    // isLoggedIn = PrefService.getValue("isLoggedIn") ?? false;
-    // if (isLoggedIn) {
-    //   setState(() {
-    //     userFirstName = PrefService.getValue('firstName') ?? userFirstName;
-    //     userPhoto = PrefService.getValue('photo');
-    //     if (userPhoto == null && PrefService.getValue('gender') == "FEMALE") {
-    //       photoIcon = Icon(
-    //         Icons.face_4,
-    //         shadows: [
-    //           BoxShadow(
-    //             color: Colors.black.withValues(alpha: 0.3),
-    //             offset: Offset(0, 4),
-    //             blurRadius: 5,
-    //             spreadRadius: 0,
-    //           ),
-    //         ],
-    //         size: 30,
-    //         color: const Color.fromARGB(255, 239, 62, 50),
-    //       );
-    //     }
-    //   });
-    // }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => isLoggedIn
-                  //         ? ProfileScreen(setHomeScreen: _loadUserData)
-                  //         : LoginScreen(afterLogin: _loadUserData),
-                  //   ),
-                  // );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: CircleAvatar(
-                    radius: 20,
-                    child: userPhoto != null
-                        ? ClipOval(
-                            child: CachedNetworkImage(imageUrl: userPhoto!),
-                          )
-                        : photoIcon,
-                  ),
+      appBar: CustomAppBar(
+        leading: ProfileIcon(),
+        title: Row(
+          children: [
+            Flexible(
+              child: Text(
+                user == null ? "Guest" : "${user!.firstName} ${user!.lastName}",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Hi,",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  Text(
-                    userFirstName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          InkWell(
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => NotificationScreen()),
-              // );
-            },
-            child: Container(
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.transparent,
-              ),
-              child: Icon(Icons.notifications, size: 28, color: Colors.black),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  const SearchBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, '/search');
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        width: double.infinity,
-        height: 45,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              offset: Offset(0, 4),
-              blurRadius: 5,
-              spreadRadius: 0,
             ),
           ],
         ),
-        child: Row(
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.notifications_rounded, color: Colors.white),
+            splashRadius: 22,
+            tooltip: 'Notification',
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: ListView(
           children: [
-            Icon(Icons.search, color: const Color.fromARGB(255, 115, 115, 115)),
-            SizedBox(width: 10),
+            SizedBox(height: 10),
+            ServiceSearchBar(),
+            FutureBuilder(
+              future: getServiceCarousel(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {}
+                return SizedBox(width: 0, height: 0);
+              },
+            ),
+            SizedBox(height: 10),
             Text(
-              "Search for services",
+              "Featured services",
               style: TextStyle(
                 fontSize: 15,
-                color: const Color.fromARGB(255, 115, 115, 115),
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(255, 41, 41, 41),
+              ),
+            ),
+            SizedBox(height: 5),
+            // FutureBuilder(
+            //   future: getFeaturedService(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData && snapshot.data != null) {
+            //       final itemList = snapshot.data!;
+            //       return SizedBox(
+            //         height: 80,
+            //         child: ListView.builder(
+            //           scrollDirection: Axis.horizontal,
+            //           itemCount: itemList.length,
+            //           itemBuilder: (context, index) {
+            //             return InkWell(
+            //               onTap: () {
+            //                 Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                     builder: (context) => ServiceScreen(
+            //                       serviceId: itemList[index]["service"],
+            //                     ),
+            //                   ),
+            //                 );
+            //               },
+            //               child: Padding(
+            //                 padding: EdgeInsets.only(right: 8),
+            //                 child: ClipRRect(
+            //                   borderRadius: BorderRadius.circular(5),
+            //                   child: Image.network(
+            //                     itemList[index]["thumbnail"]["image"],
+            //                     fit: BoxFit.cover,
+            //                   ),
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //         ),
+            //       );
+            //     }
+            //     return SizedBox(width: 0, height: 0);
+            //   },
+            // )
+            SizedBox(height: 10),
+            Text(
+              "Popular services",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(255, 41, 41, 41),
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 0,
+        height: 56,
+        color: Colors.deepOrange,
+        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: Colors.deepOrange.shade600,
+        animationCurve: Curves.easeOutCubic,
+
+        items: const <Widget>[
+          Icon(Icons.home_rounded, size: 26, color: Colors.white),
+          Icon(Icons.calendar_month_rounded, size: 26, color: Colors.white),
+          Icon(Icons.place_rounded, size: 26, color: Colors.white),
+        ],
+
+        onTap: (value) {
+          bottomNavigation(value);
+        },
       ),
     );
   }
