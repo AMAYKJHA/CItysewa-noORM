@@ -1,15 +1,26 @@
 import "package:flutter/material.dart";
 
 class BookingScreen extends StatefulWidget {
-  BookingScreen({super.key});
+  const BookingScreen({super.key});
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
 }
 
 class _BookingScreenState extends State<BookingScreen> {
+  Future<void> refreshBookings() async {}
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text(""));
+    return Scaffold(
+      body: RefreshIndicator(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(children: [Text("Booking Screen")]),
+        ),
+        onRefresh: () {
+          return refreshBookings();
+        },
+      ),
+    );
   }
 }

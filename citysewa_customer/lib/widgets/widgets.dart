@@ -20,7 +20,13 @@ class AppLogo extends StatelessWidget {
 class ProfileIcon extends StatelessWidget {
   final bool isLoggedIn;
   final String? userPhoto;
-  const ProfileIcon({super.key, this.isLoggedIn = false, this.userPhoto});
+  final VoidCallback? onClick;
+  const ProfileIcon({
+    super.key,
+    this.isLoggedIn = false,
+    this.userPhoto,
+    this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +46,7 @@ class ProfileIcon extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8),
       child: InkWell(
-        onTap: () {
-          if (isLoggedIn) {
-          } else {
-            Navigator.pushNamed(context, '/login');
-          }
-        },
+        onTap: onClick ?? () {},
         child: Container(
           padding: EdgeInsets.all(1),
           decoration: BoxDecoration(
