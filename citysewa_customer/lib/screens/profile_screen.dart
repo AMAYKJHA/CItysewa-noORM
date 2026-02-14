@@ -7,10 +7,10 @@ import "package:cached_network_image/cached_network_image.dart";
 
 class ProfileScreen extends StatefulWidget {
   // final VoidCallback setHomeScreen;
-  ProfileScreen({super.key});
+  const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 const defaultProfileImage = "https://placehold.net/avatar-1.png";
@@ -54,10 +54,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 class ProfileHeader extends StatefulWidget {
   // final VoidCallback setHomeScreen;
-  ProfileHeader({super.key});
+  const ProfileHeader({super.key});
 
   @override
-  _ProfileHeaderState createState() => _ProfileHeaderState();
+  State<ProfileHeader> createState() => _ProfileHeaderState();
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
@@ -112,7 +112,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     // });
   }
 
-  void _onUpdate() {
+  void onUpdate() {
     _loadUserData();
     // widget.setHomeScreen();
   }
