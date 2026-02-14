@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkLogin() async {
     final isLoggedIn = await SessionManager.getLogin();
     if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, '/main');
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       Navigator.pushReplacementNamed(context, '/login');
     }

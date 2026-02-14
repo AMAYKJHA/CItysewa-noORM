@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import "package:carousel_slider/carousel_slider.dart";
+
+const appIcon = "assets/images/test.png";
 
 class AppLogo extends StatelessWidget {
   static const appLogo = 'assets/images/test.png';
@@ -13,45 +16,69 @@ class AppLogo extends StatelessWidget {
   }
 }
 
-class VerifyYourselfBanner extends StatelessWidget {
-  const VerifyYourselfBanner({super.key});
+class Carousel extends StatelessWidget {
+  final List itemList;
+  final List<Widget> items;
+  Carousel({super.key, required this.itemList})
+    : items = itemList.map((image) {
+        return Card(
+          elevation: 3,
+          clipBehavior: Clip.antiAlias,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image.network(image, fit: BoxFit.fill),
+          ),
+        );
+      }).toList();
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, '/verify');
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFCE8E1),
-          border: Border.all(color: const Color(0xFFF5B7A3)),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(20),
-              offset: Offset(0, 6),
-              blurRadius: 6,
-            ),
-          ],
-        ),
-        child: RichText(
-          text: const TextSpan(
-            text: 'You are not verified yet. Please submit the ',
-            style: TextStyle(fontSize: 15, color: Color(0xFF7A2F1C)),
-            children: [
-              TextSpan(
-                text: "verification form.",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: Color(0xFFCC4C2B),
-                  fontWeight: FontWeight.w600,
-                ),
+    return CarouselSlider(
+      items: items,
+      options: CarouselOptions(
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 3),
+      ),
+    );
+  }
+}
+
+class ServiceCarousel extends StatelessWidget {
+  final List itemList;
+  final List<Widget> items;
+  final BuildContext context;
+  ServiceCarousel({super.key, required this.context, required this.itemList})
+    : items = itemList.map((item) {
+        return InkWell(
+          onTap: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => ServiceScreen(serviceId: item["service"]),
+            //   ),
+            // );
+          },
+          child: Card(
+            elevation: 3,
+            clipBehavior: Clip.antiAlias,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                item["thumbnail"]["image"],
+                fit: BoxFit.fill,
               ),
-            ],
+            ),
           ),
-        ),
+        );
+      }).toList();
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider(
+      items: items,
+      options: CarouselOptions(
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 3),
       ),
     );
   }

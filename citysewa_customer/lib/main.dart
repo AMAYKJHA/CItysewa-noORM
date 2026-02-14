@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import "package:citysewa_customer/screens/splash_screen.dart" show SplashScreen;
 import 'package:citysewa_customer/screens/login_screen.dart' show LoginScreen;
-import 'package:citysewa_customer/screens/main_screen.dart' show MainScreen;
+import 'package:citysewa_customer/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_customer/screens/signup_screen.dart' show SignupScreen;
+import 'package:citysewa_customer/screens/search_screen.dart' show SearchScreen;
+import 'package:citysewa_customer/screens/service_screen.dart'
+    show ServiceScreen;
+
 import 'package:citysewa_customer/screens/profile_screen.dart'
     show ProfileScreen;
-import 'package:citysewa_customer/screens/verification_screen.dart'
-    show VerificationScreen;
-import "package:citysewa_customer/screens/add_service_screen.dart"
-    show AddServiceScreen;
 
 void main() {
   runApp(RootApp());
@@ -70,11 +70,11 @@ class RootApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginScreen(),
-        '/main': (context) => MainScreen(),
+        '/home': (context) => HomeScreen(),
         '/register': (context) => SignupScreen(),
         '/profile': (context) => ProfileScreen(),
-        '/verify': (context) => VerificationScreen(),
-        '/add-service': (context) => AddServiceScreen(),
+        '/search': (context) => SearchScreen(),
+        '/service': (context) => ServiceScreen(serviceId: 8),
       },
     );
   }
