@@ -209,43 +209,33 @@ class ServiceManager {
     }
   }
 
-  Future<ApiResponse> addService(
-    int providerId,
-    String title,
-    String serviceType,
-    String description,
-    int price,
-    String priceUnit,
-    String thumbnailPath,
-  ) async {
-    final url = Uri.parse("$baseUrl/$modUrl/register");
+  Future<ServiceResponse> getService(int serviceId) async {
+    final url = Uri.parse("$baseUrl/$modUrl/$serviceId");
     try {
-      var request = http.MultipartRequest('POST', url);
-      request.fields["provider_id"] = providerId.toString();
-      request.fields["title"] = title;
-      request.fields["service_type"] = serviceType;
-      request.fields["description"] = description;
-      request.fields["price"] = price.toString();
-      request.fields["price_unit"] = priceUnit;
-
-      request.files.add(
-        await http.MultipartFile.fromPath("thumbnail", thumbnailPath),
-      );
-
-      final responseStream = await request.send();
-      final response = await http.Response.fromStream(responseStream);
-
+      final response = await http.get(url);
       if (response.statusCode == 200) {
-        return ApiResponse(
+        final data = jsonDecode(response.body);
+        return ServiceResponse(
           success: true,
           message: "Service added successfully.",
+          service: Service(
+            id: data["id"],
+            title: data["title"],
+            serviceType: data["service_type"],
+            price: data["price"],
+            priceUnit: data["price_unit"],
+            providerName: data["provider_name"],
+          ),
         );
       } else {
         final data = jsonDecode(response.body);
-        return ApiResponse(success: false, message: parseErrorMessage(data));
+        return ServiceResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
       }
     } catch (e) {
-      return ApiResponse(
+      return ServiceResponse(
         success: false,
         message: "Something went wrong. Please try again.",
       );
@@ -257,8 +247,8 @@ class BookingManager {
   final modUrl = "bookings";
 
   // list bookings
-  Future<BookingListResponse> listBookings(int providerId) async {
-    final url = Uri.parse("$baseUrl/$modUrl?provider_id=$providerId");
+  Future<BookingListResponse> listBookings(int customerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl?customer_id=$customerId");
     try {
       final response = await http.get(url);
 
@@ -298,8 +288,8 @@ class BookingManager {
   }
 
   // get booking stats
-  Future<BookingStats> bookingStats(int providerId) async {
-    final url = Uri.parse("$baseUrl/$modUrl/stats?provider_id=$providerId");
+  Future<BookingStats> bookingStats(int customerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl/stats?customer_id=$customerId");
     try {
       final response = await http.get(url);
 
