@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
-import "package:flutter_html/flutter_html.dart";
 
-import "package:citysewa/api/api_services.dart" show ServiceAPI;
-import "package:citysewa/screens/widgets.dart" show Carousel;
-import "package:citysewa/screens/booking_screen.dart" show BookingScreen;
+// import "package:citysewa/api/api_services.dart" show ServiceAPI;
+// import "package:citysewa/screens/widgets.dart" show Carousel;
+// import "package:citysewa/screens/booking_screen.dart" show BookingScreen;
 
 const defaultProfileImage = "https://placehold.net/avatar-1.png";
 
-ServiceAPI serviceAPI = ServiceAPI();
+// ServiceAPI serviceAPI = ServiceAPI();
 
 class ServiceScreen extends StatefulWidget {
   final int serviceId;
@@ -19,12 +18,12 @@ class ServiceScreen extends StatefulWidget {
 
 class _ServiceScreenState extends State<ServiceScreen> {
   Future getService(int serviceId) async {
-    try {
-      final result = await serviceAPI.retrieveService(serviceId);
-      return result;
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   final result = await serviceAPI.retrieveService(serviceId);
+    //   return result;
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   @override
@@ -55,10 +54,10 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 padding: EdgeInsets.all(10),
                 child: ListView(
                   children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 200),
-                      child: Carousel(itemList: imgList),
-                    ),
+                    // ConstrainedBox(
+                    //   constraints: BoxConstraints(maxHeight: 200),
+                    //   child: Carousel(itemList: imgList),
+                    // ),
                     const SizedBox(height: 5),
                     Text(
                       service['title'],
@@ -80,24 +79,24 @@ class _ServiceScreenState extends State<ServiceScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text("Description", style: TextStyle(fontSize: 17)),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.25),
-                            offset: Offset(0, 4),
-                            blurRadius: 6,
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Html(
-                        data: service['description'],
-                        style: {"p": Style(fontSize: FontSize(14))},
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     borderRadius: BorderRadius.circular(10),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black.withValues(alpha: 0.25),
+                    //         offset: Offset(0, 4),
+                    //         blurRadius: 6,
+                    //         spreadRadius: 0,
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   child: Html(
+                    //     data: service['description'],
+                    //     style: {"p": Style(fontSize: FontSize(14))},
+                    //   ),
+                    // ),
                     const SizedBox(height: 10),
                     Center(
                       child: Padding(

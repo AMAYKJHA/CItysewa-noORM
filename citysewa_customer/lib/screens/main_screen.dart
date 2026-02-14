@@ -7,12 +7,6 @@ import "package:citysewa_customer/session_manager.dart" show SessionManager;
 import "package:citysewa_customer/api/models.dart"
     show Service, User, Booking, BookingStats;
 
-import "package:citysewa_customer/screens/pages/home_page.dart" show HomePage;
-import "package:citysewa_customer/screens/pages/booking_page.dart"
-    show BookingPage;
-import "package:citysewa_customer/screens/pages/service_page.dart"
-    show ServicePage;
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -112,9 +106,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomePage(verified: user!.verified, bookingStats: bookingStats),
-      BookingPage(verified: user!.verified, bookingList: bookingList),
-      ServicePage(verified: user!.verified, serviceList: serviceList),
+      // HomePage(verified: user!.verified, bookingStats: bookingStats),
+      // BookingPage(verified: user!.verified, bookingList: bookingList),
+      // ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -136,10 +130,10 @@ class _MainScreenState extends State<MainScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (user!.verified) ...[
-              const SizedBox(width: 6),
-              const Icon(Icons.verified_rounded, size: 18, color: Colors.white),
-            ],
+            // if (user!.verified) ...[
+            //   const SizedBox(width: 6),
+            //   const Icon(Icons.verified_rounded, size: 18, color: Colors.white),
+            // ],
           ],
         ),
         centerTitle: false,
@@ -172,21 +166,21 @@ class _MainScreenState extends State<MainScreen> {
           child: Icon(Icons.add, size: 32, color: Colors.white),
         ),
       ),
-      body: RefreshIndicator(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: pages[currentPageIndex],
-        ),
-        onRefresh: () {
-          if (!user!.verified || currentPageIndex == 0) {
-            return refreshHomePage();
-          } else if (currentPageIndex == 1) {
-            return fetchBookings();
-          } else {
-            return fetchServices();
-          }
-        },
-      ),
+      // body: RefreshIndicator(
+      //   child: Padding(
+      //     padding: EdgeInsets.all(10),
+      //     child: pages[currentPageIndex],
+      //   ),
+      //   onRefresh: () {
+      //     if (!user!.verified || currentPageIndex == 0) {
+      //       return refreshHomePage();
+      //     } else if (currentPageIndex == 1) {
+      //       return fetchBookings();
+      //     } else {
+      //       return fetchServices();
+      //     }
+      //   },
+      // ),
       bottomNavigationBar: CurvedNavigationBar(
         index: currentPageIndex,
         height: 56,

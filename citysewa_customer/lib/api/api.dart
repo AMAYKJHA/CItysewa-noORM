@@ -40,10 +40,8 @@ class AuthService {
             firstName: data["first_name"],
             lastName: data["last_name"],
             gender: data["gender"],
-            verified: data["verified"],
             token: data["token"],
             photo: data["photo"],
-            description: data["description"],
           ),
         );
       } else {
@@ -114,10 +112,8 @@ class AuthService {
           firstName: data["first_name"],
           lastName: data["last_name"],
           gender: data["gender"],
-          verified: data["verified"],
           token: data["token"],
           photo: data["photo"],
-          description: data["description"],
         );
         return user;
       } else {

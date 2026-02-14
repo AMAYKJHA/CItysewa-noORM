@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 
-import "package:citysewa/api/api_services.dart" show ServiceAPI;
-import "package:citysewa/screens/service_screen.dart" show ServiceScreen;
+// import "package:citysewa/api/api_services.dart" show ServiceAPI;
+// import "package:citysewa/screens/service_screen.dart" show ServiceScreen;
 
 const defaultProfileImage = "https://placehold.net/avatar-1.png";
-ServiceAPI serviceAPI = ServiceAPI();
+// ServiceAPI serviceAPI = ServiceAPI();
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({super.key});
@@ -109,14 +109,14 @@ class _SearchResultState extends State<SearchResult> {
 
   Future<List> getServices(String serviceType) async {
     if (serviceType != "") {
-      try {
-        final result = await serviceAPI.listService(
-          serviceType = serviceType.trim(),
-        );
-        return result['results'];
-      } catch (e) {
-        print(e);
-      }
+      // try {
+      //   final result = await serviceAPI.listService(
+      //     serviceType = serviceType.trim(),
+      //   );
+      //   return result['results'];
+      // } catch (e) {
+      //   print(e);
+      // }
     }
     return [];
   }
@@ -193,12 +193,7 @@ class ServiceTile extends StatelessWidget {
     String providerName = "${provider['first_name']} ${provider['last_name']}";
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ServiceScreen(serviceId: serviceId),
-          ),
-        );
+        Navigator.pushNamed(context, '/service');
       },
       child: Container(
         width: double.infinity,
