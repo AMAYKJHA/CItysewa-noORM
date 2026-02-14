@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "dart:async";
 
 import "package:citysewa_customer/widgets/widgets.dart" show AppLogo;
-import "package:citysewa_customer/session_manager.dart" show SessionManager;
+// import "package:citysewa_customer/session_manager.dart" show SessionManager;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,12 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void checkLogin() async {
-    final isLoggedIn = await SessionManager.getLogin();
-    if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
