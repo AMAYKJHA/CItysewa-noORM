@@ -1,16 +1,16 @@
+import "package:citysewa_customer/api/models.dart";
 import "package:flutter/material.dart";
 
-// import "package:citysewa/api/api_services.dart" show ServiceAPI;
+import "package:citysewa_customer/api/api.dart" show ServiceManager;
 // import "package:citysewa/screens/service_screen.dart" show ServiceScreen;
 
 const defaultProfileImage = "https://placehold.net/avatar-1.png";
-// ServiceAPI serviceAPI = ServiceAPI();
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({super.key});
+  const SearchScreen({super.key});
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
@@ -44,10 +44,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
 class SearchBar extends StatefulWidget {
   final Function(String) onSubmit;
-  SearchBar({super.key, required this.onSubmit});
+  const SearchBar({super.key, required this.onSubmit});
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  State<SearchBar> createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
@@ -74,18 +74,7 @@ class _SearchBarState extends State<SearchBar> {
         onSubmitted: (value) {
           widget.onSubmit(value);
         },
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(10),
-          prefixIcon: Icon(Icons.search),
-          hintText: "eg: carpenter, electrician, cook",
-          hintStyle: TextStyle(fontSize: 15),
-          fillColor: Color(0xffffffff),
-          filled: true,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
+        decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
       ),
     );
   }
@@ -96,7 +85,7 @@ class SearchResult extends StatefulWidget {
   const SearchResult({super.key, required this.serviceType});
 
   @override
-  _SearchResultState createState() => _SearchResultState();
+  State<SearchResult> createState() => _SearchResultState();
 }
 
 class _SearchResultState extends State<SearchResult> {
@@ -107,16 +96,19 @@ class _SearchResultState extends State<SearchResult> {
     super.initState();
   }
 
-  Future<List> getServices(String serviceType) async {
+  Future<List<Service>> getServices(String serviceType) async {
     if (serviceType != "") {
-      // try {
-      //   final result = await serviceAPI.listService(
-      //     serviceType = serviceType.trim(),
-      //   );
-      //   return result['results'];
-      // } catch (e) {
-      //   print(e);
-      // }
+      try {
+        final manager = ServiceManager();
+        final serviceListResponse = await manager.listServices(
+          serviceType = serviceType.trim(),
+        );
+        return serviceListResponse.serviceList;
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Something went wrong. Please try again.")),
+        );
+      }
     }
     return [];
   }
@@ -127,7 +119,7 @@ class _SearchResultState extends State<SearchResult> {
       future: getServices(widget.serviceType),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: Colors.red));
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           final serviceList = snapshot.data;
           if (serviceList != null) {
@@ -143,13 +135,13 @@ class _SearchResultState extends State<SearchResult> {
               itemCount: serviceList.length,
               itemBuilder: (context, index) {
                 return ServiceTile(
-                  serviceType: serviceList[index]['service_type'],
-                  title: serviceList[index]['title'],
-                  price: serviceList[index]['price'],
-                  pricingType: serviceList[index]['pricing_type'],
-                  provider: serviceList[index]['provider'],
-                  serviceId: serviceList[index]['id'],
-                  thumbnail: serviceList[index]['thumbnail']['image'],
+                  serviceId: serviceList[index].id,
+                  serviceType: serviceList[index].serviceType,
+                  title: serviceList[index].title,
+                  price: serviceList[index].price,
+                  pricingType: serviceList[index].priceUnit,
+                  thumbnail: serviceList[index].thumbnail,
+                  providerName: "Unknown provider",
                 );
               },
             );
@@ -172,28 +164,31 @@ class ServiceTile extends StatelessWidget {
   final String title;
   final int price;
   final String pricingType;
-  final Map provider;
+  final String providerName;
   final String? thumbnail;
   final int serviceId;
   final double rating = 4.1;
 
-  ServiceTile({
+  const ServiceTile({
     super.key,
     required this.serviceType,
     required this.title,
     required this.price,
     required this.pricingType,
-    required this.provider,
+    required this.providerName,
     required this.serviceId,
     this.thumbnail,
   });
 
   @override
   Widget build(BuildContext context) {
-    String providerName = "${provider['first_name']} ${provider['last_name']}";
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/service');
+        Navigator.pushNamed(
+          context,
+          '/service',
+          arguments: {"serviceId": serviceId},
+        );
       },
       child: Container(
         width: double.infinity,
@@ -215,9 +210,17 @@ class ServiceTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(thumbnail!, fit: BoxFit.fill),
+            SizedBox(
+              width: 100,
+              height: 50,
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: thumbnail != null
+                      ? Image.network(thumbnail!, fit: BoxFit.fill)
+                      : Image.asset('assets/images/test.png'),
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Column(
