@@ -1,16 +1,65 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend is the React web application for CitySewa.
 
-Currently, two official plugins are available:
+## Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- Vite 7
+- React Router DOM 7
+- Axios for API calls
+- ESLint for code quality
 
-## React Compiler
+## Application coverage
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The web app supports multiple user experiences:
 
-## Expanding the ESLint configuration
+- Public browsing (home, about, services)
+- Customer flows (dashboard, bookings, addresses, profile)
+- Provider flows (dashboard, service management, profile)
+- Admin flows (dashboard, users, services)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project structure
+
+- `src/api/` API client and request helpers
+- `src/routes/` route tree and protected route logic
+- `src/layouts/` public/auth/customer/provider/admin layouts
+- `src/pages/` page-level features
+- `src/components/` reusable UI modules by feature area
+- `src/hooks/` data-fetch and auth hooks
+- `src/Style/` CSS stylesheets
+- `public/` static media assets
+
+## Setup
+
+1. Open terminal in `Frontend/`.
+2. Install dependencies:
+```bash
+npm install
+```
+3. Configure environment:
+```env
+VITE_API_URL=https://citysewa2.onrender.com/api/v1
+```
+4. Start dev server:
+```bash
+npm run dev
+```
+5. Build for production:
+```bash
+npm run build
+```
+
+## Routing summary
+
+- Public: `/`, `/services`, `/services/:id`, `/about`
+- Auth: `/login`, `/register`, `/login-admin`, `/register-admin`, `/forgot-password`
+- Customer: `/customer`, `/customer/bookings/...`, `/customer/addresses...`, `/customer/profile`
+- Provider: `/provider`, `/provider/services...`, `/provider/profile`
+- Admin: `/admin`, `/admin/users`, `/admin/services`
+
+## Backend integration
+
+- Frontend requests are built on Axios in `src/api/client.js`.
+- Auth token is injected from `localStorage` into `Authorization` header.
+- Current API base in code points to `https://citysewa2.onrender.com/api/v1`.
+
