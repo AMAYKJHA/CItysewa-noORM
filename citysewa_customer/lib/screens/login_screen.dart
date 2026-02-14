@@ -17,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final VoidCallback afterLogin = args['afterLogin'];
     return Scaffold(
       backgroundColor: Color(0xfffbf0f9),
       body: Center(
@@ -34,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 10),
                   WelcomeText(),
                   SizedBox(height: 20),
-                  LoginForm(),
+                  LoginForm(afterLogin: afterLogin),
                   SizedBox(height: 20),
                   GoToSignup(),
                 ],
@@ -68,7 +70,8 @@ class WelcomeText extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final VoidCallback? afterLogin;
+  const LoginForm({super.key, this.afterLogin});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -90,7 +93,8 @@ class _LoginFormState extends State<LoginForm> {
     if (result.success) {
       await SessionManager.saveLogin();
       await SessionManager.saveUser(result.user!);
-      Navigator.pushReplacementNamed(context, '/home');
+      if (widget.afterLogin != null) widget.afterLogin!();
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,

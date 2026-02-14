@@ -5,6 +5,10 @@ import 'package:citysewa_customer/screens/login_screen.dart' show LoginScreen;
 import 'package:citysewa_customer/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_customer/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_customer/screens/search_screen.dart' show SearchScreen;
+import 'package:citysewa_customer/screens/booking_screen.dart'
+    show BookingScreen;
+import 'package:citysewa_customer/screens/address_screen.dart'
+    show AddressScreen;
 import 'package:citysewa_customer/screens/service_screen.dart'
     show ServiceScreen;
 
@@ -75,6 +79,8 @@ class RootApp extends StatelessWidget {
         '/profile': (context) => ProfileScreen(),
         '/search': (context) => SearchScreen(),
         '/service': (context) => ServiceScreen(serviceId: 8),
+        '/booking': (context) => BookingScreen(),
+        '/address': (context) => AddressScreen(),
       },
     );
   }

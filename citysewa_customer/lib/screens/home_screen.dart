@@ -43,12 +43,37 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void bottomNavigation(int value) {}
+  Future refreshHomePage() async {
+    final user = await SessionManager.getUser();
+    setState(() {
+      isLoggedIn = true;
+      this.user = user;
+    });
+  }
+
+  void bottomNavigation(int value) {
+    if (!isLoggedIn && (value == 1 || value == 2)) {
+      goToLogin();
+    } else if (value == 1) {
+      Navigator.pushNamed(context, '/booking');
+    } else if (value == 2) {
+      Navigator.pushNamed(context, '/address');
+    }
+  }
+
+  void goToLogin() {
+    Navigator.pushNamed(
+      context,
+      '/login',
+      arguments: {"afterLogin": refreshHomePage, "testString": "Its working."},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        leading: ProfileIcon(),
+        leading: ProfileIcon(onClick: goToLogin),
         title: Row(
           children: [
             Flexible(
@@ -75,83 +100,88 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 4),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: ListView(
-          children: [
-            SizedBox(height: 10),
-            ServiceSearchBar(),
-            FutureBuilder(
-              future: getServiceCarousel(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {}
-                return SizedBox(width: 0, height: 0);
-              },
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Featured services",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: const Color.fromARGB(255, 41, 41, 41),
+      body: RefreshIndicator(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: ListView(
+            children: [
+              SizedBox(height: 10),
+              ServiceSearchBar(),
+              FutureBuilder(
+                future: getServiceCarousel(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {}
+                  return SizedBox(width: 0, height: 0);
+                },
               ),
-            ),
-            SizedBox(height: 5),
-            // FutureBuilder(
-            //   future: getFeaturedService(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.hasData && snapshot.data != null) {
-            //       final itemList = snapshot.data!;
-            //       return SizedBox(
-            //         height: 80,
-            //         child: ListView.builder(
-            //           scrollDirection: Axis.horizontal,
-            //           itemCount: itemList.length,
-            //           itemBuilder: (context, index) {
-            //             return InkWell(
-            //               onTap: () {
-            //                 Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                     builder: (context) => ServiceScreen(
-            //                       serviceId: itemList[index]["service"],
-            //                     ),
-            //                   ),
-            //                 );
-            //               },
-            //               child: Padding(
-            //                 padding: EdgeInsets.only(right: 8),
-            //                 child: ClipRRect(
-            //                   borderRadius: BorderRadius.circular(5),
-            //                   child: Image.network(
-            //                     itemList[index]["thumbnail"]["image"],
-            //                     fit: BoxFit.cover,
-            //                   ),
-            //                 ),
-            //               ),
-            //             );
-            //           },
-            //         ),
-            //       );
-            //     }
-            //     return SizedBox(width: 0, height: 0);
-            //   },
-            // )
-            SizedBox(height: 10),
-            Text(
-              "Popular services",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: const Color.fromARGB(255, 41, 41, 41),
+              SizedBox(height: 10),
+              Text(
+                "Featured services",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: const Color.fromARGB(255, 41, 41, 41),
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 5),
+              // FutureBuilder(
+              //   future: getFeaturedService(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData && snapshot.data != null) {
+              //       final itemList = snapshot.data!;
+              //       return SizedBox(
+              //         height: 80,
+              //         child: ListView.builder(
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: itemList.length,
+              //           itemBuilder: (context, index) {
+              //             return InkWell(
+              //               onTap: () {
+              //                 Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                     builder: (context) => ServiceScreen(
+              //                       serviceId: itemList[index]["service"],
+              //                     ),
+              //                   ),
+              //                 );
+              //               },
+              //               child: Padding(
+              //                 padding: EdgeInsets.only(right: 8),
+              //                 child: ClipRRect(
+              //                   borderRadius: BorderRadius.circular(5),
+              //                   child: Image.network(
+              //                     itemList[index]["thumbnail"]["image"],
+              //                     fit: BoxFit.cover,
+              //                   ),
+              //                 ),
+              //               ),
+              //             );
+              //           },
+              //         ),
+              //       );
+              //     }
+              //     return SizedBox(width: 0, height: 0);
+              //   },
+              // )
+              SizedBox(height: 10),
+              Text(
+                "Popular services",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: const Color.fromARGB(255, 41, 41, 41),
+                ),
+              ),
+            ],
+          ),
         ),
+        onRefresh: () {
+          return refreshHomePage();
+        },
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: 0,
+        index: currentPageIndex,
         height: 56,
         color: Colors.deepOrange,
         backgroundColor: Colors.transparent,
