@@ -196,11 +196,11 @@ python manage.py runserver
 
 ```
 ┌─────────────────┐   ┌──────────────────────┐   ┌─────────────────────┐
-│   React Web App │   │  Flutter Provider App │   │ Flutter Customer App│
-│   (Frontend/)   │   │ (citysewa_provider/)  │   │(citysewa_customer/) │
+│   React Web App │   │  Flutter Provider App│   │ Flutter Customer App│
+│   (Frontend/)   │   │ (citysewa_provider/) │   │(citysewa_customer/) │
 └────────┬────────┘   └──────────┬───────────┘   └──────────┬──────────┘
-         │                       │                           │
-         └───────────┬───────────┴───────────────────────────┘
+         │                       │                          │
+         └───────────┬───────────┴──────────────────────────┘
                      │  HTTPS  /api/v1
                      ▼
           ┌──────────────────────┐
@@ -213,7 +213,7 @@ python manage.py runserver
           │     PostgreSQL       │
           │  (SQLite for local)  │
           └──────────┬───────────┘
-                     │  optional file store
+                     │  file store
                      ▼
           ┌──────────────────────┐
           │      Supabase S3     │
@@ -230,6 +230,7 @@ CItysewa-noORM/
 ├── Frontend/             # React + Vite web app (JavaScript)
 ├── citysewa_provider/    # Flutter provider mobile app (Dart)
 ├── citysewa_customer/    # Flutter customer mobile app (Dart)
+├── mobile_app_demo/      # Mobile app demo in web format
 └── README.md             # This file
 ```
 
