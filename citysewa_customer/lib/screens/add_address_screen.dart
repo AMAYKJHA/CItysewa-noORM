@@ -2,8 +2,7 @@ import "package:citysewa_customer/session_manager.dart";
 import "package:flutter/material.dart";
 
 import "package:citysewa_customer/api/api.dart" show AddressManager;
-import "package:citysewa_customer/api/models.dart" show User, Address;
-import "package:http/http.dart";
+import "package:citysewa_customer/api/models.dart" show User;
 
 class AddAddressScreen extends StatefulWidget {
   const AddAddressScreen({super.key});

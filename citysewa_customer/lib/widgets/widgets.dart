@@ -2,7 +2,8 @@ import "package:flutter/material.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carousel_slider/carousel_slider.dart";
 
-import "package:citysewa_customer/api/models.dart" show Service, Address;
+import "package:citysewa_customer/api/models.dart"
+    show Service, Address, Booking;
 
 const appIcon = "assets/images/test.png";
 
@@ -290,6 +291,69 @@ class ServiceTile extends StatelessWidget {
                 Text(
                   "Rs.${service.price} /${service.priceUnit}",
                   style: TextStyle(fontSize: 12, color: Colors.red),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BookingTile extends StatelessWidget {
+  final Booking booking;
+  const BookingTile({super.key, required this.booking});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: 0.5, color: Colors.orangeAccent),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              offset: Offset(0, 3),
+              blurRadius: 4,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text(
+                  booking.bookingDate,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  booking.bookingTime,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: const Color.fromARGB(255, 134, 134, 134),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      booking.status,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
