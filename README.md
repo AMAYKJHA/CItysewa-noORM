@@ -1,4 +1,8 @@
-# 🏙️ CitySewa — HyperLocal Service Marketplace
+# CitySewa — HyperLocal Service Marketplace
+
+<p align="center">
+    <img src="mobile_app_demo/test.png" alt="CitySewa logo" width="160">
+</p>
 
 [![Live on Render](https://img.shields.io/badge/🌐_Live_Demo-Render-green)](https://citysewa2.onrender.com)
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
@@ -16,23 +20,28 @@
 
 The project deliberately avoids Django's ORM in favor of **raw SQL** with a custom database manager, making it an excellent learning resource for understanding database interactions at a lower level.
 
-> 🔗 **Live Demo:** [https://citysewa2.onrender.com](https://citysewa2.onrender.com)
+🔗 **Live App Demo:** [https://citysewa.vercel.app](https://citysewa.vercel.app)
+
+🔗 **Admin Dashboard:** [https://citysewa-admin.vercel.app](https://citysewa-admin.vercel.app)
+
+🔗 **Backend:** [https://citysewa2.onrender.com](https://citysewa2.onrender.com)
 
 ---
 
 ## 🎯 Who is it For?
 
-| User Role | Description |
-|-----------|-------------|
-| **Customers** | People looking for local services — browse providers, book services, manage addresses, and track bookings. |
+| User Role             | Description                                                                                                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Customers**         | People looking for local services — browse providers, book services, manage addresses, and track bookings.                                    |
 | **Service Providers** | Skilled professionals (electricians, tutors, etc.) who want to list their services, get verified, and receive bookings from nearby customers. |
-| **Admins** | Platform administrators who oversee users, services, and the overall marketplace operations. |
+| **Admins**            | Platform administrators who oversee users, services, and the overall marketplace operations.                                                  |
 
 ---
 
 ## ✨ Features
 
 ### For Customers
+
 - 🔍 **Browse & Discover** — Search and explore local services by category
 - 📅 **Book Services** — Schedule service appointments with date and time selection
 - 📍 **Address Management** — Save and manage multiple addresses for service delivery
@@ -40,6 +49,7 @@ The project deliberately avoids Django's ORM in favor of **raw SQL** with a cust
 - 📊 **Dashboard** — Track active and past bookings in one place
 
 ### For Service Providers
+
 - 📝 **Registration & Onboarding** — Easy sign-up and profile setup
 - ✅ **Verification System** — Upload identity documents for account verification
 - 🛠️ **Service Listings** — Create and manage service offerings with pricing
@@ -47,11 +57,13 @@ The project deliberately avoids Django's ORM in favor of **raw SQL** with a cust
 - 👤 **Profile Management** — Update business details and descriptions
 
 ### For Admins
+
 - 👥 **User Management** — Oversee all customers and providers on the platform
 - 🏷️ **Service Oversight** — Monitor and manage all listed services
 - 📊 **Admin Dashboard** — Central control panel for platform operations
 
 ### Platform-Wide
+
 - 🔐 **Role-Based Authentication** — Separate login flows for customers, providers, and admins
 - 🌐 **Responsive Web App** — Full-featured React web interface
 - 📱 **Mobile Apps** — Flutter-based native mobile experiences
@@ -68,21 +80,23 @@ This monorepo contains **four** core products that work together:
 
 A full-featured **React + Vite** web application serving as the primary user interface.
 
-| Tech | Details |
-|------|---------|
-| React | v19 — UI library |
-| Vite | v7 — Build tool & dev server |
-| React Router DOM | v7 — Client-side routing |
-| Axios | HTTP client for API calls |
-| ESLint | Code quality & linting |
+| Tech             | Details                      |
+| ---------------- | ---------------------------- |
+| React            | v19 — UI library             |
+| Vite             | v7 — Build tool & dev server |
+| React Router DOM | v7 — Client-side routing     |
+| Axios            | HTTP client for API calls    |
+| ESLint           | Code quality & linting       |
 
 **Supports multiple user experiences:**
+
 - **Public browsing** — Home, About, and Services pages (no login required)
 - **Customer flows** — Dashboard, bookings, addresses, and profile
 - **Provider flows** — Dashboard, service management, and profile
 - **Admin flows** — Dashboard, user management, and service oversight
 
 **Quick Start:**
+
 ```bash
 cd Frontend
 npm install
@@ -96,13 +110,14 @@ npm run dev
 
 A **Flutter** mobile application built specifically for service providers.
 
-| Tech | Details |
-|------|---------|
-| Flutter | 3.x — Cross-platform framework |
-| Dart | SDK ^3.10.1 |
-| Platforms | Android, iOS, and Web |
+| Tech      | Details                        |
+| --------- | ------------------------------ |
+| Flutter   | 3.x — Cross-platform framework |
+| Dart      | SDK ^3.10.1                    |
+| Platforms | Android, iOS, and Web          |
 
 **Key Features:**
+
 - Branded splash screen with session-aware navigation
 - Provider login & registration
 - Profile view/edit
@@ -112,6 +127,7 @@ A **Flutter** mobile application built specifically for service providers.
 - Token-based session persistence
 
 **Quick Start:**
+
 ```bash
 cd citysewa_provider
 flutter pub get
@@ -126,6 +142,7 @@ flutter run -d chrome  # Web
 A **Flutter** mobile application shell for customer-facing demo views and app-like flows.
 
 **Quick Start:**
+
 ```bash
 cd citysewa_customer
 flutter pub get
@@ -138,29 +155,33 @@ flutter run
 
 A **Django + Django REST Framework** service layer powering all client applications.
 
-| Tech | Details |
-|------|---------|
-| Python | 3.12+ |
-| Django | 5.2 |
-| DRF | 3.16 |
-| drf-spectacular | OpenAPI / Swagger docs |
-| PostgreSQL | Production database |
-| SQLite | Local development mode |
-| Gunicorn | Production WSGI server |
-| Sentry SDK | Optional error monitoring |
+| Tech            | Details                              |
+| --------------- | ------------------------------------ |
+| Python          | 3.12+                                |
+| Django          | 5.2                                  |
+| DRF             | 3.16                                 |
+| drf-spectacular | OpenAPI / Swagger docs               |
+| PostgreSQL      | Production database                  |
+| SQLite          | Local development mode               |
+| Supabase        | Postgres database and S3 filestorage |
+| Gunicorn        | Production WSGI server               |
+| Sentry SDK      | Optional error monitoring            |
 
 **Key API Endpoints:**
 
-| Route | Description |
-|-------|-------------|
-| `api/v1/accounts/...` | Authentication & account management |
-| `api/v1/services/...` | Service listing & CRUD |
-| `api/v1/docs` | Interactive Swagger documentation |
-| `api/v1/schema` | OpenAPI 3.0 schema (JSON) |
+| Route                  | Description                         |
+| ---------------------- | ----------------------------------- |
+| `api/v1/accounts/...`  | Authentication & account management |
+| `api/v1/services/...`  | Service listing & CRUD              |
+| `api/v1/bookings/...`  | Booking listing & CRUD              |
+| `api/v1/addresses/...` | Address listing & CRUD              |
+| `api/v1/docs`          | Interactive Swagger documentation   |
+| `api/v1/schema`        | OpenAPI 3.0 schema (JSON)           |
 
 **Database Tables:** `users`, `tokens`, `customers`, `providers`, `documents`, `services`, `districts`, `locations`, `addresses`, `bookings`
 
 **Quick Start:**
+
 ```bash
 cd Backend
 uv venv && uv sync
@@ -180,7 +201,7 @@ python manage.py runserver
 └────────┬────────┘   └──────────┬───────────┘   └──────────┬──────────┘
          │                       │                           │
          └───────────┬───────────┴───────────────────────────┘
-                     │  HTTPS  /api/v1/...
+                     │  HTTPS  /api/v1
                      ▼
           ┌──────────────────────┐
           │  Django REST Backend │
@@ -191,11 +212,11 @@ python manage.py runserver
           ┌──────────▼───────────┐
           │     PostgreSQL       │
           │  (SQLite for local)  │
-          └──────────────────────┘
-                     │
-          ┌──────────▼───────────┐
-          │   Supabase S3        │
-          │ (optional file store)│
+          └──────────┬───────────┘
+                     │  optional file store
+                     ▼
+          ┌──────────────────────┐
+          │      Supabase S3     │
           └──────────────────────┘
 ```
 
@@ -218,12 +239,12 @@ CItysewa-noORM/
 
 ### Prerequisites
 
-| Component | Requirement |
-|-----------|-------------|
-| Backend | Python 3.12+, [`uv`](https://docs.astral.sh/uv/) package manager |
-| Frontend | Node.js ≥ 18, npm ≥ 9 |
+| Component   | Requirement                                                                |
+| ----------- | -------------------------------------------------------------------------- |
+| Backend     | Python 3.12+, [`uv`](https://docs.astral.sh/uv/) package manager           |
+| Frontend    | Node.js ≥ 18, npm ≥ 9                                                      |
 | Mobile Apps | [Flutter SDK](https://docs.flutter.dev/get-started/install) (Dart ^3.10.1) |
-| Database | PostgreSQL (production) or SQLite (local dev) |
+| Database    | PostgreSQL (production) or SQLite (local dev)                              |
 
 ### Quick Start (Full Stack — Local)
 
@@ -258,9 +279,9 @@ flutter run -d chrome
 
 ## 🌍 Live Deployment
 
-| Service | URL |
-|---------|-----|
-| **Web App + API** | [https://citysewa2.onrender.com](https://citysewa2.onrender.com) |
+| Service                | URL                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| **Web App + API**      | [https://citysewa2.onrender.com](https://citysewa2.onrender.com)                         |
 | **API Docs (Swagger)** | [https://citysewa2.onrender.com/api/v1/docs](https://citysewa2.onrender.com/api/v1/docs) |
 
 The backend is deployed on **Render.com** using Gunicorn with PostgreSQL as the production database.

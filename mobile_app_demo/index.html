@@ -202,6 +202,39 @@
         z-index: 2;
       }
 
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--accent), #0043ce);
+        color: #fff;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(15, 98, 254, 0.35);
+        transition:
+          transform 200ms ease,
+          box-shadow 200ms ease;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(15, 98, 254, 0.45);
+      }
+
+      .download-btn:active {
+        transform: translateY(0);
+      }
+
+      .download-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+
       iframe {
         border: 0;
         width: 100%;
@@ -233,14 +266,14 @@
   </head>
   <body>
     <main class="wrap">
-      <h1 class="title">App Demo Showcase</h1>
+      <h1 class="title">CitySewa App Demo</h1>
       <p class="subtitle">
-        Preview both app experiences in a mobile-style frame.
+        Experience both apps in an interactive mobile-style preview.
       </p>
       <p class="demo-note">
-        This interactive demo showcases the exact mobile app interface build
-        with flutter, as it wasn't feasible to capture the full mobile
-        experience in the video demonstration.
+        This interactive demo showcases the actual mobile app interface built
+        with Flutter. Since capturing the complete mobile experience in a video
+        wasn't practical, you can explore the apps directly here.
       </p>
 
       <section class="phones">
@@ -251,12 +284,22 @@
               <div class="notch" aria-hidden="true"></div>
               <iframe
                 title="Customer App Demo"
-                src="https://citysewaprovider.vercel.app/"
+                src="https://citysewacustomer.vercel.app/"
                 loading="lazy"
               >
               </iframe>
             </div>
           </div>
+          <a
+            class="download-btn"
+            href="https://github.com/AMAYKJHA/CItysewa-noORM/releases/download/citysewa-customer-v1.0.0/citysewa-customer.apk"
+            download
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.17v6h5v-6h3.17L12 2z" />
+            </svg>
+            Download APK
+          </a>
         </article>
 
         <article class="phone-card">
@@ -272,6 +315,16 @@
               </iframe>
             </div>
           </div>
+          <a
+            class="download-btn"
+            href="https://github.com/AMAYKJHA/CItysewa-noORM/releases/download/citysewa-provider-v1.0.0/citysewa-provider.apk"
+            download
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.17v6h5v-6h3.17L12 2z" />
+            </svg>
+            Download APK
+          </a>
         </article>
       </section>
     </main>
