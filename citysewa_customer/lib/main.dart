@@ -35,8 +35,8 @@ class RootApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Inter'),
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
           centerTitle: true,
-          toolbarHeight: 5,
         ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),

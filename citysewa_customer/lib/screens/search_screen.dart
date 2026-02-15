@@ -132,13 +132,7 @@ class _SearchResultState extends State<SearchResult> {
               itemCount: serviceList.length,
               itemBuilder: (context, index) {
                 return ServiceTile(
-                  serviceId: serviceList[index].id,
-                  serviceType: serviceList[index].serviceType,
-                  title: serviceList[index].title,
-                  price: serviceList[index].price,
-                  pricingType: serviceList[index].priceUnit,
-                  thumbnail: serviceList[index].thumbnail,
-                  providerName: serviceList[index].providerName,
+                  service: serviceList[index],
                   rating: GetRandomNumber.getDouble(min: 3.8, max: 4.7),
                 );
               },

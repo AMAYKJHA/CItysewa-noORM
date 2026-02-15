@@ -204,26 +204,10 @@ class ServiceCarousel extends StatelessWidget {
 }
 
 class ServiceTile extends StatelessWidget {
-  final String serviceType;
-  final String title;
-  final int price;
-  final String pricingType;
-  final String providerName;
-  final String? thumbnail;
-  final int serviceId;
+  final Service service;
   final double rating;
 
-  const ServiceTile({
-    super.key,
-    required this.serviceType,
-    required this.title,
-    required this.price,
-    required this.pricingType,
-    required this.providerName,
-    required this.serviceId,
-    required this.rating,
-    this.thumbnail,
-  });
+  const ServiceTile({super.key, required this.service, required this.rating});
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +216,7 @@ class ServiceTile extends StatelessWidget {
         Navigator.pushNamed(
           context,
           '/service',
-          arguments: {"serviceId": serviceId},
+          arguments: {"serviceId": service.id},
         );
       },
       child: Container(
@@ -257,9 +241,9 @@ class ServiceTile extends StatelessWidget {
               child: Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: thumbnail != null
+                  child: service.thumbnail != null
                       ? Image.network(
-                          thumbnail!,
+                          service.thumbnail!,
                           fit: BoxFit.cover,
                           width: 90,
                           height: 60,
@@ -279,14 +263,14 @@ class ServiceTile extends StatelessWidget {
               children: [
                 SizedBox(height: 5),
                 Text(
-                  title,
+                  service.title,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   children: [
                     Text(
-                      providerName,
+                      service.providerName,
                       style: TextStyle(
                         fontSize: 12,
                         color: const Color.fromARGB(255, 134, 134, 134),
@@ -304,7 +288,7 @@ class ServiceTile extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "Rs.$price$pricingType",
+                  "Rs.${service.price} /${service.priceUnit}",
                   style: TextStyle(fontSize: 12, color: Colors.red),
                 ),
               ],

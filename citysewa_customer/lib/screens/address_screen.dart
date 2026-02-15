@@ -43,6 +43,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Addresses")),
       body: RefreshIndicator(
         child: Padding(
           padding: EdgeInsets.all(10),
