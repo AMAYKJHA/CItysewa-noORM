@@ -4,7 +4,7 @@ import "package:curved_navigation_bar/curved_navigation_bar.dart";
 import "package:citysewa_customer/session_manager.dart" show SessionManager;
 import "package:citysewa_customer/api/models.dart" show User;
 import "package:citysewa_customer/widgets/widgets.dart"
-    show ProfileIcon, CustomAppBar, ServiceSearchBar, ServiceCarousel;
+    show ProfileIcon, CustomAppBar, ServiceSearchBar;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

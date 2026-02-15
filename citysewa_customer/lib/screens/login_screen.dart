@@ -17,8 +17,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
-    final VoidCallback afterLogin = args['afterLogin'];
+    final route = ModalRoute.of(context);
+    Map<String, dynamic> args = {};
+    if (route?.settings.arguments is Map<String, dynamic>) {
+      args = route?.settings.arguments as Map<String, dynamic>;
+    }
+    final VoidCallback? afterLogin = args['afterLogin'];
     return Scaffold(
       backgroundColor: Color(0xfffbf0f9),
       body: Center(

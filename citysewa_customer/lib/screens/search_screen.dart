@@ -1,8 +1,9 @@
 import "package:citysewa_customer/api/models.dart";
 import "package:flutter/material.dart";
 
+import "package:citysewa_customer/utils/utils.dart" show GetRandomNumber;
 import "package:citysewa_customer/api/api.dart" show ServiceManager;
-// import "package:citysewa/screens/service_screen.dart" show ServiceScreen;
+import "package:citysewa_customer/widgets/widgets.dart" show ServiceTile;
 
 const defaultProfileImage = "https://placehold.net/avatar-1.png";
 
@@ -131,13 +132,8 @@ class _SearchResultState extends State<SearchResult> {
               itemCount: serviceList.length,
               itemBuilder: (context, index) {
                 return ServiceTile(
-                  serviceId: serviceList[index].id,
-                  serviceType: serviceList[index].serviceType,
-                  title: serviceList[index].title,
-                  price: serviceList[index].price,
-                  pricingType: serviceList[index].priceUnit,
-                  thumbnail: serviceList[index].thumbnail,
-                  providerName: serviceList[index].providerName,
+                  service: serviceList[index],
+                  rating: GetRandomNumber.getDouble(min: 3.8, max: 4.7),
                 );
               },
             );
@@ -151,112 +147,6 @@ class _SearchResultState extends State<SearchResult> {
           return Text("Find services", style: TextStyle(color: Colors.grey));
         }
       },
-    );
-  }
-}
-
-class ServiceTile extends StatelessWidget {
-  final String serviceType;
-  final String title;
-  final int price;
-  final String pricingType;
-  final String providerName;
-  final String? thumbnail;
-  final int serviceId;
-  final double rating = 4.1;
-
-  const ServiceTile({
-    super.key,
-    required this.serviceType,
-    required this.title,
-    required this.price,
-    required this.pricingType,
-    required this.providerName,
-    required this.serviceId,
-    this.thumbnail,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/service',
-          arguments: {"serviceId": serviceId},
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              offset: Offset(0, 4),
-              blurRadius: 5,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 50,
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: thumbnail != null
-                      ? Image.network(thumbnail!, fit: BoxFit.fill)
-                      : Image.asset('assets/images/test.png'),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5),
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      providerName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: const Color.fromARGB(255, 134, 134, 134),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      rating.toStringAsFixed(1),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: const Color.fromARGB(255, 134, 134, 134),
-                      ),
-                    ),
-                    Icon(Icons.star, color: Colors.amber, size: 15),
-                  ],
-                ),
-                Text(
-                  "Rs.$price$pricingType",
-                  style: TextStyle(fontSize: 12, color: Colors.red),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

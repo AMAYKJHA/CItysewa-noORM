@@ -1,5 +1,3 @@
-import 'dart:async';
-
 class ApiResponse {
   bool success = false;
   String message;
@@ -47,6 +45,26 @@ class ServiceResponse {
   Service? service;
 
   ServiceResponse({required this.success, required this.message, this.service});
+}
+
+class AddressListResponse {
+  bool success = false;
+  String message;
+  List<Address> addressList;
+
+  AddressListResponse({
+    required this.success,
+    required this.message,
+    this.addressList = const [],
+  });
+}
+
+class AddressResponse {
+  bool success = false;
+  String message;
+  Address? address;
+
+  AddressResponse({required this.success, required this.message, this.address});
 }
 
 class BookingListResponse extends ApiResponse {
@@ -132,5 +150,19 @@ class Booking {
     required this.bookingDate,
     required this.bookingTime,
     required this.status,
+  });
+}
+
+class Address {
+  int id;
+  int userId;
+  String landmarks;
+  Map<String, dynamic> location;
+
+  Address({
+    required this.id,
+    required this.userId,
+    required this.landmarks,
+    required this.location,
   });
 }

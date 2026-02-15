@@ -5,13 +5,16 @@ import 'package:citysewa_customer/screens/login_screen.dart' show LoginScreen;
 import 'package:citysewa_customer/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_customer/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_customer/screens/search_screen.dart' show SearchScreen;
+import 'package:citysewa_customer/screens/book_service_screen.dart'
+    show BookServiceScreen;
 import 'package:citysewa_customer/screens/booking_screen.dart'
     show BookingScreen;
 import 'package:citysewa_customer/screens/address_screen.dart'
     show AddressScreen;
+import 'package:citysewa_customer/screens/add_address_screen.dart'
+    show AddAddressScreen;
 import 'package:citysewa_customer/screens/service_screen.dart'
     show ServiceScreen;
-
 import 'package:citysewa_customer/screens/profile_screen.dart'
     show ProfileScreen;
 
@@ -33,8 +36,8 @@ class RootApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Inter'),
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
           centerTitle: true,
-          toolbarHeight: 5,
         ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),
@@ -79,8 +82,10 @@ class RootApp extends StatelessWidget {
         '/profile': (context) => ProfileScreen(),
         '/search': (context) => SearchScreen(),
         '/service': (context) => ServiceScreen(),
+        '/book-service': (context) => BookServiceScreen(),
         '/booking': (context) => BookingScreen(),
         '/address': (context) => AddressScreen(),
+        '/add-address': (context) => AddAddressScreen(),
       },
     );
   }

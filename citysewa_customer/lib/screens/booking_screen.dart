@@ -12,6 +12,7 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Bookings")),
       body: RefreshIndicator(
         child: Padding(
           padding: EdgeInsets.all(10),
