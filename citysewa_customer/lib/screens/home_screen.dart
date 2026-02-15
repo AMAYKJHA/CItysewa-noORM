@@ -69,11 +69,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void onProfileClick() {
+    if (isLoggedIn) {
+      Navigator.pushNamed(context, '/profile');
+    } else {
+      goToLogin();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        leading: ProfileIcon(onClick: goToLogin),
+        leading: ProfileIcon(onClick: onProfileClick),
         title: Row(
           children: [
             Flexible(

@@ -91,9 +91,12 @@ class _SignupFormState extends State<SignupForm> {
     if (result.success) {
       Navigator.pop(context);
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: result.success ? Colors.green : Colors.deepOrange,
+        content: Center(child: Text(result.message)),
+      ),
+    );
 
     setState(() => isLoading = false);
   }

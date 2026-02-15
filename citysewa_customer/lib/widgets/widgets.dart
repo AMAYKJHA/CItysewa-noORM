@@ -6,64 +6,37 @@ import "package:citysewa_customer/api/models.dart"
     show Service, Address, Booking;
 
 const appIcon = "assets/images/test.png";
+const defaultProfileImage = "assets/images/avatar.png";
 
 class AppLogo extends StatelessWidget {
-  static const appLogo = 'assets/images/test.png';
   final double size;
   const AppLogo({super.key, this.size = 40});
 
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-      child: Image.asset(appLogo, width: 2 * size, height: 2 * size),
+      child: Image.asset(appIcon, width: 2 * size, height: 2 * size),
     );
   }
 }
 
 class ProfileIcon extends StatelessWidget {
-  final bool isLoggedIn;
   final String? userPhoto;
   final VoidCallback? onClick;
-  const ProfileIcon({
-    super.key,
-    this.isLoggedIn = false,
-    this.userPhoto,
-    this.onClick,
-  });
+  const ProfileIcon({super.key, this.userPhoto, this.onClick});
 
   @override
   Widget build(BuildContext context) {
-    final photoIcon = Icon(
-      Icons.face,
-      shadows: [
-        BoxShadow(
-          color: Colors.white.withValues(alpha: 0.3),
-          offset: Offset(0, 4),
-          blurRadius: 5,
-          spreadRadius: 0,
-        ),
-      ],
-      size: 30,
-      color: Colors.grey,
-    );
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(1),
       child: InkWell(
         onTap: onClick ?? () {},
-        child: Container(
-          padding: EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-          child: CircleAvatar(
-            radius: 20,
-            child: Center(
-              child: userPhoto != null
-                  ? ClipOval(child: CachedNetworkImage(imageUrl: userPhoto!))
-                  : photoIcon,
-            ),
-          ),
+        child: Center(
+          child: userPhoto != null
+              ? ClipOval(child: CachedNetworkImage(imageUrl: userPhoto!))
+              : ClipOval(
+                  child: Image.asset(defaultProfileImage, fit: BoxFit.cover),
+                ),
         ),
       ),
     );
