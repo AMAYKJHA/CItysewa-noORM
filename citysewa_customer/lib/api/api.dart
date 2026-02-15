@@ -3,7 +3,9 @@ import "package:http/http.dart" as http;
 
 import "package:citysewa_customer/api/models.dart";
 
-const baseUrl = "https://citysewa2.onrender.com/api/v1";
+// const baseUrl = "https://citysewa2.onrender.com/api/v1";
+
+const baseUrl = "http://127.0.0.1:8000/api/v1";
 
 String parseErrorMessage(dynamic error) {
   if (error is Map) {
@@ -312,6 +314,47 @@ class BookingManager {
       }
     } catch (e) {
       return BookingStats(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+}
+
+class AddressManager {
+  final modUrl = "addresses";
+
+  Future<AddressListResponse> listAddresses(int customerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl?customer_id=$customerId");
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        List<Address> addressList = [];
+        for (Map<String, dynamic> item in data) {
+          final address = Address(
+            id: item["id"],
+            userId: item["user_id"],
+            landmarks: item["landmarks"],
+            location: item["location"],
+          );
+          addressList.add(address);
+        }
+        return AddressListResponse(
+          success: true,
+          message: "Addresses fetched successfully.",
+          addressList: addressList,
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return AddressListResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
+      }
+    } catch (e) {
+      return AddressListResponse(
         success: false,
         message: "Something went wrong. Please try again.",
       );

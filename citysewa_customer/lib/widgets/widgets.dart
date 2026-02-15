@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carousel_slider/carousel_slider.dart";
 
+import "package:citysewa_customer/api/models.dart" show Service, Address;
+
 const appIcon = "assets/images/test.png";
 
 class AppLogo extends StatelessWidget {
@@ -304,6 +306,73 @@ class ServiceTile extends StatelessWidget {
                 Text(
                   "Rs.$price$pricingType",
                   style: TextStyle(fontSize: 12, color: Colors.red),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddressTile extends StatelessWidget {
+  final Address address;
+  const AddressTile({super.key, required this.address});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: 0.5, color: Colors.orangeAccent),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              offset: Offset(0, 3),
+              blurRadius: 4,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text(
+                  address.landmarks,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "${address.location["area"]}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: const Color.fromARGB(255, 134, 134, 134),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      address.location["city"],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                      ),
+                    ),
+                    Text(
+                      " (${address.location["district"]["name"]})",
+                      style: TextStyle(fontSize: 12, color: Colors.red),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -42,7 +42,11 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final route = ModalRoute.of(context);
+    Map<String, dynamic> args = {};
+    if (route?.settings.arguments is Map<String, dynamic>) {
+      args = route?.settings.arguments as Map<String, dynamic>;
+    }
     final serviceId = args["serviceId"];
     return Scaffold(
       appBar: AppBar(toolbarHeight: 0, backgroundColor: Colors.red),
