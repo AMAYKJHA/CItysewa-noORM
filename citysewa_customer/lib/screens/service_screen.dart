@@ -2,6 +2,7 @@ import "package:citysewa_customer/api/models.dart";
 import "package:flutter/material.dart";
 
 import "package:citysewa_customer/api/api.dart" show ServiceManager;
+import "package:citysewa_customer/session_manager.dart" show SessionManager;
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});
@@ -11,6 +12,7 @@ class ServiceScreen extends StatefulWidget {
 }
 
 class _ServiceScreenState extends State<ServiceScreen> {
+  bool isLoggedIn = false;
   Future<ServiceResponse?> getService(int serviceId) async {
     try {
       final manager = ServiceManager();
@@ -27,6 +29,15 @@ class _ServiceScreenState extends State<ServiceScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> checkLogin() async {
+    final isLoggedIn = await SessionManager.getLogin();
+    if (isLoggedIn) {
+      setState(() {
+        this.isLoggedIn = isLoggedIn;
+      });
+    }
   }
 
   @override
@@ -52,8 +63,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                   SizedBox(
                     height: 300,
                     child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
                       child: service!.thumbnail != null
-                          ? Image.network(service.thumbnail!)
+                          ? Image.network(service.thumbnail!, fit: BoxFit.cover)
                           : Image.asset('assets/images/test.png'),
                     ),
                   ),
@@ -75,7 +87,25 @@ class _ServiceScreenState extends State<ServiceScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text("Description", style: TextStyle(fontSize: 17)),
-
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.25),
+                          offset: const Offset(0, 3),
+                          blurRadius: 5,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      service.description ??
+                          "Service from CitySewa at your home.",
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Center(
                     child: Padding(
@@ -88,21 +118,15 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             backgroundColor: Colors.red,
                           ),
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Center(
-                                  child: Text(
-                                    "Work in progress",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
+                            if (isLoggedIn) {
+                              Navigator.pushNamed(
+                                context,
+                                '/book-service',
+                                arguments: {"serviceId": service.id},
+                              );
+                            } else {
+                              Navigator.pushNamed(context, '/login');
+                            }
                           },
                           child: Text(
                             "Book service",

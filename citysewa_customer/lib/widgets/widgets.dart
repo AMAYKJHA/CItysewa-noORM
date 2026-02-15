@@ -200,3 +200,116 @@ class ServiceCarousel extends StatelessWidget {
     );
   }
 }
+
+class ServiceTile extends StatelessWidget {
+  final String serviceType;
+  final String title;
+  final int price;
+  final String pricingType;
+  final String providerName;
+  final String? thumbnail;
+  final int serviceId;
+  final double rating;
+
+  const ServiceTile({
+    super.key,
+    required this.serviceType,
+    required this.title,
+    required this.price,
+    required this.pricingType,
+    required this.providerName,
+    required this.serviceId,
+    required this.rating,
+    this.thumbnail,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          '/service',
+          arguments: {"serviceId": serviceId},
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              offset: Offset(0, 4),
+              blurRadius: 5,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: thumbnail != null
+                      ? Image.network(
+                          thumbnail!,
+                          fit: BoxFit.cover,
+                          width: 90,
+                          height: 60,
+                        )
+                      : Image.asset(
+                          'assets/images/test.png',
+                          fit: BoxFit.cover,
+                          width: 90,
+                          height: 60,
+                        ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      providerName,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      rating.toStringAsFixed(1),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                      ),
+                    ),
+                    Icon(Icons.star, color: Colors.amber, size: 15),
+                  ],
+                ),
+                Text(
+                  "Rs.$price$pricingType",
+                  style: TextStyle(fontSize: 12, color: Colors.red),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

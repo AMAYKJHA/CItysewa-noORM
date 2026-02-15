@@ -186,6 +186,8 @@ class ServiceManager {
             serviceType: item["service_type"],
             price: item["price"],
             priceUnit: item["price_unit"],
+            providerName: item["provider_name"],
+            thumbnail: item["thumbnail"],
           );
           serviceList.add(service);
         }
@@ -225,6 +227,7 @@ class ServiceManager {
             price: data["price"],
             priceUnit: data["price_unit"],
             providerName: data["provider_name"],
+            thumbnail: data["thumbnail"],
           ),
         );
       } else {

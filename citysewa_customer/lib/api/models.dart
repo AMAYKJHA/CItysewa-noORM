@@ -1,5 +1,3 @@
-import 'dart:async';
-
 class ApiResponse {
   bool success = false;
   String message;
