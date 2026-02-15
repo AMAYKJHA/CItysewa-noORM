@@ -124,6 +124,13 @@ class AddressAPIView(APIView):
     def post(self, request):
         data = request.data
         location = request.data.pop("location", {})
+        customer_id = request.data.pop("customer_id", None)
+        
+        if customer_id:
+            customer = Customer().get(id=customer_id)
+            if customer:
+                data["user_id"] = customer.user_id
+      
         if not location:
             return Response({"location": "Location field is reqired with (area, ward, city, district_id)."}, status=HTTP_400_BAD_REQUEST)
         

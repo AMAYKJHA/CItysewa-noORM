@@ -22,7 +22,7 @@ String parseErrorMessage(dynamic error) {
 }
 
 class AuthService {
-  final modUrl = "accounts/provider";
+  final modUrl = "accounts/customer";
 
   // login
   Future<LoginResponse> login(String email, String password) async {
@@ -99,8 +99,8 @@ class AuthService {
     }
   }
 
-  //fetch provider
-  Future<User?> getProvider(int id) async {
+  //fetch customer
+  Future<User?> getCustomer(int id) async {
     final url = Uri.parse("$baseUrl/$modUrl/$id");
     try {
       final response = await http.get(url);
@@ -121,49 +121,6 @@ class AuthService {
       }
     } catch (e) {
       return null;
-    }
-  }
-
-  //Verify provider
-  Future<VerificationResponse> verifyProvider(
-    int id,
-    String phoneNumber,
-    String docNumber,
-    String docType,
-    String photoPath,
-    String docPath,
-  ) async {
-    final url = Uri.parse("$baseUrl/$modUrl/submit-verification");
-    try {
-      var request = http.MultipartRequest('POST', url);
-      request.fields['id'] = id.toString();
-      request.fields['phone_number'] = phoneNumber;
-      request.fields['document_number'] = docNumber;
-      request.fields['document_type'] = docType;
-
-      request.files.add(await http.MultipartFile.fromPath('photo', photoPath));
-      request.files.add(await http.MultipartFile.fromPath('document', docPath));
-
-      final responseStream = await request.send();
-      final response = await http.Response.fromStream(responseStream);
-
-      if (response.statusCode == 200) {
-        return VerificationResponse(
-          success: true,
-          message: "Verification form submitted successfully.",
-        );
-      } else {
-        final data = jsonDecode(response.body);
-        return VerificationResponse(
-          success: false,
-          message: parseErrorMessage(data),
-        );
-      }
-    } catch (e) {
-      return VerificationResponse(
-        success: false,
-        message: "Something went wrong. Please try again.",
-      );
     }
   }
 }
@@ -353,6 +310,55 @@ class AddressManager {
       }
     } catch (e) {
       return AddressListResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+
+  Future<AddressResponse> addAddress(
+    int customerId,
+    int districtId,
+    String city,
+    int ward,
+    String area,
+    String landmarks,
+  ) async {
+    final url = Uri.parse("$baseUrl/$modUrl");
+    final body = jsonEncode({
+      "location": {
+        "district_id": districtId,
+        "city": city,
+        "ward": ward,
+        "area": area,
+      },
+      "customer_id": customerId,
+      "landmarks": landmarks,
+    });
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AddressResponse(
+          success: true,
+          message: "Address added successfully.",
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return AddressResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
+      }
+    } catch (e) {
+      return AddressResponse(
         success: false,
         message: "Something went wrong. Please try again.",
       );
