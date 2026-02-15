@@ -5,6 +5,12 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST
 )
 
+from src.accounts.tables import (
+    User,
+    Customer,
+    Provider
+)
+
 from .tables import (
     District,
     Location,
@@ -101,12 +107,35 @@ class AddressAPIView(APIView):
             else:
                 return Response({"detail": ADDRESS_NOT_FOUND}, status=HTTP_400_BAD_REQUEST)
           
-        addresses = Address().all()
+        customer_id = request.query_params.get("customer_id")
+        user_id = None
+        if customer_id:
+            try:
+                customer_id = int(customer_id)
+                customer = Customer().get(id=customer_id)
+                user_id = customer.user_id if customer else None
+            except ValueError:
+                return Response({"detail": "Customer id must be integer."}, status=HTTP_400_BAD_REQUEST)
+            
+        addresses = Address().all(user_id=user_id)
         serializer = AddressSerializer(addresses, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
         
     def post(self, request):
-        serializer = AddressCreateSerializer(data=request.data)
+        data = request.data
+        location = request.data.pop("location", {})
+        if not location:
+            return Response({"location": "Location field is reqired with (area, ward, city, district_id)."}, status=HTTP_400_BAD_REQUEST)
+        
+        location_serializer = LocationCreateSerializer(data=location)
+        if location_serializer.is_valid(raise_exception=True):
+            location_data = location_serializer.save()
+            data["location_id"] = location_data.get("id")
+        else:
+            return Response(location_serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+                
+        serializer = AddressCreateSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.save()
             return Response(data=data, status=HTTP_200_OK)
