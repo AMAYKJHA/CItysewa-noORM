@@ -117,10 +117,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: 200),
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 4,
-                            backgroundColor: Colors.red,
-                          ),
                           onPressed: () {
                             if (isLoggedIn) {
                               Navigator.pushNamed(
@@ -132,14 +128,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                               Navigator.pushNamed(context, '/login');
                             }
                           },
-                          child: Text(
-                            "Book service",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          child: Text("Book service"),
                         ),
                       ),
                     ),

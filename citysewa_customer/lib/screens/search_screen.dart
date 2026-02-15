@@ -71,7 +71,10 @@ class _SearchBarState extends State<SearchBar> {
         onSubmitted: (value) {
           widget.onSubmit(value);
         },
-        decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
+        decoration: InputDecoration(
+          hintText: 'Plumber, Mechaninc',
+          prefixIcon: Icon(Icons.search),
+        ),
       ),
     );
   }
