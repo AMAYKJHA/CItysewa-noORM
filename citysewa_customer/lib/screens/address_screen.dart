@@ -27,12 +27,13 @@ class _AddressScreenState extends State<AddressScreen> {
       setState(() {
         this.user = user;
       });
+      refreshAddresses();
     }
   }
 
   Future<void> refreshAddresses() async {
     final manager = AddressManager();
-    final response = await manager.listAddresses(22);
+    final response = await manager.listAddresses(user!.id);
     if (response.success) {
       setState(() {
         addressList = response.addressList;
@@ -60,7 +61,13 @@ class _AddressScreenState extends State<AddressScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepOrange,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/add-address',
+            arguments: {"userId": user!.id},
+          );
+        },
         child: Icon(Icons.add, color: Colors.white, size: 28),
       ),
     );

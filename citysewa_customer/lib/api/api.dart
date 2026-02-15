@@ -3,9 +3,7 @@ import "package:http/http.dart" as http;
 
 import "package:citysewa_customer/api/models.dart";
 
-// const baseUrl = "https://citysewa2.onrender.com/api/v1";
-
-const baseUrl = "http://127.0.0.1:8000/api/v1";
+const baseUrl = "https://citysewa2.onrender.com/api/v1";
 
 String parseErrorMessage(dynamic error) {
   if (error is Map) {
