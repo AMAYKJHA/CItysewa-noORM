@@ -22,6 +22,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   String? selectedTime;
   List<Address> addressList = [];
   String? selectedAddress;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -48,6 +49,15 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         addressList = response.addressList;
       });
     }
+  }
+
+  Future confirmBooking() async {
+    setState(() {
+      isLoading = true;
+    });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -138,7 +148,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
               ],
             ),
             const SizedBox(height: 10),
-
             LayoutBuilder(
               builder: (context, constraints) {
                 return DropdownMenuFormField<String>(
@@ -173,6 +182,26 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                   },
                 );
               },
+            ),
+
+            const SizedBox(height: 10),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 200),
+                  child: ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            confirmBooking();
+                          },
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : Text("Confirm"),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
