@@ -73,7 +73,7 @@ class Header extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ProfileIcon(userPhoto: user!.photo, radius: 42),
+          ProfileIcon(userPhoto: user?.photo, radius: 42),
           SizedBox(width: 16),
           Expanded(
             child: Column(

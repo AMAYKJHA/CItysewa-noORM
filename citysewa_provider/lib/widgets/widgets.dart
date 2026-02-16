@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import "package:cached_network_image/cached_network_image.dart";
+
+const defaultProfileImage = "assets/images/avatar.png";
 
 class AppLogo extends StatelessWidget {
   static const appLogo = 'assets/images/test.png';
@@ -9,6 +12,37 @@ class AppLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: Image.asset(appLogo, width: 2 * size, height: 2 * size),
+    );
+  }
+}
+
+class ProfileIcon extends StatelessWidget {
+  final String? userPhoto;
+  final VoidCallback? onClick;
+  final double radius;
+  const ProfileIcon({
+    super.key,
+    this.userPhoto,
+    this.onClick,
+    this.radius = 18.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print(userPhoto);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(100),
+        onTap: onClick,
+        child: CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.transparent,
+          backgroundImage: userPhoto != null
+              ? CachedNetworkImageProvider(userPhoto!)
+              : AssetImage(defaultProfileImage) as ImageProvider,
+        ),
+      ),
     );
   }
 }

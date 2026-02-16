@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        leading: ProfileIcon(onClick: onProfileClick),
+        leading: ProfileIcon(onClick: onProfileClick, userPhoto: user?.photo),
         title: Row(
           children: [
             Flexible(
