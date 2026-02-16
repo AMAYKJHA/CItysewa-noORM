@@ -50,13 +50,13 @@ class _ServiceScreenState extends State<ServiceScreen> {
     }
     final serviceId = args["serviceId"];
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 0, backgroundColor: Colors.red),
+      appBar: AppBar(title: Text("Service")),
       backgroundColor: Color(0xfffbf0f9),
       body: FutureBuilder(
         future: getService(serviceId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: Colors.red));
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData &&
               snapshot.data != null &&
               snapshot.data!.success) {

@@ -4,7 +4,8 @@ import "package:citysewa_customer/utils/utils.dart" show GetDateTime;
 import "package:citysewa_customer/session_manager.dart" show SessionManager;
 import "package:citysewa_customer/api/api.dart"
     show BookingManager, AddressManager;
-import "package:citysewa_customer/api/models.dart" show User, Service, Booking;
+import "package:citysewa_customer/api/models.dart"
+    show User, Service, Booking, Address;
 
 class BookServiceScreen extends StatefulWidget {
   const BookServiceScreen({super.key});
@@ -19,27 +20,48 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   List<String> dateList = [];
   String? selectedDate;
   String? selectedTime;
+  List<Address> addressList = [];
+  String? selectedAddress;
+
   @override
   void initState() {
     super.initState();
-    getUser();
+    loadState();
+    // loadAddresses();
   }
 
-  Future getUser() async {
-    User? user = await SessionManager.getUser();
-    if (user != null) {
+  Future loadState() async {
+    User? userLoaded = await SessionManager.getUser();
+    if (userLoaded != null) {
       setState(() {
-        this.user = user;
+        user = userLoaded;
         dateList = GetDateTime.getFutureDate(7);
         selectedDate = dateList[1];
+      });
+    }
+
+    final manager = AddressManager();
+    final response = await manager.listAddresses(user!.id);
+
+    if (response.success) {
+      setState(() {
+        addressList = response.addressList;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final route = ModalRoute.of(context);
+    Map<String, dynamic> args = {};
+    if (route?.settings.arguments is Map<String, dynamic>) {
+      args = route?.settings.arguments as Map<String, dynamic>;
+    }
     final service = args["service"];
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide(color: Colors.deepOrange.shade200),
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text("Bookings")),
@@ -92,13 +114,16 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.25),
+                          color: Colors.black.withValues(alpha: 0.2),
                           offset: Offset(0, 4),
                           blurRadius: 4,
                         ),
                       ],
                     ),
-                    child: Text("Select time"),
+                    child: Text(
+                      "Select time",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 if (selectedTime != null)
@@ -112,11 +137,51 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                   ),
               ],
             ),
+            const SizedBox(height: 10),
+
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return DropdownMenuFormField<String>(
+                  enableSearch: false,
+                  hintText: 'Select an address',
+                  width: double.infinity,
+                  inputDecorationTheme: InputDecorationTheme(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: inputBorder,
+                    enabledBorder: inputBorder,
+                    focusedBorder: inputBorder.copyWith(
+                      borderSide: BorderSide(color: Colors.deepOrange.shade400),
+                    ),
+                  ),
+                  menuStyle: MenuStyle(
+                    minimumSize: WidgetStateProperty.all(
+                      Size(constraints.maxWidth, 0),
+                    ),
+                    maximumSize: WidgetStateProperty.all(
+                      Size(constraints.maxWidth, 400),
+                    ),
+                  ),
+                  dropdownMenuEntries: addressList
+                      .map((address) {
+                        return "${address.location['area']} (${address.location['district']['name']})";
+                      })
+                      .map(buildMenuItem)
+                      .toList(),
+                  onSelected: (value) {
+                    setState(() => selectedAddress = value!);
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
     );
   }
+
+  DropdownMenuEntry<String> buildMenuItem(String item) =>
+      DropdownMenuEntry(value: item, label: item);
 
   Future<void> pickTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
