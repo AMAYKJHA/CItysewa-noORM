@@ -17,10 +17,8 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   User? user;
   List<Booking> bookingList = [];
   List<String> dateList = [];
-  List<String> timeList = List.generate(9, (i) {
-    return "${i + 9}:00";
-  });
   String? selectedDate;
+  String? selectedTime;
   @override
   void initState() {
     super.initState();
@@ -81,10 +79,56 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                 ),
               ],
             ),
+            Wrap(
+              spacing: 10,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () => pickTime(context),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.25),
+                          offset: Offset(0, 4),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: Text("Select time"),
+                  ),
+                ),
+                if (selectedTime != null)
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(selectedTime!),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> pickTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: 9, minute: 0),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedTime = picked.format(context);
+      });
+    }
   }
 }
 
