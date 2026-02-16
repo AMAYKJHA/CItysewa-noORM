@@ -23,20 +23,27 @@ class AppLogo extends StatelessWidget {
 class ProfileIcon extends StatelessWidget {
   final String? userPhoto;
   final VoidCallback? onClick;
-  const ProfileIcon({super.key, this.userPhoto, this.onClick});
+  final double radius;
+  const ProfileIcon({
+    super.key,
+    this.userPhoto,
+    this.onClick,
+    this.radius = 18.0,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(1),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: InkWell(
-        onTap: onClick ?? () {},
-        child: Center(
-          child: userPhoto != null
-              ? ClipOval(child: CachedNetworkImage(imageUrl: userPhoto!))
-              : ClipOval(
-                  child: Image.asset(defaultProfileImage, fit: BoxFit.cover),
-                ),
+        borderRadius: BorderRadius.circular(100),
+        onTap: onClick,
+        child: CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.transparent,
+          backgroundImage: userPhoto != null
+              ? CachedNetworkImageProvider(userPhoto!)
+              : AssetImage(defaultProfileImage) as ImageProvider,
         ),
       ),
     );

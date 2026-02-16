@@ -29,6 +29,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   @override
   void initState() {
     super.initState();
+    checkLogin();
   }
 
   Future<void> checkLogin() async {
@@ -122,7 +123,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                               Navigator.pushNamed(
                                 context,
                                 '/book-service',
-                                arguments: {"serviceId": service.id},
+                                arguments: {"service": service},
                               );
                             } else {
                               Navigator.pushNamed(context, '/login');

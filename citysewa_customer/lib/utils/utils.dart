@@ -1,4 +1,5 @@
 import "dart:math";
+import "package:intl/intl.dart";
 
 class GetRandomNumber {
   static final random = Random();
@@ -9,5 +10,17 @@ class GetRandomNumber {
 
   static int getInt({int max = 10}) {
     return random.nextInt(max);
+  }
+}
+
+class GetDateTime {
+  static List<String> getFutureDate(int days) {
+    final today = DateTime.now();
+    final formatter = DateFormat("E dd MMM");
+
+    return List.generate(days, (i) {
+      final date = today.add(Duration(days: i));
+      return formatter.format(date);
+    });
   }
 }
