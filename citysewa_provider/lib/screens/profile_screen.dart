@@ -4,7 +4,7 @@ import 'package:citysewa_provider/api/api.dart' show AuthService;
 import 'package:citysewa_provider/api/models.dart' show User;
 import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 import 'package:citysewa_provider/widgets/widgets.dart'
-    show VerifyYourselfBanner;
+    show VerifyYourselfBanner, ProfileIcon;
 
 AuthService auth = AuthService();
 
@@ -85,13 +85,7 @@ class Header extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 45,
-            backgroundColor: Colors.white,
-            backgroundImage: AssetImage(
-              user!.photo ?? 'assets/images/test.png',
-            ),
-          ),
+          ProfileIcon(userPhoto: user?.photo, radius: 42),
           SizedBox(width: 16),
           Expanded(
             child: Column(

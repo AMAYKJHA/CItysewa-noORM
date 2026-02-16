@@ -12,6 +12,7 @@ import "package:citysewa_provider/screens/pages/booking_page.dart"
     show BookingPage;
 import "package:citysewa_provider/screens/pages/service_page.dart"
     show ServicePage;
+import "package:citysewa_provider/widgets/widgets.dart" show ProfileIcon;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -109,6 +110,10 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void onProfileClick() {
+    Navigator.pushNamed(context, '/profile');
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
@@ -119,7 +124,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,
-        leading: ProfileIcon(),
+        leading: ProfileIcon(onClick: onProfileClick, userPhoto: user?.photo),
         titleSpacing: 8,
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
         title: Row(
@@ -203,27 +208,6 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (value) {
           bottomNavigation(value);
         },
-      ),
-    );
-  }
-}
-
-class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/profile');
-        },
-        child: CircleAvatar(
-          radius: 16,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage('assets/images/test.png'),
-        ),
       ),
     );
   }

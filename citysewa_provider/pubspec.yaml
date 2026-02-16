@@ -42,6 +42,7 @@ dependencies:
   circle_nav_bar: ^2.2.0
   curved_labeled_navigation_bar: ^2.0.6
   flutter_launcher_icons: ^0.14.4
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
