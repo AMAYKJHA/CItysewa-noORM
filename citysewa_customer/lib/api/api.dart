@@ -206,6 +206,43 @@ class ServiceManager {
 class BookingManager {
   final modUrl = "bookings";
 
+  // create booking
+  Future<BookingResponse> createBooking(Booking booking) async {
+    final url = Uri.parse("$baseUrl/$modUrl");
+    final body = {
+      "service_id": booking.serviceId,
+      "customer_id": booking.customerId,
+      "address_id": booking.addressId,
+      "booking_date": booking.bookingDate,
+      "booking_time": booking.bookingTime,
+    };
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return BookingResponse(
+          success: true,
+          message: "Booking created successfully.",
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return BookingResponse(success: true, message: parseErrorMessage(data));
+      }
+    } catch (e) {
+      return BookingResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+
   // list bookings
   Future<BookingListResponse> listBookings(int customerId) async {
     final url = Uri.parse("$baseUrl/$modUrl?customer_id=$customerId");
@@ -284,7 +321,6 @@ class AddressManager {
 
     try {
       final response = await http.get(url);
-      print(response.body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<Address> addressList = [];

@@ -67,6 +67,16 @@ class AddressResponse {
   AddressResponse({required this.success, required this.message, this.address});
 }
 
+class BookingResponse extends ApiResponse {
+  final Booking? booking;
+
+  BookingResponse({
+    required super.success,
+    required super.message,
+    this.booking,
+  });
+}
+
 class BookingListResponse extends ApiResponse {
   List<Booking>? bookingList;
 
@@ -134,7 +144,7 @@ class Service {
 }
 
 class Booking {
-  final int id;
+  final int? id;
   final int serviceId;
   final int customerId;
   final int addressId;
@@ -143,13 +153,13 @@ class Booking {
   final String status;
 
   Booking({
-    required this.id,
+    this.id,
     required this.serviceId,
     required this.customerId,
     required this.addressId,
     required this.bookingDate,
     required this.bookingTime,
-    required this.status,
+    this.status = 'Pending',
   });
 }
 

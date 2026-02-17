@@ -16,19 +16,18 @@ class BookServiceScreen extends StatefulWidget {
 
 class _BookServiceScreenState extends State<BookServiceScreen> {
   User? user;
-  List<Booking> bookingList = [];
   List<String> dateList = [];
+  Service? service;
   String? selectedDate;
   String? selectedTime;
   List<Address> addressList = [];
-  String? selectedAddress;
+  Address? selectedAddress;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     loadState();
-    // loadAddresses();
   }
 
   Future loadState() async {
@@ -37,7 +36,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
       setState(() {
         user = userLoaded;
         dateList = GetDateTime.getFutureDate(7);
-        selectedDate = dateList[1];
+        selectedDate = dateList[1].split(' ')[0];
       });
     }
 
@@ -55,6 +54,44 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     setState(() {
       isLoading = true;
     });
+    final serviceId = service?.id;
+    final customerId = user?.id;
+    final addressId = selectedAddress?.id;
+    if (serviceId == null ||
+        customerId == null ||
+        addressId == null ||
+        selectedDate == null ||
+        selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Make sure you entered all fields correctly.")),
+      );
+    } else {
+      final booking = Booking(
+        serviceId: serviceId,
+        customerId: customerId,
+        addressId: addressId,
+        bookingDate: selectedDate!,
+        bookingTime: selectedTime!,
+      );
+      try {
+        final manager = BookingManager();
+        final response = await manager.createBooking(booking);
+        if (response.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              content: Text(response.message),
+            ),
+          );
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Something went wrong. Please try again.")),
+        );
+      }
+    }
+
     setState(() {
       isLoading = false;
     });
@@ -67,7 +104,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     if (route?.settings.arguments is Map<String, dynamic>) {
       args = route?.settings.arguments as Map<String, dynamic>;
     }
-    final service = args["service"];
+    service = args["service"];
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.deepOrange.shade200),
@@ -79,7 +116,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: [
-            ServiceTile(service: service),
+            ServiceTile(service: service!),
             const SizedBox(height: 18),
             Text("Pick a date"),
             Wrap(
@@ -89,7 +126,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                     date: date,
                     onClick: () {
                       setState(() {
-                        selectedDate = date;
+                        selectedDate = date.split(' ')[0];
                       });
                     },
                   ),
@@ -150,7 +187,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
             const SizedBox(height: 10),
             LayoutBuilder(
               builder: (context, constraints) {
-                return DropdownMenuFormField<String>(
+                return DropdownMenuFormField<Address>(
                   enableSearch: false,
                   hintText: 'Select an address',
                   width: double.infinity,
@@ -171,14 +208,9 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
                       Size(constraints.maxWidth, 400),
                     ),
                   ),
-                  dropdownMenuEntries: addressList
-                      .map((address) {
-                        return "${address.location['area']} (${address.location['district']['name']})";
-                      })
-                      .map(buildMenuItem)
-                      .toList(),
+                  dropdownMenuEntries: addressList.map(buildMenuItem).toList(),
                   onSelected: (value) {
-                    setState(() => selectedAddress = value!);
+                    setState(() => selectedAddress = value);
                   },
                 );
               },
@@ -209,8 +241,11 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     );
   }
 
-  DropdownMenuEntry<String> buildMenuItem(String item) =>
-      DropdownMenuEntry(value: item, label: item);
+  DropdownMenuEntry<Address> buildMenuItem(Address address) =>
+      DropdownMenuEntry(
+        value: address,
+        label: "${address.location['area']} (${address.landmarks})",
+      );
 
   Future<void> pickTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -220,7 +255,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
 
     if (picked != null) {
       setState(() {
-        selectedTime = picked.format(context);
+        selectedTime = picked.format(context).split(' ')[0];
       });
     }
   }
@@ -285,7 +320,7 @@ class ServiceTile extends StatelessWidget {
                 ],
               ),
               Text(
-                "Rs.${service.price} /${service.priceUnit}",
+                "Rs.${service.price} ${service.priceUnit}",
                 style: TextStyle(fontSize: 12, color: Colors.red),
               ),
             ],
@@ -323,8 +358,8 @@ class RenderDate extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(splitDate[0], style: textStyle),
-            Text("${splitDate[1]} ${splitDate[2]}", style: textStyle),
+            Text(splitDate[1], style: textStyle),
+            Text("${splitDate[2]} ${splitDate[3]}", style: textStyle),
           ],
         ),
       ),

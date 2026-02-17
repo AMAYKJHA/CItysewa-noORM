@@ -269,7 +269,7 @@ class ServiceTile extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "Rs.${service.price} /${service.priceUnit}",
+                  "Rs.${service.price} ${service.priceUnit}",
                   style: TextStyle(fontSize: 12, color: Colors.red),
                 ),
               ],

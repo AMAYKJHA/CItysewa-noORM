@@ -18,7 +18,8 @@ from src.addresses.messages import (
 )
 
 from .messages import (
-    PROVIDER_NOT_AVAILABLE
+    PROVIDER_NOT_AVAILABLE,
+    SAME_PROVIDER_AND_CUSTOMER
 )
 
 class BookingCreateSerializer(serializers.Serializer):
@@ -29,25 +30,31 @@ class BookingCreateSerializer(serializers.Serializer):
     booking_time = serializers.TimeField()
     status = serializers.CharField(required=False, default='Pending')
     
-    def is_provider_available(self, service_id, booking_date, booking_time):
+    def is_provider_available(self, customer, service_id, booking_date, booking_time):
         service = Service().get(id=service_id)
         if not service:
             raise serializers.ValidationError({
                 "message": SERVICE_NOT_FOUND
             })
-        
+            
+        provider = Provider().get(id=service.provider_id)
+        if(customer.user_id == provider.user_id):
+            raise serializers.ValidationError({
+                "message": SAME_PROVIDER_AND_CUSTOMER
+            })
+            
         provider_services = Service().all(provider_id=service.provider_id)
-        # print(f"{provider_services=}")
         provider_services_id = [service.get("id") for service in provider_services]
-        # print(f"{provider_services_id=}")
         provider_bookings = Booking().all(service_id=tuple(provider_services_id)) 
-        print(f"{provider_bookings=}")
+        
         provider_bookings_date = [booking.get("booking_date") for booking in provider_bookings]
         provider_bookings_time = [booking.get("booking_time") for booking in provider_bookings]
+        
         return not (booking_date in provider_bookings_date and booking_time in provider_bookings_time)            
         
-    def validate(self, attrs):            
-        if not Customer().get(id=attrs.get("customer_id")):
+    def validate(self, attrs):   
+        customer = Customer().get(id=attrs.get("customer_id"))
+        if not customer:
             raise serializers.ValidationError({
                 "message": CUSTOMER_NOT_FOUND
             })
@@ -58,6 +65,7 @@ class BookingCreateSerializer(serializers.Serializer):
             })
             
         if not self.is_provider_available(
+            customer=customer,
             service_id=attrs.get("service_id"),
             booking_date=attrs.get("booking_date"),
             booking_time=attrs.get("booking_time")
