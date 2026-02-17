@@ -351,8 +351,8 @@ class DocumentCreateSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         provider_id = attrs.get("provider_id")
-        provider = Provider().get(id=provider_id)
-        if provider:
+        document = Document().get(provider_id=provider_id)
+        if document:
             raise serializers.ValidationError({
                 "message": DOCUMENT_ALREADY_SUBMITTED
             })

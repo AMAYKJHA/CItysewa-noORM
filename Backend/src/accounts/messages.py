@@ -24,5 +24,5 @@ EMAIL_ALREADY_ASSOCIATED = _("This email is already associated with another acco
 
 DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC = _("This document number is already associated with another account.")
 
-DOCUMENT_ALREADY_SUBMITTED = _("Document has already been submitted for this provider.")
+DOCUMENT_ALREADY_SUBMITTED = _("You have already been submitted for this account.")
 STATUS_NOT_MATCHED = _("Verification status should be one of these {status}.")
