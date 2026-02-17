@@ -45,10 +45,14 @@ class BookingAPIView(APIView):
             direction = 1 if order_dir.lower() == 'desc' else 0        
         
         provider_id = request.query_params.get("provider_id")
+        customer_id = request.query_params.get("customer_id")
         try:
             provider_id = int(provider_id) if provider_id is not None else None
+            customer_id = int(customer_id) if customer_id is not None else None
         except ValueError:
             provider_id = None
+            customer_id = None
+            
         service_ids = None
         if provider_id:
             service_and_provider_id = Service().join(
@@ -58,8 +62,8 @@ class BookingAPIView(APIView):
                 right_conditions={"id": provider_id}
             )
             service_ids = tuple([item.get("services_id") for item in service_and_provider_id])
-            
-        bookings = Booking().all(order_by=order_by, order_dir=direction, service_id=service_ids)        
+                
+        bookings = Booking().all(order_by=order_by, order_dir=direction, service_id=service_ids, customer_id=customer_id)        
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
         
