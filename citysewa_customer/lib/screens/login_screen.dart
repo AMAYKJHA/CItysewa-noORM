@@ -98,7 +98,8 @@ class _LoginFormState extends State<LoginForm> {
       await SessionManager.saveLogin();
       await SessionManager.saveUser(result.user!);
       if (widget.afterLogin != null) widget.afterLogin!();
-      Navigator.pop(context);
+
+      Navigator.popUntil(context, (route) => route.isFirst);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,

@@ -16,7 +16,7 @@ class GetRandomNumber {
 class GetDateTime {
   static List<String> getFutureDate(int days) {
     final today = DateTime.now();
-    final formatter = DateFormat("E dd MMM");
+    final formatter = DateFormat("yyyy-MM-dd E dd MMM");
 
     return List.generate(days, (i) {
       final date = today.add(Duration(days: i));
