@@ -209,13 +209,13 @@ class BookingManager {
   // create booking
   Future<BookingResponse> createBooking(Booking booking) async {
     final url = Uri.parse("$baseUrl/$modUrl");
-    final body = {
+    final body = jsonEncode({
       "service_id": booking.serviceId,
       "customer_id": booking.customerId,
       "address_id": booking.addressId,
       "booking_date": booking.bookingDate,
       "booking_time": booking.bookingTime,
-    };
+    });
     try {
       final response = await http.post(
         url,
@@ -233,9 +233,13 @@ class BookingManager {
         );
       } else {
         final data = jsonDecode(response.body);
-        return BookingResponse(success: true, message: parseErrorMessage(data));
+        return BookingResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
       }
     } catch (e) {
+      print(e);
       return BookingResponse(
         success: false,
         message: "Something went wrong. Please try again.",

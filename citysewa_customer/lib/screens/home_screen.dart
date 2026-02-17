@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
   bool isLoggedIn = false;
   User? user;
   int currentPageIndex = 0;
@@ -30,11 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    checkLogin();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    checkLogin();
   }
 
   Future<void> checkLogin() async {
     final isLoggedIn = await SessionManager.getLogin();
-    if (isLoggedIn) {
+    if (isLoggedIn != this.isLoggedIn) {
       final user = await SessionManager.getUser();
       setState(() {
         this.isLoggedIn = true;
