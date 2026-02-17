@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text("Profile")),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: ListView(
