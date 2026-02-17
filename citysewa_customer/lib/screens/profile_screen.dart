@@ -35,7 +35,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Padding(
         padding: EdgeInsets.all(10),
         child: ListView(
-          children: [Header(user), SizedBox(height: 24), SettingsContainer()],
+          children: [
+            Header(user),
+            SizedBox(height: 24),
+            SettingsContainer(),
+            SizedBox(height: 15),
+            FilledButton(
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+                SessionManager.logout();
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Text("Log out"),
+            ),
+          ],
         ),
       ),
     );

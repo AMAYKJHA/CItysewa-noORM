@@ -15,10 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), checkLogin);
+    Timer(Duration(seconds: 3), goToHome);
   }
 
-  void checkLogin() async {
+  void goToHome() async {
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              AppLogo(size: 90),
+              AppLogo(size: 88),
               SizedBox(height: 12),
               Text(
                 "Local Service, Made Simple",

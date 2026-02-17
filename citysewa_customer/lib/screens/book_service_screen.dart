@@ -51,21 +51,31 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   }
 
   Future confirmBooking() async {
+    print("1.here" * 10);
     setState(() {
       isLoading = true;
     });
+    print("2.here" * 10);
     final serviceId = service?.id;
     final customerId = user?.id;
     final addressId = selectedAddress?.id;
+
+    print("3.here" * 10);
     if (serviceId == null ||
         customerId == null ||
         addressId == null ||
         selectedDate == null ||
         selectedTime == null) {
+      print("4.here" * 10);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Make sure you entered all fields correctly.")),
+        SnackBar(
+          content: Center(
+            child: Text("Make sure you entered all fields correctly."),
+          ),
+        ),
       );
     } else {
+      print("5.here" * 10);
       final booking = Booking(
         serviceId: serviceId,
         customerId: customerId,
@@ -73,21 +83,37 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         bookingDate: selectedDate!,
         bookingTime: selectedTime!,
       );
+
+      print("6.here" * 10);
       try {
+        print("7.here" * 10);
         final manager = BookingManager();
         final response = await manager.createBooking(booking);
+
+        print("8.here" * 10);
         if (response.success) {
+          print("9.here" * 10);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
-              content: Text(response.message),
+              content: Center(child: Text(response.message)),
             ),
           );
           Navigator.popUntil(context, (route) => route.isFirst);
+        } else {
+          print("10.here" * 10);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Center(child: Text(response.message))),
+          );
         }
       } catch (e) {
+        print("6.here" * 10);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Something went wrong. Please try again.")),
+          SnackBar(
+            content: Center(
+              child: Text("Something went wrong. Please try again."),
+            ),
+          ),
         );
       }
     }

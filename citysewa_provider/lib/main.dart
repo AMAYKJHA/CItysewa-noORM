@@ -57,6 +57,17 @@ class RootApp extends StatelessWidget {
             textStyle: TextStyle(fontSize: 18),
           ),
         ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.deepOrange,
+            minimumSize: Size.fromHeight(50),
+            textStyle: TextStyle(fontSize: 18),
+          ),
+        ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: Colors.deepOrange,
           contentTextStyle: TextStyle(fontSize: 14, color: Colors.white),
