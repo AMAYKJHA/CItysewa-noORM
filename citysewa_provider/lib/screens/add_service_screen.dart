@@ -15,12 +15,13 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   bool isLoading = false;
   String? thumbnailPath;
   String photoLabel = "Upload a thumbnail";
+  List<String> priceUnitList = ["hr", 'day', 'total'];
+  String? selectedPriceUnit;
 
   final titleController = TextEditingController();
   final serviceTypeController = TextEditingController();
   final descController = TextEditingController();
   final priceController = TextEditingController();
-  final priceUnitController = TextEditingController();
 
   Future<XFile?> getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -46,13 +47,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     final serviceType = serviceTypeController.text.toString().trim();
     final description = descController.text.toString().trim();
     final price = priceController.text.toString().trim();
-    final priceUnit = priceUnitController.text.toString().trim();
 
     if (title.isEmpty ||
         serviceType.isEmpty ||
         description.isEmpty ||
         price.isEmpty ||
-        priceUnit.isEmpty ||
+        selectedPriceUnit == null ||
         thumbnailPath == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -85,7 +85,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           serviceType,
           description,
           integerPrice,
-          "/$priceUnit",
+          selectedPriceUnit != "total"
+              ? "/$selectedPriceUnit"
+              : selectedPriceUnit!,
           thumbnailPath!,
         );
 
@@ -121,7 +123,6 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     serviceTypeController.dispose();
     descController.dispose();
     priceController.dispose();
-    priceUnitController.dispose();
     super.dispose();
   }
 
@@ -146,11 +147,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Service"),
-        centerTitle: false,
-        toolbarHeight: kToolbarHeight,
-      ),
+      appBar: AppBar(title: const Text("Add Service")),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -195,7 +192,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 TextField(
                   controller: serviceTypeController,
                   decoration: inputDecoration.copyWith(
-                    hintText: "Service Type (e.g., Carpenter)",
+                    hintText: "Service Type (Carpenter, Plumber, ...)",
                     prefixIcon: const Icon(Icons.category_rounded),
                   ),
                 ),
@@ -212,7 +209,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 Row(
                   children: [
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: TextField(
                         controller: priceController,
                         keyboardType: TextInputType.number,
@@ -222,23 +219,34 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: TextField(
-                        controller: priceUnitController,
-                        decoration: InputDecoration(
-                          hintText: "Unit",
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: inputBorder,
-                          enabledBorder: inputBorder,
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.deepOrange.shade400,
+                      flex: 2,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return DropdownMenuFormField<String>(
+                            enableSearch: false,
+                            hintText: 'Category',
+                            inputDecorationTheme: InputDecorationTheme(
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: inputBorder,
+                              enabledBorder: inputBorder,
+                              focusedBorder: inputBorder.copyWith(
+                                borderSide: BorderSide(
+                                  color: Colors.deepOrange.shade400,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                            width: 200,
+                            dropdownMenuEntries: priceUnitList
+                                .map(buildMenuItem)
+                                .toList(),
+                            onSelected: (value) {
+                              setState(() => selectedPriceUnit = value!);
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -302,4 +310,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       ),
     );
   }
+
+  DropdownMenuEntry<String> buildMenuItem(String item) =>
+      DropdownMenuEntry(value: item, label: item);
 }

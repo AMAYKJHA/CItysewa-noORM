@@ -34,7 +34,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("Provider verification")),
       body: Padding(
         padding: EdgeInsets.all(10),
         child: ListView(children: [VerificationForm(user)]),
