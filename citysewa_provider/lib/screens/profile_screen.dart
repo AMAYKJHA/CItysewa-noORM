@@ -47,6 +47,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
             SizedBox(height: 24),
             SettingsContainer(),
+            SizedBox(height: 15),
+            FilledButton(
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+                SessionManager.logout();
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Text("Log out"),
+            ),
           ],
         ),
       ),
@@ -113,7 +122,7 @@ class Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Carpenter",
+                  "Service provider",
                   style: TextStyle(fontSize: 14, color: Colors.black54),
                 ),
                 if (!user!.verified) ...[
