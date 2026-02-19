@@ -32,16 +32,21 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
 
   Future loadState() async {
     User? userLoaded = await SessionManager.getUser();
-    if (userLoaded != null) {
-      setState(() {
-        user = userLoaded;
-        dateList = GetDateTime.getFutureDate(7);
-        selectedDate = dateList[1].split(' ')[0];
-      });
-    }
+    if (!mounted) return;
+    if (userLoaded == null) return;
+
+    final generatedDates = GetDateTime.getFutureDate(7);
+    setState(() {
+      user = userLoaded;
+      dateList = generatedDates;
+      selectedDate = generatedDates.isNotEmpty
+          ? generatedDates.first.split(' ')[0]
+          : null;
+    });
 
     final manager = AddressManager();
-    final response = await manager.listAddresses(user!.id);
+    final response = await manager.listAddresses(userLoaded.id);
+    if (!mounted) return;
 
     if (response.success) {
       setState(() {
@@ -51,22 +56,18 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   }
 
   Future confirmBooking() async {
-    print("1.here" * 10);
     setState(() {
       isLoading = true;
     });
-    print("2.here" * 10);
     final serviceId = service?.id;
     final customerId = user?.id;
     final addressId = selectedAddress?.id;
 
-    print("3.here" * 10);
     if (serviceId == null ||
         customerId == null ||
         addressId == null ||
         selectedDate == null ||
         selectedTime == null) {
-      print("4.here" * 10);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(
@@ -75,7 +76,6 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         ),
       );
     } else {
-      print("5.here" * 10);
       final booking = Booking(
         serviceId: serviceId,
         customerId: customerId,
@@ -84,15 +84,11 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
         bookingTime: selectedTime!,
       );
 
-      print("6.here" * 10);
       try {
-        print("7.here" * 10);
         final manager = BookingManager();
         final response = await manager.createBooking(booking);
 
-        print("8.here" * 10);
         if (response.success) {
-          print("9.here" * 10);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
@@ -101,13 +97,11 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
           );
           Navigator.popUntil(context, (route) => route.isFirst);
         } else {
-          print("10.here" * 10);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Center(child: Text(response.message))),
           );
         }
       } catch (e) {
-        print("6.here" * 10);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Center(
@@ -130,135 +124,188 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
     if (route?.settings.arguments is Map<String, dynamic>) {
       args = route?.settings.arguments as Map<String, dynamic>;
     }
-    service = args["service"];
+    service = args["service"] is Service ? args["service"] as Service : null;
+
+    if (service == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text("Book Service")),
+        body: Center(child: Text("Unable to load selected service.")),
+      );
+    }
+
+    if (user == null && dateList.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text("Book Service")),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    final titleTextStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: Colors.grey.shade800,
+    );
+
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: Colors.deepOrange.shade200),
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text("Bookings")),
+      appBar: AppBar(title: Text("Book Service")),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(16),
         child: ListView(
           children: [
             ServiceTile(service: service!),
-            const SizedBox(height: 18),
-            Text("Pick a date"),
-            Wrap(
-              children: [
-                ...dateList.map(
-                  (date) => RenderDate(
-                    date: date,
-                    onClick: () {
-                      setState(() {
-                        selectedDate = date.split(' ')[0];
-                      });
-                    },
+
+            const SizedBox(height: 20),
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: Offset(0, 2),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text("Selected date: "),
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white60,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(selectedDate!),
-                ),
-              ],
-            ),
-            Wrap(
-              spacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () => pickTime(context),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          offset: Offset(0, 4),
-                          blurRadius: 4,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Select Date", style: titleTextStyle),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ...dateList.map(
+                        (date) => RenderDate(
+                          date: date,
+                          isSelected: selectedDate == date.split(' ')[0],
+                          onClick: () {
+                            setState(() {
+                              selectedDate = date.split(' ')[0];
+                            });
+                          },
                         ),
-                      ],
-                    ),
-                    child: Text(
-                      "Select time",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-                if (selectedTime != null)
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white60,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(selectedTime!),
+                  const SizedBox(height: 16),
+                  Text("Select Time", style: titleTextStyle),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () => pickTime(context),
+                    icon: Icon(Icons.access_time, size: 20),
+                    label: Text(selectedTime ?? "Choose Time"),
                   ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return DropdownMenuFormField<Address>(
-                  enableSearch: false,
-                  hintText: 'Select an address',
-                  width: double.infinity,
-                  inputDecorationTheme: InputDecorationTheme(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: inputBorder,
-                    enabledBorder: inputBorder,
-                    focusedBorder: inputBorder.copyWith(
-                      borderSide: BorderSide(color: Colors.deepOrange.shade400),
-                    ),
-                  ),
-                  menuStyle: MenuStyle(
-                    minimumSize: WidgetStateProperty.all(
-                      Size(constraints.maxWidth, 0),
-                    ),
-                    maximumSize: WidgetStateProperty.all(
-                      Size(constraints.maxWidth, 400),
-                    ),
-                  ),
-                  dropdownMenuEntries: addressList.map(buildMenuItem).toList(),
-                  onSelected: (value) {
-                    setState(() => selectedAddress = value);
-                  },
-                );
-              },
+                ],
+              ),
             ),
 
-            const SizedBox(height: 10),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 200),
-                  child: ElevatedButton(
-                    onPressed: isLoading
-                        ? null
-                        : () {
-                            confirmBooking();
+            const SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Delivery Address", style: titleTextStyle),
+
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return DropdownMenuFormField<Address>(
+                              hintText: 'Select an address',
+                              width: constraints.maxWidth,
+                              inputDecorationTheme: InputDecorationTheme(
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                                border: inputBorder,
+                                enabledBorder: inputBorder,
+                                focusedBorder: inputBorder.copyWith(
+                                  borderSide: BorderSide(
+                                    color: Colors.deepOrange.shade400,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                              menuStyle: MenuStyle(
+                                minimumSize: WidgetStateProperty.all(
+                                  Size(constraints.maxWidth, 0),
+                                ),
+                                maximumSize: WidgetStateProperty.all(
+                                  Size(constraints.maxWidth, 300),
+                                ),
+                              ),
+                              dropdownMenuEntries: addressList
+                                  .map(buildMenuItem)
+                                  .toList(),
+                              onSelected: (value) {
+                                setState(() => selectedAddress = value);
+                              },
+                            );
                           },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text("Confirm"),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/add-address');
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: FilledButton(
+                onPressed: isLoading ? null : () => confirmBooking(),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.deepOrange,
+                  disabledBackgroundColor: Colors.deepOrange.shade200,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                child: isLoading
+                    ? SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                    : Text(
+                        "Confirm Booking",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -270,7 +317,7 @@ class _BookServiceScreenState extends State<BookServiceScreen> {
   DropdownMenuEntry<Address> buildMenuItem(Address address) =>
       DropdownMenuEntry(
         value: address,
-        label: "${address.location['area']} (${address.landmarks})",
+        label: "${address.location['area'] ?? 'Area'} (${address.landmarks})",
       );
 
   Future<void> pickTime(BuildContext context) async {
@@ -296,60 +343,87 @@ class ServiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(5),
-      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          SizedBox(
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: service.thumbnail != null
-                    ? Image.network(
-                        service.thumbnail!,
-                        fit: BoxFit.cover,
-                        width: 90,
-                        height: 60,
-                      )
-                    : Image.asset(
-                        'assets/images/test.png',
-                        fit: BoxFit.cover,
-                        width: 90,
-                        height: 60,
-                      ),
-              ),
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: service.thumbnail != null
+                ? Image.network(
+                    service.thumbnail!,
+                    fit: BoxFit.cover,
+                    width: 80,
+                    height: 80,
+                  )
+                : Image.asset(
+                    'assets/images/test.png',
+                    fit: BoxFit.cover,
+                    width: 80,
+                    height: 80,
+                  ),
           ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 5),
-              Text(
-                service.title,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Row(
-                children: [
-                  Text(
-                    service.providerName,
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  service.title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.store_outlined,
+                      size: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      service.providerName,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "Rs. ${service.price} ${service.priceUnit}",
                     style: TextStyle(
-                      fontSize: 12,
-                      color: const Color.fromARGB(255, 134, 134, 134),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.deepOrange,
                     ),
                   ),
-                ],
-              ),
-              Text(
-                "Rs.${service.price} ${service.priceUnit}",
-                style: TextStyle(fontSize: 12, color: Colors.red),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -359,33 +433,53 @@ class ServiceTile extends StatelessWidget {
 
 class RenderDate extends StatelessWidget {
   final String date;
+  final bool isSelected;
   final VoidCallback? onClick;
-  const RenderDate({super.key, required this.date, this.onClick});
+
+  const RenderDate({
+    super.key,
+    required this.date,
+    this.isSelected = false,
+    this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
     final splitDate = date.split(' ');
-    final textStyle = TextStyle(color: Colors.white);
-    return InkWell(
-      onTap: onClick ?? () {},
-      child: Container(
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(2),
+    final isActive = isSelected;
+
+    return GestureDetector(
+      onTap: onClick,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.orange,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              offset: Offset(0, 4),
-              blurRadius: 4,
-            ),
-          ],
+          color: isActive ? Colors.deepOrange : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isActive ? Colors.deepOrange : Colors.grey.shade300,
+            width: 1.5,
+          ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(splitDate[1], style: textStyle),
-            Text("${splitDate[2]} ${splitDate[3]}", style: textStyle),
+            Text(
+              splitDate[1],
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isActive ? Colors.white : Colors.grey.shade700,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              "${splitDate[2]} ${splitDate[3]}",
+              style: TextStyle(
+                fontSize: 11,
+                color: isActive ? Colors.white70 : Colors.grey.shade500,
+              ),
+            ),
           ],
         ),
       ),
