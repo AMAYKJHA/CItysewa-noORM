@@ -93,6 +93,19 @@ nav:hover {
     font-weight: 600;
 }
 
+.navItem--logout {
+    border: none;
+    background-color: transparent;
+    color: var(--nav-text);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.navItem--logout:hover {
+    color: var(--nav-accent);
+}
+
 .nav-logo-section {
     display: flex;
     justify-content: center;

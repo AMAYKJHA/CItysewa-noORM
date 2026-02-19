@@ -1,9 +1,18 @@
 import { useTheme } from "../../context/ThemeContext";
 import sunIcon from "../../assets/light.png";
 import moonIcon from "../../assets/dark.png";
+import { useNavigate } from "react-router-dom";
+import {useAuth } from "../../hooks/useAuth";
 
 const AdminTopBar = ({ pageTitle, onMenuClick }) => {
+    const {user, logout} = useAuth();
     const { isDark, toggleTheme } = useTheme();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/");
+    };
 
     return (
         <header className="admin-topbar">
@@ -30,6 +39,7 @@ const AdminTopBar = ({ pageTitle, onMenuClick }) => {
                     )}
                 </nav>
                 <div className="admin-topbar-actions">
+                    <button className="admin-topbar-theme-btn" style={{width: 'fit-content', padding: '8px 16px'}} onClick={handleLogout}>Logout</button>
                     <button
                         type="button"
                         className="admin-topbar-theme-btn"

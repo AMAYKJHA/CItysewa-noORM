@@ -3,7 +3,7 @@ import customerMenu from './customerMenu';
 import providerMenu from './providerMenu';
 import { useAuth } from '../../../hooks/useAuth.jsx';
 import { useTheme } from '../../../context/ThemeContext.jsx';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "./../../../Style/Navbar.css";
 import { useState, useEffect } from 'react';
 import sunIcon from "../../../assets/light.png";
@@ -59,7 +59,13 @@ const Navbar = (props) => {
     );
 };
 
-const NavMenu = ({ menu, currentPath }) => {
+const NavMenu = ({ menu, currentPath, role }) => {
+    const {logout} = useAuth();
+    const navigate = useNavigate();
+    const handleLogout = async () => {
+        await logout();
+        navigate("/");
+    }
     return(
         <section className='nav-menu'>
             {menu.map((navItem) => {
@@ -80,6 +86,9 @@ const NavMenu = ({ menu, currentPath }) => {
                     </Link>
                 );
             })}
+            {
+                (role === 'customer' || role === 'provider') ? <button className={`navItem navItem--logout`} onClick={handleLogout} >Logout</button> : null
+            }
         </section>
     );
 }

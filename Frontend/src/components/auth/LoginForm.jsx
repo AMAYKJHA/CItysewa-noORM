@@ -113,7 +113,7 @@ const LoginForm = ({
                                 value={credentials.email}
                                 onChange={handleChange}
                                 autoComplete="username"
-                                placeholder="you@example.com"
+                                placeholder="luffy@example.com"
                             />
                             {fieldErrors.email && <span className="login-field-error">{fieldErrors.email}</span>}
                         </div>

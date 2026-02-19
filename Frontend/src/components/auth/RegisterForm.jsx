@@ -247,7 +247,7 @@ const RegisterForm = ({
                         value={formData.email}
                         onChange={handleChange}
                         autoComplete="email"
-                        placeholder="you@example.com"
+                        placeholder="charizard@example.com"
                     />
                     {fieldErrors.email && (
                         <small className="field-error">{fieldErrors.email}</small>
