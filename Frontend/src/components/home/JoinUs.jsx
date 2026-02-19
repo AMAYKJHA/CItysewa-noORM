@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import '../../Style/Home.css';
+import providerIcon from "../../assets/provider.png";
+import customerIcon from "../../assets/customer.png";
+import teamIcon from "../../assets/team.png";
 
 const JoinUs = () => {
     return (
@@ -9,7 +12,7 @@ const JoinUs = () => {
             
             <div className="join-options">
                 <div className="join-card provider">
-                    <div className="icon">🔧</div>
+                    <img src={providerIcon} alt='providericon' width={80} height={80} className="icon"/>
                     <h3>Become a Provider</h3>
                     <p>Grow your service business and reach more customers in your locality.</p>
                     <ul className="benefits">
@@ -21,7 +24,7 @@ const JoinUs = () => {
                 </div>
 
                 <div className="join-card customer">
-                    <div className="icon">👤</div>
+                    <img src={customerIcon} alt='customericon' width={80} height={80} className="icon"/>
                     <h3>Become a Customer</h3>
                     <p>Find trusted local experts for any service you need, all in one place.</p>
                     <ul className="benefits">
@@ -33,7 +36,7 @@ const JoinUs = () => {
                 </div>
 
                 <div className="join-card developer">
-                    <div className="icon">💻</div>
+                    <img src={teamIcon} alt='teamicon' width={80} height={80} className="icon"/>
                     <h3>Join Our Team</h3>
                     <p>Help us build the next-generation hyperlocal marketplace platform.</p>
                     <ul className="benefits">
