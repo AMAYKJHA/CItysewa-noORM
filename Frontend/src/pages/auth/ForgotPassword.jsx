@@ -1,27 +1,73 @@
 import { useState } from "react";
+import "../../Style/Root.css"
+import "../../Style/Login.css";
 
 const ForgotPassword = () => {
-    const [method, setMethod] = useState("");
-    return(
-        <section className="forgot-password-section" style={{minWidth:'250px', border:'2px solid red', display:'flex', justifyContent:'space-evenly',alignItems:'center', flexDirection:'column', margin:'5vh', padding:'25px', color:'white'}}>
-            <h2>Forgot Password?</h2>
-            <form style={{display:'flex', flexDirection:'column'}}>
-                <span>
-                    <label>Select recovery method: </label>
-                    <select  name="recovery-method" onChange={(e) => setMethod(e.target.value)} value={method}>
-                        <option value={""} disabled hidden>Choose an Option</option>
-                        <option value={"email"}>Mail OTP to Recovery Email</option>
-                        <option value={"phone"}>Send OTP to your Phone Number</option>
-                    </select>
-                </span>
-                <span >
-                    <label htmlFor="emergency-contact">Enter your {method == "email"? "recovery email address": "recovery phone number"}</label>
-                    <input type={method.includes("phone")?"tel":"email"} id="emergency-contact" name={method.includes("phone")?"phone":"email"} required/>
-                </span>
-            </form>
-            <button>Ok</button>
-            {/* Logic for OTP */}
-        </section>
+    const [email, setEmail] = useState("");
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError("");
+
+        if (!email.trim()) {
+            setError("Email is required.");
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        setSubmitted(true);
+        // In a real app, we would call a password reset endpoint here.
+    };
+
+    return (
+        <div className="login-page">
+            <div className="login-card">
+                <form className="login-form-inner" onSubmit={handleSubmit} noValidate>
+                    <div className="login-header">
+                        <h1 className="login-title">Reset your password</h1>
+                        <p className="login-subtitle">
+                            Enter the email associated with your account and we&apos;ll send you a reset link.
+                        </p>
+                    </div>
+                    <div className="login-fields">
+                        {submitted && !error && (
+                            <div className="login-error" role="status" style={{ backgroundColor: "rgba(46, 204, 113, 0.12)", color: "#27ae60", borderColor: "rgba(46, 204, 113, 0.4)" }}>
+                                If an account exists for <strong>{email}</strong>, you&apos;ll receive an email with instructions to reset your password.
+                            </div>
+                        )}
+                        {error && !submitted && (
+                            <div className="login-error" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        <div className="login-field">
+                            <label htmlFor="forgot-email">Email</label>
+                            <input
+                                id="forgot-email"
+                                type="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    if (error) setError("");
+                                }}
+                                autoComplete="email"
+                                placeholder="you@example.com"
+                            />
+                        </div>
+                        <button type="submit" className="login-submit-btn">
+                            Send reset link
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 };
 

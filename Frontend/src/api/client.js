@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
 
 // Base axios instance
 const api = axios.create({
@@ -24,14 +22,11 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if(error.response?.status === 401) {
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            const isAdmin = user?.role === "admin";
             localStorage.removeItem("token");
-            try{
-                const navigate = useNavigate();
-                navigate("/login");
-            } catch(err) {
-                console.error(err);
-                window.location.href = "/login";
-            }
+            localStorage.removeItem("user");
+            window.location.href = isAdmin ? "/login-admin" : "/login";
         }
         return Promise.reject(error);
     }
@@ -91,5 +86,32 @@ export const adminLogin = (data) =>
 
 export const adminRegister = (data) =>
     api.post("/accounts/admin/register",data);
+
+//Service related APIs
+export const fetchServices = () =>
+    api.get("/services");
+
+export const fetchServiceById = (id) =>
+    api.get(`/services/${id}`);
+
+export const createService = (data) =>
+    api.post("/services/register",data);
+
+//Booking related APIs
+export const fetchBookings = (data) =>
+    api.get("/bookings",data);
+
+export const fetchBookingById = (id) =>
+    api.get(`/bookings/${id}`);
+
+export const createBooking = (data) =>
+    api.post("/bookings/register",data);
+
+export const getBookingStats = () =>
+    api.get("/bookings/stats");
+
+//Address related APIs
+export const fetchAddresses = () =>
+    api.get("/addresses");
 
 export default api;

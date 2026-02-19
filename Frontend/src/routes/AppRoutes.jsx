@@ -1,22 +1,27 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
-// Import Auth pages
+// Import Auth components
 import Login from '../pages/auth/login/Login.jsx';
 import LoginAdmin from '../pages/auth/login/LoginAdmin.jsx';
 import Register from '../pages/auth/register/Register.jsx';
 import RegisterAdmin from '../pages/auth/register/RegisterAdmin.jsx';
 import ForgotPassword from '../pages/auth/ForgotPassword';
 
-// Import Landing page
+// Import Landing components
 import Home from '../pages/Home.jsx';
 import About from '../pages/About.jsx';
+import JoinOurTeam from '../pages/JoinOurTeam.jsx';
 
-// Import Dashboard pages
+// Import Dashboard
 import CustomerDashboard from '../pages/dashboard/CustomerDashboard';
+import CustomerBookings from '../pages/dashboard/CustomerBookings';
+import CustomerServices from '../pages/dashboard/CustomerServices';
 import AdminDashboard from '../pages/dashboard/admin/AdminDashboard.jsx';
 import ProviderDashboard from '../pages/dashboard/ProviderDashboard';
+import ProviderMyServices from '../pages/dashboard/ProviderMyServices';
+import ProviderBookings from '../pages/dashboard/ProviderBookings';
 
-// Import Booking related pages
+// Import Booking related components
 // import Bookings from '../pages/bookings/Bookings';
 import BookingDetail from '../pages/bookings/BookingDetail';
 import BookingForm from '../pages/bookings/BookingForm';
@@ -55,6 +60,7 @@ const AppRoutes = ()=> (
                 <Route path='services' element={<Services/>}/>
                 <Route path='/services/:id' element={<ServiceDetail/>}/>
                 <Route path='/about' element={<About/>}/>
+                <Route path='/join-our-team' element={<JoinOurTeam/>}/>
             </Route>
 
             {/* Auth Routes */}
@@ -71,7 +77,8 @@ const AppRoutes = ()=> (
             <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
                 <Route element={<CustomerLayout/>}>
                     <Route path='/customer' element={<CustomerDashboard/>}/>
-                    {/* <Route path='/customer/bookings' element={<Bookings/>}/> */}
+                    <Route path='/customer/services' element={<CustomerServices/>}/>
+                    <Route path='/customer/bookings' element={<CustomerBookings/>}/>
                     <Route path='/customer/bookings/:id' element={<BookingDetail/>}/>
                     <Route path='/customer/bookings/new/:serviceId' element={<BookingForm/>}/>
                     <Route path='/customer/addresses' element={<Addresses/>}/>
@@ -83,10 +90,11 @@ const AppRoutes = ()=> (
             <Route element={<ProtectedRoute allowedRoles={["provider"]} />}>
                 <Route element={<ProviderLayout/>}>
                     <Route path='/provider' element={<ProviderDashboard/>}/>
+                    <Route path='/provider/my-services' element={<ProviderMyServices/>}/>
                     <Route path='/provider/services' element={<Services/>}/>
                     <Route path='/provider/services/new' element={<ServiceForm/>}/>
                     <Route path='/provider/services/:id' element={<ServiceDetail/>}/>
-                    {/* <Route path='/provider/bookings' element={<Bookings/>}/> */}
+                    <Route path='/provider/bookings' element={<ProviderBookings/>}/>
                     <Route path='/provider/profile' element={<ProviderProfile/>}/>
                 </Route>
             </Route>

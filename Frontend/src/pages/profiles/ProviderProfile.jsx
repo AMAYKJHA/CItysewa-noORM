@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../Style/Profiles.css";
+import "../../Style/SectionPages.css";
 import { fetchVerificationData } from "../../api/client";
 import VerificationForm from "./components/VerificationForm";
 import VerificationDetails from "./components/VerificationDetails";
@@ -8,12 +9,12 @@ const ProviderProfile = () => {
     const [loading, setLoading] = useState(true);
     const [verification, setVerification] = useState(null);
 
-    useEffect(()=>{
+    useEffect(() => {
         const loadVerificationData = async () => {
-            try{
+            try {
                 const res = await fetchVerificationData();
                 setVerification(res.data);
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             } finally {
                 setLoading(false);
@@ -22,14 +23,20 @@ const ProviderProfile = () => {
         loadVerificationData();
     }, []);
 
-    if(loading) {
-        return <p>Loading Profile...</p>;
+    if (loading) {
+        return <div className="profile-page"><div className="dashboard-loading">Loading profile…</div></div>;
     }
-    return(
-        <section className="provider-profile">
-            <h2>My Profile</h2>
-            {!verification?.is_verified ? (<VerificationForm/>) : (<VerificationDetails data={verification}/>)}
-        </section>
+    return (
+        <div className="profile-page">
+            <div className="dashboard-header">
+                <h1>My Profile</h1>
+                <p className="dashboard-subtitle">Verification and account details</p>
+            </div>
+            <section className="provider-profile profile-card">
+                <h2>Verification</h2>
+                {!verification?.is_verified ? <VerificationForm /> : <VerificationDetails data={verification} />}
+            </section>
+        </div>
     );
 };
 

@@ -1,153 +1,302 @@
-.register-form, .register-admin-form{
-    width: 90vw; 
-    aspect-ratio: 2/3; 
-    padding: 25px 13px 25px 13px;
+/* REGISTER LAYOUT
+   Matches login styling and uses theme variables */
+
+.register-form,
+.register-admin-form {
+    width: 90vw;
+    aspect-ratio: 2/3;
+    padding: 25px 13px;
     margin: 13px;
     letter-spacing: 1px;
-    border: 2px solid #4C5FD5;
     border-radius: 1rem;
     display: flex;
-    color: rgba(255, 255, 255, 0.75);
-    background: rgba(76, 95, 213, 0.15);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.35),
+        rgba(0, 0, 0, 0.15)
+    );
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
 }
 
-.register-form fieldset, .register-admin-form fieldset{
+.register-form fieldset,
+.register-admin-form fieldset {
     width: 100%;
-    padding: 0px 13px 0 13px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 0 13px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-left: none;
     border-right: none;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: flex-start;
+    gap: 16px;
 }
 
-.register-form fieldset legend, .register-admin-form fieldset legend{
+.register-form fieldset legend,
+.register-admin-form fieldset legend {
     width: 35%;
     text-align: center;
-    font-Size: x-large;
+    font-size: x-large;
+    color: var(--text-primary);
 }
 
-.register-admin-form fieldset legend{
+.register-admin-form fieldset legend {
     width: 80%;
 }
 
-.register-form fieldset span, .register-admin-form fieldset span{
+.register-form fieldset span,
+.register-admin-form fieldset span {
     min-width: 100%;
     display: flex;
     flex-direction: column;
-    /* border: 2px solid red; */
 }
 
-.register-form fieldset span:nth-of-type(2){
+.register-form fieldset span:nth-of-type(2) {
     flex-direction: row;
     column-gap: 25px;
 }
 
-.register-form fieldset span:nth-of-type(2) span{
+.register-form fieldset span:nth-of-type(2) span {
     min-width: 30%;
     display: flex;
     flex-direction: column;
 }
 
-label{
-    font-size: larger;
-}
-
-input{
-    all: unset;
-    width: 100%;
-    margin-top: 8px;
-    border: 2px solid rgba(135, 206, 235, 0.5);
-    padding: 8px 13px 8px 13px;
-    box-sizing: border-box;
-    border-radius: 0.75rem;
-}
-
-input:focus{
-    border: 2px solid rgba(135, 206, 235, 0.75);
-    background: rgba(135, 206, 235, 0.05);
-}
-
-.register-form fieldset span:nth-of-type(3), .register-form fieldset span:nth-of-type(4){
+.register-form fieldset span:nth-of-type(3),
+.register-form fieldset span:nth-of-type(4) {
     flex-direction: row;
     gap: 25px;
 }
 
-select{
+label {
+    font-size: larger;
+    color: var(--text-primary);
+}
+
+input {
+    all: unset;
+    width: 100%;
+    margin-top: 8px;
+    border: 2px solid var(--border-color);
+    padding: 8px 13px;
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
+}
+
+input::placeholder {
+    color: var(--text-secondary);
+}
+
+input:focus {
+    border-color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+select {
     font-size: large;
     min-width: 40%;
     max-width: 130px;
     padding: 4px;
     outline: none;
-    border: 2px solid rgba(135, 206, 235, 0.5);
+    border: 2px solid var(--border-color);
     border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
 }
 
-button{
+select:focus {
+    border-color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+button {
     all: unset;
-    border: 2px solid rgba(135, 206, 235, 0.75);
     border-radius: 0.75rem;
-    padding: 8px 13px 8px 13px;
-    align-self: flex-end;
-    box-sizing: border-box;
+    padding: 8px 13px;
     align-self: center;
+    box-sizing: border-box;
     font-size: large;
     cursor: pointer;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    min-width: 140px;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.15s ease,
+        box-shadow 0.2s ease;
 }
 
-button:hover{
-    border: 2px solid rgba(135, 206, 235, 1);
-    background: rgba(135, 206, 235, 0.26);
-    color: white;
+button:hover {
+    background-color: #ff8a50;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
-@media only screen and (min-width: 321px){
-    .register-form, .register-admin-form{
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.error {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+    background-color: rgba(255, 77, 79, 0.15);
+    color: #ff4d4f;
+    font-size: 0.9rem;
+}
+
+.success {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    font-size: 0.9rem;
+}
+
+.field-error {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: #ff4d4f;
+}
+
+.password-strength {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.password-strength-bar {
+    display: flex;
+    gap: 4px;
+}
+
+.password-strength-bar .segment {
+    flex: 1;
+    height: 4px;
+    border-radius: 999px;
+    background-color: var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.password-strength-bar .segment.filled {
+    background-color: var(--accent-color);
+}
+
+.strength-weak .password-strength-bar .segment:first-child {
+    background-color: #ff4d4f;
+}
+
+.strength-medium .password-strength-bar .segment:first-child,
+.strength-medium .password-strength-bar .segment:nth-child(2) {
+    background-color: #ffa502;
+}
+
+.strength-strong .password-strength-bar .segment {
+    background-color: #2ecc71;
+}
+
+.password-strength-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.register-logo-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 4px 0 12px;
+}
+
+.register-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background-color: var(--card-bg);
+}
+
+.register-footer {
+    width: 100%;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.register-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.register-link:hover {
+    color: #ff8a50;
+    text-decoration: underline;
+}
+
+@media only screen and (min-width: 321px) {
+    .register-form,
+    .register-admin-form {
         aspect-ratio: 3/4;
     }
 }
 
-@media only screen and (min-width: 375px){
-    .register-form, .register-admin-form{
+@media only screen and (min-width: 375px) {
+    .register-form,
+    .register-admin-form {
         aspect-ratio: 4/5;
     }
-    legend{
+
+    legend {
         font-size: xx-large;
     }
-    .register-admin-form fieldset legend{
+
+    .register-admin-form fieldset legend {
         font-size: xx-large;
         width: 62%;
     }
-    label{
+
+    label {
         font-size: x-large;
     }
-    input{
+
+    input {
         font-size: larger;
     }
-    button{
+
+    button {
         font-size: x-large;
     }
 }
 
-@media only screen and (min-width: 426px){
-    .register-form, .register-admin-form{
+@media only screen and (min-width: 426px) {
+    .register-form,
+    .register-admin-form {
         width: 60vw;
         max-height: 60vh;
     }
 }
 
-@media only screen and (min-width: 768px){
-    .register-form, .register-admin-form{
+@media only screen and (min-width: 768px) {
+    .register-form,
+    .register-admin-form {
         width: 490px;
         margin: 25px;
         padding: 40px;
     }
-    legend{
+
+    legend {
         width: 31%;
     }
 }
