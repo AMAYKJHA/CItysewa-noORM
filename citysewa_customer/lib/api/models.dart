@@ -129,7 +129,7 @@ class Service {
   final String priceUnit;
   String providerName;
   String? thumbnail;
-  String? description;
+  String description;
 
   Service({
     required this.id,
@@ -139,7 +139,8 @@ class Service {
     required this.priceUnit,
     this.providerName = "Unknown",
     this.thumbnail,
-    this.description,
+    this.description =
+        "Professional service from CitySewa, delivered right at your doorstep.",
   });
 }
 

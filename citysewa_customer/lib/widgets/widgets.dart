@@ -84,36 +84,41 @@ class ServiceSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(16),
       onTap: () {
         Navigator.pushNamed(context, '/search');
       },
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         width: double.infinity,
-        height: 45,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
+              color: Colors.black.withValues(alpha: 0.08),
               offset: Offset(0, 4),
-              blurRadius: 5,
-              spreadRadius: 0,
+              blurRadius: 12,
             ),
           ],
         ),
         child: Row(
           children: [
-            Icon(Icons.search, color: const Color.fromARGB(255, 115, 115, 115)),
-            SizedBox(width: 10),
-            Text(
-              "Search for services",
-              style: TextStyle(
-                fontSize: 15,
-                color: const Color.fromARGB(255, 115, 115, 115),
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.deepOrange.shade50,
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Icon(Icons.search, color: Colors.deepOrange, size: 20),
             ),
+            SizedBox(width: 12),
+            Text(
+              "Search for services...",
+              style: TextStyle(fontSize: 15, color: Colors.grey.shade500),
+            ),
+            Spacer(),
+            Icon(Icons.tune, color: Colors.grey.shade400, size: 20),
           ],
         ),
       ),
@@ -126,12 +131,25 @@ class Carousel extends StatelessWidget {
   final List<Widget> items;
   Carousel({super.key, required this.itemList})
     : items = itemList.map((image) {
-        return Card(
-          elevation: 3,
-          clipBehavior: Clip.antiAlias,
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: Image.network(image, fit: BoxFit.fill),
+            borderRadius: BorderRadius.circular(16),
+            child: Image.network(
+              image,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
           ),
         );
       }).toList();
@@ -142,7 +160,10 @@ class Carousel extends StatelessWidget {
       items: items,
       options: CarouselOptions(
         autoPlay: true,
-        autoPlayInterval: Duration(seconds: 3),
+        autoPlayInterval: Duration(seconds: 4),
+        enlargeCenterPage: true,
+        viewportFraction: 0.9,
+        aspectRatio: 16 / 9,
       ),
     );
   }
@@ -155,17 +176,28 @@ class ServiceCarousel extends StatelessWidget {
   ServiceCarousel({super.key, required this.context, required this.itemList})
     : carouselItems = itemList.map((item) {
         return InkWell(
+          borderRadius: BorderRadius.circular(16),
           onTap: () {
             Navigator.pushNamed(context, '/service');
           },
-          child: Card(
-            elevation: 3,
-            clipBehavior: Clip.antiAlias,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(16),
               child: Image.network(
                 item["thumbnail"]["image"],
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
+                width: double.infinity,
               ),
             ),
           ),
@@ -178,7 +210,10 @@ class ServiceCarousel extends StatelessWidget {
       items: carouselItems,
       options: CarouselOptions(
         autoPlay: true,
-        autoPlayInterval: Duration(seconds: 3),
+        autoPlayInterval: Duration(seconds: 4),
+        enlargeCenterPage: true,
+        viewportFraction: 0.9,
+        aspectRatio: 16 / 9,
       ),
     );
   }
@@ -193,6 +228,7 @@ class ServiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(16),
       onTap: () {
         Navigator.pushNamed(
           context,
@@ -202,77 +238,127 @@ class ServiceTile extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
+              color: Colors.black.withValues(alpha: 0.06),
               offset: Offset(0, 4),
-              blurRadius: 5,
-              spreadRadius: 0,
+              blurRadius: 12,
             ),
           ],
         ),
         child: Row(
           children: [
-            SizedBox(
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: service.thumbnail != null
-                      ? Image.network(
-                          service.thumbnail!,
-                          fit: BoxFit.cover,
-                          width: 90,
-                          height: 60,
-                        )
-                      : Image.asset(
-                          'assets/images/test.png',
-                          fit: BoxFit.cover,
-                          width: 90,
-                          height: 60,
-                        ),
-                ),
-              ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: service.thumbnail != null
+                  ? Image.network(
+                      service.thumbnail!,
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                    )
+                  : Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.grey.shade200,
+                      child: Icon(Icons.image, color: Colors.grey.shade400),
+                    ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5),
-                Text(
-                  service.title,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      service.providerName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: const Color.fromARGB(255, 134, 134, 134),
-                      ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    service.title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade800,
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      rating.toStringAsFixed(1),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: const Color.fromARGB(255, 134, 134, 134),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.store_outlined,
+                        size: 14,
+                        color: Colors.grey.shade500,
                       ),
-                    ),
-                    Icon(Icons.star, color: Colors.amber, size: 15),
-                  ],
-                ),
-                Text(
-                  "Rs.${service.price} ${service.priceUnit}",
-                  style: TextStyle(fontSize: 12, color: Colors.red),
-                ),
-              ],
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          service.providerName,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.deepOrange.shade50,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          "Rs. ${service.price}/${service.priceUnit}",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.deepOrange,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade50,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.amber.shade800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -285,60 +371,125 @@ class BookingTile extends StatelessWidget {
   final Booking booking;
   const BookingTile({super.key, required this.booking});
 
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return Colors.green;
+      case 'cancelled':
+        return Colors.red;
+      case 'pending':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return Icons.check_circle_outline;
+      case 'cancelled':
+        return Icons.cancel_outlined;
+      case 'pending':
+        return Icons.schedule;
+      default:
+        return Icons.info_outline;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(width: 0.5, color: Colors.orangeAccent),
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              offset: Offset(0, 3),
-              blurRadius: 4,
-              spreadRadius: 0,
+    final statusColor = _getStatusColor(booking.status);
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            offset: Offset(0, 4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.deepOrange.shade50,
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Column(
+            child: Icon(
+              Icons.calendar_today_rounded,
+              color: Colors.deepOrange,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 5),
                 Text(
                   booking.bookingDate,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  booking.bookingTime,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: const Color.fromARGB(255, 134, 134, 134),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade800,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Row(
                   children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                    const SizedBox(width: 4),
                     Text(
-                      booking.status,
+                      booking.bookingTime,
                       style: TextStyle(
-                        fontSize: 12,
-                        color: const Color.fromARGB(255, 134, 134, 134),
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _getStatusIcon(booking.status),
+                  size: 14,
+                  color: statusColor,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  booking.status,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: statusColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -346,64 +497,106 @@ class BookingTile extends StatelessWidget {
 
 class AddressTile extends StatelessWidget {
   final Address address;
-  const AddressTile({super.key, required this.address});
+  final VoidCallback? onTap;
+  final bool isSelected;
+
+  const AddressTile({
+    super.key,
+    required this.address,
+    this.onTap,
+    this.isSelected = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(width: 0.5, color: Colors.orangeAccent),
-          borderRadius: BorderRadius.circular(5),
+          color: isSelected ? Colors.deepOrange.shade50 : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: isSelected
+              ? Border.all(color: Colors.deepOrange, width: 2)
+              : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              offset: Offset(0, 3),
-              blurRadius: 4,
-              spreadRadius: 0,
+              color: Colors.black.withValues(alpha: 0.06),
+              offset: Offset(0, 4),
+              blurRadius: 12,
             ),
           ],
         ),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5),
-                Text(
-                  address.landmarks,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  "${address.location["area"]}",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: const Color.fromARGB(255, 134, 134, 134),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      address.location["city"],
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: const Color.fromARGB(255, 134, 134, 134),
-                      ),
-                    ),
-                    Text(
-                      " (${address.location["district"]["name"]})",
-                      style: TextStyle(fontSize: 12, color: Colors.red),
-                    ),
-                  ],
-                ),
-              ],
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Colors.deepOrange.shade100
+                    : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.location_on_rounded,
+                color: isSelected ? Colors.deepOrange : Colors.grey.shade600,
+                size: 24,
+              ),
             ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    address.landmarks,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade800,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "${address.location["area"] ?? ''}",
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Text(
+                        address.location["city"] ?? '',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                      if (address.location["district"] != null) ...[
+                        Text(
+                          " • ",
+                          style: TextStyle(color: Colors.grey.shade400),
+                        ),
+                        Text(
+                          address.location["district"]["name"] ?? '',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check_circle, color: Colors.deepOrange, size: 24),
           ],
         ),
       ),

@@ -185,6 +185,7 @@ class ServiceManager {
             priceUnit: data["price_unit"],
             providerName: data["provider_name"],
             thumbnail: data["thumbnail"],
+            description: data["description"],
           ),
         );
       } else {
