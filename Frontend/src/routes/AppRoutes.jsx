@@ -57,7 +57,7 @@ const AppRoutes = ()=> (
             {/* Public Routes */}
             <Route element={<PublicLayout/>}>
                 <Route path='/' element={<Home/>}/>
-                <Route path='services' element={<Services/>}/>
+                <Route path='/services' element={<Services/>}/>
                 <Route path='/services/:id' element={<ServiceDetail/>}/>
                 <Route path='/about' element={<About/>}/>
                 <Route path='/join-our-team' element={<JoinOurTeam/>}/>
