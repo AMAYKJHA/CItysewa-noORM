@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    SendOTPAPIView,
+    VerifyOTPAPIView,
     AdminRegisterAPIView,
     AdminLoginAPIView,
     CustomerRegisterAPIView,
@@ -16,6 +18,9 @@ from .views import (
     VerificationRetrieveAPIView,
 )
 urlpatterns= [
+    path('auth/otp/send', SendOTPAPIView.as_view(), name="send-otp"),
+    path('auth/otp/verify', VerifyOTPAPIView.as_view(), name="verify-otp"),
+    
     path('admin/register', AdminRegisterAPIView.as_view(), name="admin-register"),
     path('admin/login', AdminLoginAPIView.as_view(), name="admin-login"),
     
