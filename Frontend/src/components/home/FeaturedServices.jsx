@@ -24,7 +24,7 @@ const FeaturedServices = () => {
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % services.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
 
-  if (loading) return <p>Loading services...</p>;
+  if (loading) return <p style={{textAlign:'center'}}>Loading featured services...</p>;
   if (services.length === 0) return <p style={{textAlign:'center'}}>No fetaured services available.</p>;
 
   const total = services.length;

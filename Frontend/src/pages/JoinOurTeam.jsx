@@ -153,7 +153,7 @@ const JoinOurTeam = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 autoComplete="email"
-                                placeholder="you@example.com"
+                                placeholder="giyu@example.com"
                             />
                             {fieldErrors.email && (
                                 <small className="field-error">{fieldErrors.email}</small>
