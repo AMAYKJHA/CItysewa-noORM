@@ -94,8 +94,24 @@ class CustomerListAPIView(APIView):
         direction = 0
         if order_dir:
             direction = 1 if order_dir.lower() == 'desc' else 0
-        customers = Customer().all(order_by=order_by, order_dir=direction)
-        serializer = CustomerSerializer(customers, many=True)        
+            
+        customers_data = Customer().join(
+            right_table=User(),
+            join_on=("user_id","id"),
+            left_attrs=("id", "first_name", "last_name", "gender"),
+            right_attrs = ("email",)
+        )
+        transformed_data = []
+        for item in customers_data:
+            temp_dict = {}
+            for key, val in item.items():
+                new_key = key.removeprefix(f"{Customer.table_name}_")
+                new_key = new_key.removeprefix(f"{User.table_name}_")
+                temp_dict[new_key] = val
+            
+            transformed_data.append(temp_dict)
+
+        serializer = CustomerSerializer(transformed_data, many=True)        
         return Response(serializer.data, status=HTTP_200_OK) 
 
 @extend_schema(
@@ -146,8 +162,23 @@ class ProviderListAPIView(APIView):
         direction = 0
         if order_dir:
             direction = 1 if order_dir.lower() == 'desc' else 0
-        providers = Provider().all(order_by=order_by, order_dir=direction)
-        serializer = ProviderSerializer(providers, many=True)        
+
+        providers_data = Provider().join(
+            right_table=User(),
+            join_on=("user_id","id"),
+            left_attrs=("id", "first_name", "last_name", "gender", "photo", "verified"),
+            right_attrs = ("email",)
+        )
+        transformed_data = []
+        for item in providers_data:
+            temp_dict = {}
+            for key, val in item.items():
+                new_key = key.removeprefix(f"{Provider.table_name}_")
+                new_key = new_key.removeprefix(f"{User.table_name}_")
+                temp_dict[new_key] = val
+            
+            transformed_data.append(temp_dict)
+        serializer = ProviderSerializer(transformed_data, many=True)        
         return Response(serializer.data, status=HTTP_200_OK) 
 
 

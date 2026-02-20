@@ -236,6 +236,7 @@ class CustomerSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     gender = serializers.CharField()
+    email = serializers.EmailField(required=False)
 
     
 # Provider serializers
@@ -333,6 +334,7 @@ class ProviderSerializer(serializers.Serializer):
     verified = serializers.BooleanField()
     description = serializers.CharField(required=False)
     photo = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
