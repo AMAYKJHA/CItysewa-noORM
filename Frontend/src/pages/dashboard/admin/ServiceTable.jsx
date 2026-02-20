@@ -118,9 +118,7 @@ const ServiceTable = () => {
                                 <td>{service.id}</td>
                                 <td>{service.title || "—"}</td>
                                 <td>
-                                    {[service.provider?.first_name, service.provider?.last_name]
-                                        .filter(Boolean)
-                                        .join(" ") || "—"}
+                                    {service.provider_name || "—"}
                                 </td>
                                 <td>{service.category || service.service_type || "—"}</td>
                                 <td>

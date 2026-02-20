@@ -58,7 +58,7 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 /* ============================================
@@ -174,103 +174,121 @@ html, body {
 }
 
 .carousel-container {
-    max-width: 1000px;
+    perspective: 1200px; /* stronger perspective for flatten effect */
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     position: relative;
-}
-
-.carousel {
-    position: relative;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    overflow: visible;
 }
 
 .service-card {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: var(--card-bg);
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    transform-style: preserve-3d;
+    transform-origin: center center;
     border: 2px solid var(--border-color);
-    padding: 30px;
+    background-color: var(--card-bg);
     border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.5s;
-    opacity: 0.3;
-    pointer-events: none;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+    box-shadow: var(--card-shadow);
 }
 
-.service-card.active {
-    opacity: 1;
-    pointer-events: auto;
-    z-index: 2;
-}
 
-.service-header h3 {
-    font-size: 1.8rem;
-    color: var(--text-primary);
+/* Card image */
+.service-card img {
+    width: 80%;
+    border-radius: 10px;
     margin-bottom: 15px;
+    object-fit: cover;
 }
 
+/* Card header */
+.service-header h3 {
+    font-size: 1.6rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+/* Description */
 .service-desc {
-    color: var(--text-secondary);
     font-size: 1rem;
-    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 10px 0;
+    line-height: 1.5;
 }
 
-.service-footer {
-    display: flex;
-    justify-content: center;
-}
-
+/* Category badge */
 .service-category {
     display: inline-block;
     background-color: var(--accent-light);
     color: var(--accent-color);
-    padding: 8px 16px;
+    padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 600;
 }
 
 .carousel-controls {
+    position: absolute;
+    bottom: -60px;
+    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
+    align-items: center;
+    /* border: 2px solid red; */
+    /* gap: 20px; */
+    z-index: 10;
 }
 
 .carousel-btn {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    cursor: pointer;
+    background-color: var(--accent-color);
+    border: none;
+    color: #fff;
     font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
     transition: all 0.3s;
+    margin: 0px 25px 0px 25px;
 }
 
 .carousel-btn:hover {
-    background-color: var(--text-primary);
     transform: scale(1.1);
 }
 
-.carousel-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.service-card.active {
+    z-index: 2;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); /* rotation handled inline */
 }
 
+.service-card:not(.active) {
+    z-index: 1;
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.7); /* rotation handled inline */
+}
+
+/* Carousel dots (optional) */
 .carousel-dots {
     display: flex;
     gap: 10px;
+    justify-content: center;
+    margin-top: 30px;
 }
 
 .dot {
@@ -290,6 +308,29 @@ html, body {
 
 .dot:hover {
     background-color: var(--text-secondary);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .carousel-container {
+        height: 300px;
+    }
+
+    .service-card {
+        width: 220px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 250px;
+    }
+
+    .service-card {
+        width: 180px;
+        padding: 12px;
+    }
 }
 
 /* ============================================

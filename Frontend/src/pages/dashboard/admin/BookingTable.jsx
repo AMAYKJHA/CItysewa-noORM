@@ -115,10 +115,11 @@ const BookingTable = () => {
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>Service</th>
-                            <th>Customer</th>
-                            <th>Provider</th>
+                            <th>Service Id</th>
+                            <th>Customer Id</th>
+                            {/* <th>Provider</th> */}
                             <th>Date</th>
+                            <th>Booking Time</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -126,20 +127,23 @@ const BookingTable = () => {
                         {bookingsOnDisplay.map((booking) => (
                             <tr key={booking.id}>
                                 <td>{booking.id}</td>
-                                <td>{booking.service?.title || "—"}</td>
+                                <td>{booking.service_id || "—"}</td>
                                 <td>
-                                    {[booking.customer?.first_name, booking.customer?.last_name]
-                                        .filter(Boolean)
-                                        .join(" ") || "—"}
+                                    {booking.customer_id || "—"}
                                 </td>
-                                <td>
+                                {/* <td>
                                     {[booking.provider?.first_name, booking.provider?.last_name]
                                         .filter(Boolean)
                                         .join(" ") || "—"}
-                                </td>
+                                </td> */}
                                 <td>
                                     {booking.booking_date
                                         ? new Date(booking.booking_date).toLocaleDateString()
+                                        : "—"}
+                                </td>
+                                <td>
+                                    {booking.booking_time
+                                        ? new Date(`1970-01-01T${booking.booking_time}`).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                                         : "—"}
                                 </td>
                                 <td>{booking.status || "—"}</td>
