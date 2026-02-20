@@ -153,25 +153,29 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-REST_FRAMEWORK = {
-    # "UNAUTHENTICATED_USER": None,
-    # "UNAUTHENTICATED_TOKEN": None,
-    
-    # "DEFAULT_AUTHENTICATION_CLASSES": [
-    #     "rest_framework.authentication.TokenAuthentication",
-    # ],
-    # "DEFAULT_PERMISSION_CLASSES": [
-    #     "rest_framework.permissions.IsAuthenticated",
-    # ],
-    # "DEFAULT_RENDERER_CLASSES": [
-    #     "rest_framework.renderers.JSONRenderer",
-    # ],
-    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    # "PAGE_SIZE": 20,
-    
-    
+REST_FRAMEWORK = {  
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+ORIGIN_URL=env.str("ORIGIN_URL", None)
+OTP_EXPIRY_TIME=env.int("OTP_EXPIRY_TIME", 300) # 5 minutes
+
+REDIS_HOST=env.str("REDIS_HOST")
+REDIS_PORT=env.int("REDIS_PORT")
+REDIS_PASSWORD=env.str("REDIS_PASSWORD")
+
+# Redis caching
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://default:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+APP_LOGO=env.str("APP_LOGO")
 
 # Email settings
 if env.bool("USE_SMTP", False):

@@ -7,6 +7,11 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR
 )
 from drf_spectacular.utils import extend_schema
+from django.core.cache import cache
+from django.conf import settings
+
+from accounts.utils.generators import generate_otp
+from accounts.utils.verification import send_user_OTP_email
 
 from .tables import (
     Token,
@@ -40,6 +45,57 @@ from .messages import (
     CUSTOMER_NOT_FOUND,
     PROVIDER_NOT_FOUND
 )
+
+# Account verification views
+# -----------------------------------------------------------------------------------------
+class SendOTPAPIView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        if email:
+            otp_expiry_time = settings.OTP_EXPIRY_TIME
+            origin_url = settings.ORIGIN_URL
+            otp = generate_otp()
+            cache.set(f"otp:{email}", otp, otp_expiry_time)
+            send_user_OTP_email(recipient_email=email, otp=otp, otp_expiry_minutes=otp_expiry_time // 60, origin_url=origin_url)
+            return Response({
+                "message": f"OTP has been sent to your email. It will expire after {otp_expiry_time // 60} minutes."},
+                status=HTTP_200_OK
+            )
+        
+        return Response({"detail": "Email is required for verification."}, status=HTTP_400_BAD_REQUEST) 
+
+class VerifyOTPAPIView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        otp = request.data.get("otp")
+        
+        if not email or not otp:
+            return Response(
+                {"detail": "Email and OTP are required."},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        cached_otp = cache.get(f"otp:{email}")
+
+        if cached_otp is None:
+            return Response(
+                {"detail": "OTP expired or not found."},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        if otp != cached_otp:
+            return Response(
+                {"detail": "Invalid OTP."},
+                status=HTTP_400_BAD_REQUEST
+            )
+            
+        cache.delete(f"otp:{email}")
+
+        return Response(
+            {"message": "OTP verified successfully."},
+            status=HTTP_200_OK
+        )
+        
 
 # Admin views
 # -----------------------------------------------------------------------------------------
