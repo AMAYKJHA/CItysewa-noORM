@@ -2,10 +2,13 @@ import "react-phone-number-input/style.css"
 import PhoneInput from "react-phone-number-input";
 import { useState } from "react";
 import {submitForVerification} from "../../../api/client";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 
 const VerificationForm = () => {
+    const navigate = useNavigate;
+    const { user } = useAuth();
     const [formData, setFromData] = useState({
-        id: "",
         phone_number: "",
         document_type: "",
         document_number: "",
@@ -23,22 +26,27 @@ const VerificationForm = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
-        setSuccess("");
+        if(!formData.phone_number) {
+            setError("Phone number required");
+            return;
+        }
+        if(!formData.photo || !formData.document) {
+            setError("Upload required file");
+            return;
+        }
         try{
             const payload = new FormData();
-            payload.append("id", formData.id);
+            payload.append("id", user.id);
             payload.append("phone_number", formData.phone_number);
             payload.append("document_type", formData.document_type);
             payload.append("document_number", formData.document_number);
             payload.append("photo", formData.photo);
             payload.append("document", formData.document);
             await submitForVerification(payload);
-            setSuccess("Verification submitted successfully");
-            setFromData({id: "", phone_number: "", document_type: "", document_number: "", photo: null, document: null}); 
+            setSuccess("Verification submitted successfully"); 
+            setTimeout(()=>{navigate('/provider')},1500);
         } catch(err) {
             setError(err.response?.data?.message || "Submission failed");
-            setFromData({id: "", phone_number: "", document_type: "", document_number: "", photo: null, document: null});
         }
     };
     return(
@@ -48,7 +56,7 @@ const VerificationForm = () => {
             {success && <p className="success">{success}</p>}
             <span>
                 <label htmlFor="provider-id">ID</label>
-                <input type="number" id="provider-id" name="id" value={formData.id} onChange={handleChange} required/>
+                <input type="number" id="provider-id" name="id" value={user.id} disabled/>
             </span>
             <span>
                 <label htmlFor="provider-photo">Upload Your Photo</label>
@@ -75,7 +83,7 @@ const VerificationForm = () => {
             </span>
             <span>
                 <label htmlFor="provider-document">Attach Document</label>
-                <input type="file" id="provider_document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} required/>
+                <input type="file" id="provider-document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} required/>
             </span>
             <button type="submit">Submit</button>
         </form>

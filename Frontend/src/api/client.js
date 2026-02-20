@@ -8,12 +8,28 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
-        if(token){
+        const isAuthRoute = config.url?.includes("/login") || config.url?.includes("/register");
+        if(token && !isAuthRoute){
+            config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
     (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if(error.response?.status === 401) {
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            const isAdmin = user?.role === "admin";
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = isAdmin ? "/login-admin" : "/login";
+        }
+        return Promise.reject(error);
+    }
 );
 
 /* Accounts */
@@ -48,7 +64,11 @@ export const fetchProviderById = (id) =>
 
 //Provider verification
 export const submitForVerification = (data) =>
-    api.post("/accounts/provider/submit-verification",data);
+    api.post("/accounts/provider/submit-verification",data,{
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    });
 
 //Provider verification in Admin side
 export const fetchVerificationData = () => 
@@ -66,5 +86,32 @@ export const adminLogin = (data) =>
 
 export const adminRegister = (data) =>
     api.post("/accounts/admin/register",data);
+
+//Service related APIs
+export const fetchServices = () =>
+    api.get("/services");
+
+export const fetchServiceById = (id) =>
+    api.get(`/services/${id}`);
+
+export const createService = (data) =>
+    api.post("/services/register",data);
+
+//Booking related APIs
+export const fetchBookings = (data) =>
+    api.get("/bookings",data);
+
+export const fetchBookingById = (id) =>
+    api.get(`/bookings/${id}`);
+
+export const createBooking = (data) =>
+    api.post("/bookings/register",data);
+
+export const getBookingStats = () =>
+    api.get("/bookings/stats");
+
+//Address related APIs
+export const fetchAddresses = () =>
+    api.get("/addresses");
 
 export default api;

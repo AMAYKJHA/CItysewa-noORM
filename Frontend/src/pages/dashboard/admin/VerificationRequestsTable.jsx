@@ -1,157 +1,237 @@
-import { useEffect, useState } from "react";
-import { fetchVerificationData, fetchVerificationDataById, updateVerificationData} from "../../../api/client";
+import { useEffect, useState, useMemo } from "react";
+import {
+    fetchVerificationData,
+    fetchVerificationDataById,
+    updateVerificationData,
+} from "../../../api/client";
+
+const PAGE_SIZE = 10;
 
 const VerificationRequests = () => {
-
-    const [requests, setrequests] = useState([]);
+    const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [errorInMultipleDataFetch, setErrorForMultipleDataFetch] = useState(null);
-    const [errorInSingleDataFetch, setErrorForSingleDataFetch] = useState(null);
+    const [error, setError] = useState(null);
     const [searchBy, setSearchBy] = useState("Id");
-    const [shownIndex, setShownIndex] = useState(0);
-    const PAGE_SIZE = 10;
-    const requestsOnDisplay = requests.slice(shownIndex, shownIndex + PAGE_SIZE);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [page, setPage] = useState(0);
     const [selectedRequest, setSelectedRequest] = useState(null);
-    // Functions that show records on the table
-    const showNextBatch = () => {
-        setShownIndex(prev => prev + PAGE_SIZE < requests.length ? prev + PAGE_SIZE : prev);
-    };
-    const showPrevBatch = () => {
-        setShownIndex(prev => prev - PAGE_SIZE >= 0 ? prev - PAGE_SIZE : 0);
-    };
+    const [detailLoading, setDetailLoading] = useState(false);
+    const [detailError, setDetailError] = useState(null);
 
-    const handleChange = (e) => {
-        setSearchBy(e.target.value);
-    };
+    const filtered = useMemo(() => {
+        if (!searchQuery.trim()) return requests;
+        const q = searchQuery.trim().toLowerCase();
+        return requests.filter((r) => {
+            if (searchBy === "Id") return String(r.id).toLowerCase().includes(q);
+            if (searchBy === "First Name") return (r.first_name || "").toLowerCase().includes(q);
+            if (searchBy === "Last Name") return (r.last_name || "").toLowerCase().includes(q);
+            return true;
+        });
+    }, [requests, searchBy, searchQuery]);
 
-    const handleClick = async (id) => {
-        try{
-            const response = await fetchVerificationDataById(id);
-            setSelectedRequest(response.data);
-            console.log(response);
-        } 
-        catch(err) {
-            setErrorForSingleDataFetch("Failed to fetch request");
-        }
-    }
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const start = page * PAGE_SIZE;
+    const requestsOnDisplay = filtered.slice(start, start + PAGE_SIZE);
 
-    const handleClose = () => {
-        setSelectedRequest(null);
-    };
+    const showPrev = () => setPage((p) => Math.max(0, p - 1));
+    const showNext = () => setPage((p) => Math.min(totalPages - 1, p + 1));
 
-    const updateVerificationStatus = async (ver_status) => {
-        try{
-            if(!selectedRequest) return;
-            const patchData = {
-                document_number: selectedRequest.document_number,
-                status: ver_status,
-                verified: ver_status === "Verified"
-            }
-            await updateVerificationData(selectedRequest.id, patchData);
-            await loadrequests();
-            handleClose();
-            console.log("Updated provider verification status as : "+ver_status);
-        } catch(err) {
-            console.error("Error updating provider:", err.response?.data || err.message);
-        }
-    };
-
-    const loadrequests = async () => {
-        try{
-            const response = await fetchVerificationData();
-            const sortedrequests = response.data.slice().sort((a,b)=> a.id - b.id);
-            setrequests(sortedrequests);
+    const loadRequests = async () => {
+        try {
+            const res = await fetchVerificationData();
+            const sorted = (res.data || []).slice().sort((a, b) => a.id - b.id);
+            setRequests(sorted);
         } catch (e) {
-            setErrorForMultipleDataFetch("Failed to fetch requests");
+            setError("Failed to fetch requests");
             console.error(e);
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const load = async () => {
-            await loadrequests();
+            setLoading(true);
+            await loadRequests();
             setLoading(false);
         };
         load();
     }, []);
 
-    useEffect(()=>{
-        if(errorInSingleDataFetch){
-            alert("Failed to fetch response");
-            setErrorForSingleDataFetch(null);
+    const handleRowClick = async (id) => {
+        setDetailError(null);
+        setDetailLoading(true);
+        setSelectedRequest(null);
+        try {
+            const res = await fetchVerificationDataById(id);
+            setSelectedRequest(res.data);
+        } catch {
+            setDetailError("Failed to load request details");
+        } finally {
+            setDetailLoading(false);
         }
-    },[errorInSingleDataFetch])
+    };
 
-    if (loading) return <p>Loading requests ...</p>;
-    if (errorInMultipleDataFetch) return <p>{errorInMultipleDataFetch}</p>
+    const handleClose = () => {
+        setSelectedRequest(null);
+        setDetailError(null);
+    };
 
-    return(
-        <>
-            {selectedRequest? (
-                <section className="VRD-container">
-                    <h2>Provider Details</h2>
-                    <div className="verify-request-data">
-                        <a href={selectedRequest.photo} target="_blank" rel="noreferrer"><img src={selectedRequest.photo} alt={"Provider PP"}/></a>
-                        <p><strong>Id: </strong>{selectedRequest.id}</p>
-                        <p><strong>Name: </strong>{selectedRequest.first_name+" "+selectedRequest.last_name}</p>
-                        <p><strong>Gender: </strong>{selectedRequest.gender}</p>
-                        <p><strong>Phone Number: </strong>{selectedRequest.phone_number || "Amay le rakheko xaina"}</p>
-                        <p><strong>Provided Document Type: </strong>{selectedRequest.document_type}</p>
-                        <p><strong>Document Number: </strong>{selectedRequest.document_number}</p>
-                        <p><strong>Document: </strong><a href={selectedRequest.file_name} target="_blank" rel="noreferrer"><img src={selectedRequest.file_name} alt={"Provider Document"}/></a></p>
-                        <p><strong>Is Verified: </strong>{selectedRequest.verified ? "Yes" : "No"}</p>
-                        <p><strong>Verification Status: </strong>{selectedRequest.status}</p>
-                    </div>
-                    <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', marginTop:'13px'}}>
-                        <button onClick={()=>updateVerificationStatus("Verified")}>Verify</button>
-                        <button onClick={()=>updateVerificationStatus("Not verified")}>Unverify</button>
-                        <button onClick={handleClose}>Close</button>
-                    </span>
-                </section>
-            ): ""} 
-            <section className="verification-requests">
-            <h2>Verification Requests</h2>
-            <input type="text" placeholder={`Search by ${searchBy}`}/>
-            <select value={searchBy} name="searchBy" onChange={handleChange}>
-                <option disabled hidden value={""}>Search by</option>
-                <option value={"Id"}>Id</option>
-                <option value={"First Name"}>First Name</option>
-                <option value={"Last Name"}>Last Name</option>
-            </select>
-            <div className="tablewrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Phone Number</th>
-                            <th>Document Type</th>
-                            <th>Document Number</th>
-                            <th>Photo</th>
-                            <th>Document</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {requestsOnDisplay.map(req => (
-                            <tr key={req.id} onClick={()=>handleClick(req.id)}>
-                                <td>{req.id}</td>
-                                <td>{req.first_name+" "+req.last_name}</td>
-                                <td>View Number</td>
-                                <td>View Doctype</td>
-                                <td>View Doc. No.</td>
-                                <td>View Photo</td>
-                                <td>View Document</td>
-                            </tr>
-                        ))}
-                    </tbody>  
-                </table>
+    const updateVerificationStatus = async (verStatus) => {
+        if (!selectedRequest) return;
+        try {
+            await updateVerificationData(selectedRequest.id, {
+                document_number: selectedRequest.document_number,
+                status: verStatus,
+                verified: verStatus === "Verified",
+            });
+            await loadRequests();
+            handleClose();
+        } catch (err) {
+            console.error(err?.response?.data || err.message);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="dashboard-table-header">
+                <h2>Verification Requests</h2>
+                <div className="dashboard-table-loading">Loading verification requests…</div>
             </div>
-            {requests.length === 0 ? 
-            ( <p style={{marginLeft:'8px'}}> No requests at the moment </p>) :
-            ( <p></p>)
-            }
-            <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= requests.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
-        </section>   
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="dashboard-table-header">
+                <h2>Verification Requests</h2>
+                <div className="dashboard-table-error">{error}</div>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            {selectedRequest != null && (
+                <div className="admin-modal-overlay" onClick={handleClose}>
+                    <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="admin-modal-header">
+                            <h3>Provider verification details</h3>
+                            <button type="button" className="admin-modal-close" onClick={handleClose} aria-label="Close">
+                                ×
+                            </button>
+                        </div>
+                        {detailLoading ? (
+                            <p className="dashboard-table-loading">Loading…</p>
+                        ) : detailError ? (
+                            <p className="dashboard-table-error">{detailError}</p>
+                        ) : (
+                            <div className="verify-request-data">
+                                <div className="verify-request-data-row verify-request-data-photo">
+                                    <a href={selectedRequest.photo} target="_blank" rel="noreferrer">
+                                        <img src={selectedRequest.photo} alt="Provider" />
+                                    </a>
+                                </div>
+                                <p><strong>Id:</strong> {selectedRequest.id}</p>
+                                <p><strong>Name:</strong> {[selectedRequest.first_name, selectedRequest.last_name].filter(Boolean).join(" ") || "—"}</p>
+                                <p><strong>Gender:</strong> {selectedRequest.gender || "—"}</p>
+                                <p><strong>Phone:</strong> {selectedRequest.phone_number || "—"}</p>
+                                <p><strong>Document type:</strong> {selectedRequest.document_type || "—"}</p>
+                                <p><strong>Document number:</strong> {selectedRequest.document_number || "—"}</p>
+                                <p><strong>Document:</strong>{" "}
+                                    <a href={selectedRequest.file_name} target="_blank" rel="noreferrer">View document</a>
+                                </p>
+                                <p><strong>Status:</strong>{" "}
+                                    <span className={`status-badge status-badge--${selectedRequest.verified ? "success" : "warning"}`}>
+                                        {selectedRequest.status || (selectedRequest.verified ? "Verified" : "Pending")}
+                                    </span>
+                                </p>
+                                <div className="admin-modal-actions">
+                                    <button type="button" className="admin-modal-btn admin-modal-btn--success" onClick={() => updateVerificationStatus("Verified")}>
+                                        Approve
+                                    </button>
+                                    <button type="button" className="admin-modal-btn admin-modal-btn--danger" onClick={() => updateVerificationStatus("Not verified")}>
+                                        Reject
+                                    </button>
+                                    <button type="button" className="admin-modal-btn admin-modal-btn--secondary" onClick={handleClose}>
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            <section className="dashboard-table-section verification-requests">
+                <div className="dashboard-table-header">
+                    <h2>Verification Requests</h2>
+                    <div className="dashboard-table-toolbar">
+                        <select
+                            value={searchBy}
+                            name="searchBy"
+                            onChange={(e) => {
+                                setSearchBy(e.target.value);
+                                setPage(0);
+                            }}
+                            className="dashboard-table-select"
+                        >
+                            <option value="Id">Search by Id</option>
+                            <option value="First Name">Search by First Name</option>
+                            <option value="Last Name">Search by Last Name</option>
+                        </select>
+                        <input
+                            type="text"
+                            placeholder={`Filter by ${searchBy}…`}
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setPage(0);
+                            }}
+                            className="dashboard-table-search"
+                        />
+                    </div>
+                </div>
+                <div className="tablewrapper">
+                    <table className="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Document type</th>
+                                <th>Document no.</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {requestsOnDisplay.map((req) => (
+                                <tr key={req.id} onClick={() => handleRowClick(req.id)}>
+                                    <td>{req.id}</td>
+                                    <td>{[req.first_name, req.last_name].filter(Boolean).join(" ") || "—"}</td>
+                                    <td>{req.phone_number ? "View" : "—"}</td>
+                                    <td>{req.document_type || "—"}</td>
+                                    <td>{req.document_number ? "View" : "—"}</td>
+                                    <td>
+                                        <span className="table-action-link">View details</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                {filtered.length === 0 ? (
+                    <p className="dashboard-table-empty">No verification requests at the moment.</p>
+                ) : (
+                    <div className="dashboard-pagination">
+                        <span className="dashboard-pagination-info">
+                            Showing {start + 1}–{Math.min(start + PAGE_SIZE, filtered.length)} of {filtered.length}
+                        </span>
+                        <div className="dashboard-pagination-buttons">
+                            <button type="button" onClick={showPrev} disabled={page === 0}>Previous</button>
+                            <button type="button" onClick={showNext} disabled={page >= totalPages - 1}>Next</button>
+                        </div>
+                    </div>
+                )}
+            </section>
         </>
     );
 };

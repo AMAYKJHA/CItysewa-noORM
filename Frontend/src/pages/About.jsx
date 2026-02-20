@@ -1,86 +1,68 @@
-import { Link } from "react-router-dom";
 import "../Style/About.css";
+import trustIcon from "../assets/trust.png";
+import communityIcon from "../assets/community.png";
+import convenienceIcon from "../assets/convenience.png";
+import opportunityIcon from "../assets/opportunity.png";
 
 const About = () => {
-    return(
-        <section className="about">
-            <header className="about-hero">
-                <div className="about-hero-text">
-                    <p className="eyebrow">About CitySewa</p>
-                    <h1>Local skills, trusted service, real impact.</h1>
-                    <p>
-                        CitySewa connects neighborhood talent with people who need help today.
-                        From electricians to tutors, we make discovery, booking, and trust simple.
-                    </p>
-                    <div className="about-hero-actions">
-                        <Link to="/services" className="btn primary">Explore Services</Link>
-                        <Link to="/register-admin" className="btn ghost">Join Our Team</Link>
-                    </div>
-                </div>
-                <div className="about-hero-card">
-                    <div>
-                        <h3>Quality-first marketplace</h3>
-                        <p>
-                            Verified profiles, clear pricing, and consistent communication help
-                            every booking feel reliable.
-                        </p>
-                    </div>
-                    <div className="hero-stats">
-                        <span>
-                            <strong>30+</strong>
-                            <small>service categories</small>
-                        </span>
-                        <span>
-                            <strong>4.8/5</strong>
-                            <small>average rating</small>
-                        </span>
-                        <span>
-                            <strong>24h</strong>
-                            <small>avg. response time</small>
-                        </span>
-                    </div>
-                </div>
-            </header>
+    return (
+        <div className="about-page">
+            <div className="about-hero">
+                <h1>About CitySewa</h1>
+                <p className="about-subtitle">Connecting Local Services with Local Communities</p>
+            </div>
 
-            <section className="about-grid">
-                <article>
-                    <h3>For customers</h3>
+            <div className="about-content">
+                <section className="about-section">
+                    <h2>Our Mission</h2>
                     <p>
-                        Browse verified professionals, compare services, and schedule without
-                        the back-and-forth. Every booking is secured with clear expectations.
+                        <strong>CitySewa</strong> is a hyperlocal service marketplace that connects trusted local service providers with customers in their community. Whether you need an electrician, plumber, cook, or tutor—or you&apos;re a skilled professional looking for work—CitySewa makes the connection simple and reliable.
                     </p>
-                </article>
-                <article>
-                    <h3>For providers</h3>
-                    <p>
-                        Build your reputation, manage bookings, and grow your local network
-                        with tools designed for independent professionals.
-                    </p>
-                </article>
-                <article>
-                    <h3>For communities</h3>
-                    <p>
-                        CitySewa keeps spending local, supports livelihoods, and makes trusted
-                        services accessible when they matter most.
-                    </p>
-                </article>
-            </section>
+                </section>
 
-            <section className="about-values">
-                <div className="value">
-                    <h4>Trust & safety</h4>
-                    <p>Verified profiles, transparent reviews, and secure communication.</p>
-                </div>
-                <div className="value">
-                    <h4>Speed & clarity</h4>
-                    <p>Fast discovery, honest pricing, and clear service expectations.</p>
-                </div>
-                <div className="value">
-                    <h4>Local pride</h4>
-                    <p>Empowering neighbors and strengthening community economies.</p>
-                </div>
-            </section>
-        </section>
+                <section className="about-section">
+                    <h2>What We Do</h2>
+                    <p>
+                        We help local service providers get discovered by the right customers while making it easy for users to find quality services, right when they need them. By bridging local skills with local demand, CitySewa supports livelihoods, strengthens communities, and simplifies everyday life.
+                    </p>
+                </section>
+
+                <section className="about-section">
+                    <h2>Our Values</h2>
+                    <div className="values-grid">
+                        <div className="value-card">
+                            <img src={trustIcon} alt="Trust" width={100} height={100} className="value-icon"/>
+                            <h3>Trust</h3>
+                            <p>We verify providers to ensure quality and reliability</p>
+                        </div>
+                        <div className="value-card">
+                            <img src={communityIcon} alt="Community" width={100} height={100} className="value-icon"/>
+                            <h3>Community</h3>
+                            <p>Supporting local businesses and strengthening neighborhoods</p>
+                        </div>
+                        <div className="value-card">
+                            <img src={convenienceIcon} alt="Convenience" width={100} height={100} className="value-icon"/>
+                            <h3>Convenience</h3>
+                            <p>Easy booking and seamless service delivery</p>
+                        </div>
+                        <div className="value-card">
+                            <img src={opportunityIcon} alt="Opportunity" width={100} height={100} className="value-icon"/>
+                            <h3>Opportunity</h3>
+                            <p>Creating earning opportunities for local professionals</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="about-section about-cta">
+                    <h2>Join The Community</h2>
+                    <p>Be part of the hyperlocal service revolution</p>
+                    <div className="cta-buttons">
+                        <a href="/register" className="cta-btn cta-btn--primary">Become a Provider</a>
+                        <a href="/register" className="cta-btn cta-btn--secondary">Sign Up as Customer</a>
+                    </div>
+                </section>
+            </div>
+        </div>
     );
 };
 

@@ -10,7 +10,10 @@ const ProtectedRoute = ({allowedRoles}) => {
     }
 
     if(allowedRoles && !allowedRoles.includes(user.role)) {
-        return <Navigate to="/" replace />
+        // Redirect to user's own dashboard if they try to access unauthorized route
+        const role = user.role?.toLowerCase();
+        const dashboardPath = role === "admin" ? "/admin" : role === "provider" ? "/provider" : role === "customer" ? "/customer" : "/";
+        return <Navigate to={dashboardPath} replace />
     }
 
     return <Outlet/>

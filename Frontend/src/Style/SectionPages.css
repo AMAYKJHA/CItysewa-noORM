@@ -1,0 +1,114 @@
+/* ============================================
+   SECTION PAGES - My Services, Bookings, Profile
+   Theme-aware, responsive
+   ============================================ */
+
+.section-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    color: var(--text-primary);
+}
+
+.section-actions {
+    margin-bottom: 20px;
+}
+
+.section-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.section-btn--primary {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+}
+
+.section-btn--primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+.section-btn--secondary {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.section-btn--secondary:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Profile card layout */
+.profile-page {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    color: var(--text-primary);
+}
+
+.profile-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+}
+
+.profile-card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+}
+
+.profile-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+.profile-row .label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.profile-row .value {
+    color: var(--text-primary);
+}
+
+@media only screen and (min-width: 768px) {
+    .section-page,
+    .profile-page {
+        padding: 32px 24px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .section-page,
+    .profile-page {
+        padding: 40px 32px;
+    }
+
+    .section-page .dashboard-header h1,
+    .profile-page .dashboard-header h1 {
+        font-size: 2rem;
+    }
+}
