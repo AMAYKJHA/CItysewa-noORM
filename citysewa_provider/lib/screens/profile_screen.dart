@@ -4,7 +4,7 @@ import 'package:citysewa_provider/api/api.dart' show AuthService;
 import 'package:citysewa_provider/api/models.dart' show User;
 import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 import 'package:citysewa_provider/widgets/widgets.dart'
-    show VerifyYourselfBanner;
+    show VerifyYourselfBanner, ProfileIcon;
 
 AuthService auth = AuthService();
 
@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text("Profile")),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: ListView(
@@ -47,6 +47,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
             SizedBox(height: 24),
             SettingsContainer(),
+            SizedBox(height: 15),
+            FilledButton(
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+                SessionManager.logout();
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Text("Log out"),
+            ),
           ],
         ),
       ),
@@ -85,13 +94,7 @@ class Header extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 45,
-            backgroundColor: Colors.white,
-            backgroundImage: AssetImage(
-              user!.photo ?? 'assets/images/test.png',
-            ),
-          ),
+          ProfileIcon(userPhoto: user?.photo, radius: 42),
           SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -119,7 +122,7 @@ class Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Carpenter",
+                  "Service provider",
                   style: TextStyle(fontSize: 14, color: Colors.black54),
                 ),
                 if (!user!.verified) ...[

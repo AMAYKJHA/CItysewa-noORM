@@ -1,163 +1,254 @@
-.login-form, .login-admin-form{
-    width: 90vw; 
-    aspect-ratio: 2/3; 
-    padding: 25px 13px 25px 13px;
-    margin: 13px;
-    letter-spacing: 1px;
-    border: 2px solid #4C5FD5;
-    border-radius: 1rem;
-    display: flex;
-    color: rgba(255, 255, 255, 0.75);
-    background: rgba(76, 95, 213, 0.15);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
-}
+/* ============================================
+   LOGIN PAGE - Real-world web app style
+   Theme-aware, responsive
+   ============================================ */
 
-.login-form fieldset, .login-admin-form fieldset{
+.login-page {
     width: 100%;
-    padding: 0px 13px 0 13px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-left: none;
-    border-right: none;
+    min-height: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
 }
 
-.login-form fieldset legend, .login-admin-form fieldset legend{
-    width: 76%;
-    text-align: center;
-    font-Size: x-large;
-}
-
-.login-form fieldset span, .login-admin-form fieldset span{
-    min-width: 100%;
-    display: flex;
-    flex-direction: column;
-    /* border: 2px solid red; */
-}
-
-label{
-    font-size: larger;
-}
-
-input{
-    all: unset;
+.login-card {
     width: 100%;
-    margin-top: 8px;
-    border: 2px solid rgba(135, 206, 235, 0.5);
-    padding: 8px 13px 8px 13px;
-    box-sizing: border-box;
-    border-radius: 0.75rem;
+    max-width: 420px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-input:focus{
-    border: 2px solid rgba(135, 206, 235, 0.75);
-    background: rgba(135, 206, 235, 0.05);
+.login-card:hover {
+    border-color: var(--accent-color);
 }
 
-button{
-    all: unset;
-    border: 2px solid rgba(135, 206, 235, 0.75);
-    border-radius: 0.75rem;
-    padding: 8px 13px 8px 13px;
-    align-self: flex-end;
-    box-sizing: border-box;
-    align-self: center;
-    font-size: large;
+/* Role selector (Customer / Provider) */
+.login-role-selector {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.login-role-tab {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-button:hover{
-    border: 2px solid rgba(135, 206, 235, 1);
-    background: rgba(135, 206, 235, 0.26);
-    color: white;
+.login-role-tab:hover {
+    color: var(--text-primary);
 }
 
-.login-as{
-    width: 90vw;
-    min-height: 50px;
-    color: white;
+.login-role-tab.active {
+    color: var(--accent-color);
+    background-color: var(--accent-light);
+    border-bottom: 2px solid var(--accent-color);
+    margin-bottom: -1px;
+}
+
+/* Role badge (Admin - single role) */
+.login-role-badge {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Form inner */
+.login-form-inner {
+    padding: 28px 24px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-logo-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 25px;
+    margin-bottom: 16px;
 }
 
-.login-as-op{
-    min-width: 40%;
-    height: 100%;
-    font-size: x-large;
+.login-logo {
+    display: block;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background-color: var(--card-bg);
+}
+
+.login-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px 0;
+}
+
+.login-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.login-fields {
     display: flex;
-    justify-content: center;
-    border: 2px solid #4C5FD5;
-    border-radius: 1rem;
-    align-items: center;
-    text-align: center;
-    padding: 13px;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-error {
+    padding: 12px 14px;
+    background-color: rgba(255, 77, 79, 0.1);
+    color: #e74c3c;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 77, 79, 0.3);
+}
+
+.login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.login-field label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.login-field input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.login-field input::placeholder {
+    color: var(--text-secondary);
+}
+
+.login-field input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+}
+
+.login-field-error {
+    font-size: 0.8rem;
+    color: #e74c3c;
+}
+
+.login-actions-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.login-link {
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-link--forgot {
+    color: var(--text-secondary);
+}
+
+.login-link--forgot:hover {
+    color: var(--accent-color);
+}
+
+.login-link--register {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.login-link--register:hover {
+    text-decoration: underline;
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: white;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
 }
 
-@media only screen and (min-width: 321px){
-    .login-form, .login-admin-form{
-        aspect-ratio: 3/4;
-    }
+.login-submit-btn:hover:not(:disabled) {
+    background-color: #ff8a50;
+    transform: translateY(-1px);
 }
 
-@media only screen and (min-width: 375px){
-    .login-form, .login-admin-form{
-        aspect-ratio: 4/5;
-    }
-    .login-form fieldset legend, .login-as-op, .login-admin-form fieldset legend{
-        font-size: xx-large;
-    }
-    label{
-        font-size: x-large;
-    }
-    input{
-        font-size: larger;
-    }
-    button{
-        font-size: x-large;
-    }
+.login-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-@media only screen and (min-width: 426px){
-    .login-form, .login-admin-form{
-        width: 60vw;
-        max-height: 60vh;
+.login-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Responsive */
+@media only screen and (min-width: 375px) {
+    .login-page {
+        padding: 32px 20px;
     }
-    .login-as{
-        width: 62vw;
-        min-height: 75px;
-        gap: 13px;
-    }
-    .login-as-op{
-        padding: 13px 20px 13px 20px;
+
+    .login-form-inner {
+        padding: 32px 28px;
     }
 }
 
-@media only screen and (min-width: 768px){
-    .login-form, .login-admin-form{
-        width: 490px;
-        margin: 25px;
-        padding: 40px;
+@media only screen and (min-width: 480px) {
+    .login-card {
+        padding: 0;
     }
-    .login-form fieldset legend,.login-admin-form fieldset legend{
-        width: 51%;
-    }
-    .login-as{
-        width: 580px;
-        justify-content: space-between;
+
+    .login-role-tab {
+        padding: 16px 20px;
+        font-size: 1rem;
     }
 }
 
-@media only screen and (min-width: 1212px){
-    .login-as-op{
-        aspect-ratio: 4/5;
+@media only screen and (min-width: 768px) {
+    .login-page {
+        padding: 48px 24px;
     }
-} 
 
+    .login-card {
+        max-width: 440px;
+    }
+
+    .login-title {
+        font-size: 1.65rem;
+    }
+}

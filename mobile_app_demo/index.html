@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CitySewa App Demo</title>
+
+    <style>
+      :root {
+        --bg-1: #eef5ff;
+        --bg-2: #dbe9ff;
+        --bg-3: #cbdfff;
+        --text: #10213f;
+        --muted: #4d5f84;
+        --card: rgba(255, 255, 255, 0.88);
+        --edge: rgba(120, 145, 198, 0.25);
+        --shadow-soft: 0 15px 40px rgba(14, 40, 92, 0.12);
+        --shadow-deep: 0 24px 50px rgba(5, 15, 36, 0.25);
+        --phone-border-1: #0b1225;
+        --phone-border-2: #172a52;
+        --accent: #0f62fe;
+        --warning-bg: #fff8e6;
+        --warning-border: #ffd591;
+        --warning-text: #8a5a00;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Manrope", "Segoe UI", Tahoma, sans-serif;
+        color: var(--text);
+        background: linear-gradient(
+          145deg,
+          var(--bg-1),
+          var(--bg-2) 50%,
+          var(--bg-3)
+        );
+        min-height: 100vh;
+        padding: clamp(14px, 3vw, 32px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: 1200px;
+        background: var(--card);
+        border: 1px solid var(--edge);
+        border-radius: clamp(16px, 3vw, 28px);
+        box-shadow: var(--shadow-soft);
+        padding: clamp(18px, 3vw, 32px);
+        backdrop-filter: blur(12px);
+      }
+
+      .title {
+        margin: 0 0 8px;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        font-weight: 800;
+      }
+
+      .subtitle {
+        margin: 0 0 16px;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        color: var(--muted);
+        max-width: 600px;
+      }
+
+      .demo-note {
+        font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(133, 158, 214, 0.3);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+      }
+
+      .backend-note {
+        font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+        background: var(--warning-bg);
+        border: 1px solid var(--warning-border);
+        color: var(--warning-text);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 24px;
+      }
+
+      .backend-note a {
+        color: #d46b08;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .backend-note a:hover {
+        text-decoration: underline;
+      }
+
+      .phones {
+        display: grid;
+        gap: clamp(16px, 3vw, 28px);
+        grid-template-columns: 1fr;
+      }
+
+      @media (min-width: 768px) {
+        .phones {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1100px) {
+        .phones {
+          grid-template-columns: repeat(2, minmax(320px, 420px));
+          justify-content: center;
+        }
+      }
+
+      .phone-card {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(133, 158, 214, 0.25);
+        border-radius: 22px;
+        padding: clamp(14px, 2.5vw, 20px);
+        box-shadow: 0 12px 30px rgba(19, 41, 87, 0.1);
+        transition: 0.3s ease;
+      }
+
+      .phone-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(17, 39, 82, 0.18);
+      }
+
+      .phone-card h2 {
+        margin: 0 0 14px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--accent);
+      }
+
+      .phone-shell {
+        background: linear-gradient(
+          165deg,
+          var(--phone-border-2),
+          var(--phone-border-1) 60%
+        );
+        border-radius: 40px;
+        padding: 14px;
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+        box-shadow: var(--shadow-deep);
+      }
+
+      .phone-screen {
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        aspect-ratio: 9 / 19.5;
+        border: 1px solid rgba(132, 150, 183, 0.2);
+        position: relative;
+      }
+
+      .notch {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 36%;
+        height: 16px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.25);
+        z-index: 2;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+      }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 18px;
+        padding: 14px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent), #0043ce);
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(15, 98, 254, 0.35);
+        transition: 0.2s ease;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .download-btn:active {
+        transform: scale(0.98);
+      }
+
+      .download-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="wrap">
+      <h1 class="title">CitySewa App Demo</h1>
+
+      <p class="subtitle">
+        Experience both apps in an interactive mobile-style preview.
+      </p>
+
+      <p class="demo-note">
+        This interactive demo showcases the actual mobile app interface built
+        with Flutter. Since capturing the complete mobile experience in a video
+        wasn't practical, you can explore the apps directly here.
+      </p>
+
+      <div class="backend-note">
+        ⚠️ If the app appears unresponsive or takes longer than expected to
+        load, the backend server may be in sleep mode (due to free hosting
+        limitations). Kindly visit
+        <a href="https://citysewa2.onrender.com" target="_blank">
+          citysewa2.onrender.com
+        </a>
+        once to wake the server, then return here and refresh the page. Thank
+        you for your patience 🙏
+      </div>
+
+      <section class="phones">
+        <!-- Customer App -->
+        <article class="phone-card">
+          <h2>Customer App</h2>
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="notch"></div>
+              <iframe
+                title="Customer App Demo"
+                src="https://citysewacustomer.vercel.app/"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+
+          <a
+            class="download-btn"
+            href="https://github.com/AMAYKJHA/CItysewa-noORM/releases/download/citysewa-customer-v1.0.0/citysewa.apk"
+            download
+          >
+            Download APK
+          </a>
+        </article>
+
+        <!-- Provider App -->
+        <article class="phone-card">
+          <h2>Provider App</h2>
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="notch"></div>
+              <iframe
+                title="Provider App Demo"
+                src="https://citysewaprovider.vercel.app/"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+
+          <a
+            class="download-btn"
+            href="https://github.com/AMAYKJHA/CItysewa-noORM/releases/download/citysewa-provider-v1.0.0/cs-provider.apk"
+            download
+          >
+            Download APK
+          </a>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

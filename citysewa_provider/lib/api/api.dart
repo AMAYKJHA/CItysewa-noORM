@@ -256,3 +256,76 @@ class ServiceManager {
     }
   }
 }
+
+class BookingManager {
+  final modUrl = "bookings";
+
+  // list bookings
+  Future<BookingListResponse> listBookings(int providerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl?provider_id=$providerId");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        List<Booking> bookingList = [];
+        for (Map<String, dynamic> item in data) {
+          final booking = Booking(
+            id: item["id"],
+            serviceId: item["service_id"],
+            customerId: item["customer_id"],
+            addressId: item["address_id"],
+            bookingDate: item["booking_date"],
+            bookingTime: item["booking_time"],
+            status: item["status"],
+          );
+          bookingList.add(booking);
+        }
+        return BookingListResponse(
+          success: true,
+          message: "Your bookings are here.",
+          bookingList: bookingList,
+        );
+      } else {
+        final data = jsonDecode(response.body);
+        return BookingListResponse(
+          success: false,
+          message: parseErrorMessage(data),
+        );
+      }
+    } catch (e) {
+      return BookingListResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+
+  // get booking stats
+  Future<BookingStats> bookingStats(int providerId) async {
+    final url = Uri.parse("$baseUrl/$modUrl/stats?provider_id=$providerId");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final bookingStats = BookingStats(
+          success: true,
+          message: "Stats fetched successfully.",
+          pending: data["pending"],
+          completed: data["completed"],
+          cancelled: data["cancelled"],
+        );
+        return bookingStats;
+      } else {
+        final data = jsonDecode(response.body);
+        return BookingStats(success: false, message: parseErrorMessage(data));
+      }
+    } catch (e) {
+      return BookingStats(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+}

@@ -2,15 +2,17 @@ import "package:flutter/material.dart";
 import "package:curved_navigation_bar/curved_navigation_bar.dart";
 
 import "package:citysewa_provider/api/api.dart"
-    show AuthService, ServiceManager;
+    show AuthService, ServiceManager, BookingManager;
 import "package:citysewa_provider/session_manager.dart" show SessionManager;
-import "package:citysewa_provider/api/models.dart" show Service, User;
+import "package:citysewa_provider/api/models.dart"
+    show Service, User, Booking, BookingStats;
 
 import "package:citysewa_provider/screens/pages/home_page.dart" show HomePage;
 import "package:citysewa_provider/screens/pages/booking_page.dart"
     show BookingPage;
 import "package:citysewa_provider/screens/pages/service_page.dart"
     show ServicePage;
+import "package:citysewa_provider/widgets/widgets.dart" show ProfileIcon;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -23,6 +25,8 @@ class _MainScreenState extends State<MainScreen> {
   User? user;
   int currentPageIndex = 0;
   List<Service> serviceList = [];
+  List<Booking> bookingList = [];
+  BookingStats bookingStats = BookingStats(success: false, message: "");
 
   @override
   void initState() {
@@ -62,19 +66,65 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Future<void> fetchBookings() async {}
+  Future<void> fetchBookings() async {
+    final bookingManager = BookingManager();
+    final response = await bookingManager.listBookings(user!.id);
+
+    if (response.success) {
+      setState(() {
+        bookingList = response.bookingList!;
+      });
+    }
+  }
+
+  Future<void> fetchBookingStats() async {
+    final bookingManager = BookingManager();
+    final bookingStats = await bookingManager.bookingStats(user!.id);
+
+    if (bookingStats.success) {
+      setState(() {
+        this.bookingStats = bookingStats;
+      });
+    }
+  }
+
+  Future<void> refreshHomePage() async {
+    fetchUser();
+    fetchBookingStats();
+  }
+
+  void bottomNavigation(int value) {
+    if (value == currentPageIndex) return;
+
+    if (value == 0) {
+      fetchBookingStats();
+    }
+    if (value == 1 && bookingList.isEmpty) {
+      fetchBookings();
+    }
+    if (value == 2 && serviceList.isEmpty) {
+      fetchServices();
+    }
+    setState(() {
+      currentPageIndex = value;
+    });
+  }
+
+  void onProfileClick() {
+    Navigator.pushNamed(context, '/profile');
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomePage(verified: user!.verified),
-      BookingPage(verified: user!.verified),
+      HomePage(verified: user!.verified, bookingStats: bookingStats),
+      BookingPage(verified: user!.verified, bookingList: bookingList),
       ServicePage(verified: user!.verified, serviceList: serviceList),
     ];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,
-        leading: ProfileIcon(),
+        leading: ProfileIcon(onClick: onProfileClick, userPhoto: user?.photo),
         titleSpacing: 8,
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
         title: Row(
@@ -134,7 +184,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         onRefresh: () {
           if (!user!.verified || currentPageIndex == 0) {
-            return fetchUser();
+            return refreshHomePage();
           } else if (currentPageIndex == 1) {
             return fetchBookings();
           } else {
@@ -156,32 +206,8 @@ class _MainScreenState extends State<MainScreen> {
           Icon(Icons.handyman_rounded, size: 26, color: Colors.white),
         ],
         onTap: (value) {
-          if (value == currentPageIndex) return;
-          setState(() {
-            currentPageIndex = value;
-          });
+          bottomNavigation(value);
         },
-      ),
-    );
-  }
-}
-
-class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/profile');
-        },
-        child: CircleAvatar(
-          radius: 16,
-          backgroundColor: Colors.white,
-          backgroundImage: AssetImage('assets/images/test.png'),
-        ),
       ),
     );
   }

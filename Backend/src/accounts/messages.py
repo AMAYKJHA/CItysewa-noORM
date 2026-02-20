@@ -2,11 +2,12 @@ from django.utils.translation import gettext_lazy as _
 
 INVALID_PASSWORD = _("Password is incorrect.")
 
-USER_NOT_FOUND = _("No account associated with this email.")
+USER_NOT_FOUND = _("User not found.")
 CUSTOMER_NOT_FOUND = _("Customer not found.")
 PROVIDER_NOT_FOUND = _("Provider not found.")
 DOCUMENT_NOT_FOUND = _("Document not found.")
 
+USER_DOES_NOT_EXIST = _("No account associated with this email.")
 CUSTOMER_PROFILE_DOES_NOT_EXIST = _("No customer profile associated with this email.")
 PROVIDER_PROFILE_DOES_NOT_EXIST = _("No provider profile associated with this email.")
 
@@ -23,5 +24,5 @@ EMAIL_ALREADY_ASSOCIATED = _("This email is already associated with another acco
 
 DOCUMENT_ASSOCIATED_WITH_ANOTHER_ACC = _("This document number is already associated with another account.")
 
-DOCUMENT_ALREADY_SUBMITTED = _("Document has already been submitted for this provider.")
+DOCUMENT_ALREADY_SUBMITTED = _("You have already been submitted for this account.")
 STATUS_NOT_MATCHED = _("Verification status should be one of these {status}.")

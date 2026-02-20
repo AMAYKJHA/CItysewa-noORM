@@ -29,8 +29,8 @@ class RootApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Inter'),
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
           centerTitle: true,
-          toolbarHeight: 5,
         ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),
@@ -48,6 +48,17 @@ class RootApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.deepOrange,
+            minimumSize: Size.fromHeight(50),
+            textStyle: TextStyle(fontSize: 18),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

@@ -1,0 +1,79 @@
+.provider-profile {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    color: var(--text-primary);
+    margin: 0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.verification-form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0;
+    background-color: var(--bg-secondary);
+}
+
+.verification-form h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0 0 12px 0;
+}
+
+.verification-form span {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.verification-form span:nth-of-type(1) input {
+    max-width: 71%;
+}
+
+.verification-form select {
+    margin-top: 8px;
+    min-width: fit-content;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+.verification-form input {
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+@media only screen and (min-width: 375px) {
+    .verification-form h3 {
+        font-size: 1.15rem;
+    }
+    .verification-form span label {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+    }
+    .verification-form span input {
+        font-size: 0.95rem;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .provider-profile h2 {
+        font-size: 1.35rem;
+    }
+}

@@ -39,6 +39,32 @@ class ServiceListResponse {
   });
 }
 
+class BookingListResponse extends ApiResponse {
+  List<Booking>? bookingList;
+
+  BookingListResponse({
+    required super.success,
+    required super.message,
+    this.bookingList,
+  });
+}
+
+class BookingStats {
+  bool success = false;
+  String message;
+  int pending;
+  int completed;
+  int cancelled;
+
+  BookingStats({
+    required this.success,
+    required this.message,
+    this.pending = 0,
+    this.completed = 0,
+    this.cancelled = 0,
+  });
+}
+
 class User {
   final int id;
   final String firstName;
@@ -80,5 +106,25 @@ class Service {
     this.thumbnail,
     this.providerId,
     this.description,
+  });
+}
+
+class Booking {
+  final int id;
+  final int serviceId;
+  final int customerId;
+  final int addressId;
+  final String bookingDate;
+  final String bookingTime;
+  final String status;
+
+  Booking({
+    required this.id,
+    required this.serviceId,
+    required this.customerId,
+    required this.addressId,
+    required this.bookingDate,
+    required this.bookingTime,
+    required this.status,
   });
 }

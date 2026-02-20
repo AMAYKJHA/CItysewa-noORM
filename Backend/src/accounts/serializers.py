@@ -17,7 +17,7 @@ from .messages import (
     CUSTOMER_PROFILE_EXISTS,
     PROVIDER_PROFILE_EXISTS,
     INVALID_PASSWORD,
-    USER_NOT_FOUND,
+    USER_DOES_NOT_EXIST,
     CUSTOMER_NOT_FOUND,
     DOCUMENT_NOT_FOUND,
     PROVIDER_NOT_FOUND,
@@ -90,7 +90,7 @@ class UserPatchSerializer(serializers.Serializer):
                     })
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })            
         return attrs
     
@@ -126,7 +126,7 @@ class AdminLoginSerializer(serializers.Serializer):
         
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
@@ -213,7 +213,7 @@ class CustomerLoginSerializer(serializers.Serializer):
                     
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
@@ -236,6 +236,7 @@ class CustomerSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     gender = serializers.CharField()
+    email = serializers.EmailField(required=False)
 
     
 # Provider serializers
@@ -305,7 +306,7 @@ class ProviderLoginSerializer(serializers.Serializer):
                     
         else:
             raise serializers.ValidationError({
-                "message": USER_NOT_FOUND
+                "message": USER_DOES_NOT_EXIST
             })
             
         attrs["user_id"] = user.id
@@ -333,6 +334,7 @@ class ProviderSerializer(serializers.Serializer):
     verified = serializers.BooleanField()
     description = serializers.CharField(required=False)
     photo = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -351,8 +353,8 @@ class DocumentCreateSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         provider_id = attrs.get("provider_id")
-        provider = Provider().get(id=provider_id)
-        if provider:
+        document = Document().get(provider_id=provider_id)
+        if document:
             raise serializers.ValidationError({
                 "message": DOCUMENT_ALREADY_SUBMITTED
             })

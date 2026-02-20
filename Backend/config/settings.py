@@ -100,15 +100,26 @@ else:
 
 # Supabase S3 bucket
 USE_S3=env.bool("USE_S3", False)
-SUPABASE_S3_ACCESS_KEY_ID=env("SUPABASE_S3_ACCESS_KEY_ID")
-SUPABASE_S3_SECRET_ACCESS_KEY = env("SUPABASE_S3_SECRET_ACCESS_KEY")
-SUPABASE_S3_REGION_NAME = env("SUPABASE_S3_REGION_NAME")
-SUPABASE_S3_ENDPOINT_URL = env("SUPABASE_S3_ENDPOINT_URL")
-STORAGE_BUCKETS = {
-    "customer": env("SUPABASE_S3_CUSTOMER_BUCKET_NAME"),
-    "provider": env("SUPABASE_S3_PROVIDER_BUCKET_NAME"),
-    "service": env("SUPABASE_S3_SERVICE_BUCKET_NAME")
-}
+if USE_S3:
+    SUPABASE_S3_ACCESS_KEY_ID=env("SUPABASE_S3_ACCESS_KEY_ID")
+    SUPABASE_S3_SECRET_ACCESS_KEY = env("SUPABASE_S3_SECRET_ACCESS_KEY")
+    SUPABASE_S3_REGION_NAME = env("SUPABASE_S3_REGION_NAME")
+    SUPABASE_S3_ENDPOINT_URL = env("SUPABASE_S3_ENDPOINT_URL")
+    STORAGE_BUCKETS = {
+        "customer": env("SUPABASE_S3_CUSTOMER_BUCKET_NAME"),
+        "provider": env("SUPABASE_S3_PROVIDER_BUCKET_NAME"),
+        "service": env("SUPABASE_S3_SERVICE_BUCKET_NAME")
+    }
+else:
+    SUPABASE_S3_ACCESS_KEY_ID = None
+    SUPABASE_S3_SECRET_ACCESS_KEY = None
+    SUPABASE_S3_REGION_NAME = None
+    SUPABASE_S3_ENDPOINT_URL = None
+    STORAGE_BUCKETS = {
+        "customer": None,
+        "provider": None,
+        "service": None
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -162,8 +173,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-
-# Email settings for Brevo SMTP
+# Email settings
 if env.bool("USE_SMTP", False):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env.str("EMAIL_HOST")
@@ -173,8 +183,6 @@ if env.bool("USE_SMTP", False):
     EMAIL_HOST_USER = env.str("EMAIL_LOGIN")
     EMAIL_HOST_PASSWORD = env.str("EMAIL_SMTP_KEY")
     DEFAULT_FROM_EMAIL = env.str("FROM_EMAIL")
-
-
 
 if env.bool("USE_SENTRY", default=True):
     sentry_sdk.init(

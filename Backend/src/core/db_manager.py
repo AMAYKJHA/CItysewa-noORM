@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from django.db import connection
 
-from .schema import table_queries
+from .schema import table_queries, create_triggers
 
 class SchemaManager:
     def test_connection(self):
@@ -54,12 +54,30 @@ class SchemaManager:
             connection.rollback()
             print(f"Error: Unable to delete table. {e}")
             return
+    
+    # For test purpose, not standard     
+    def run_query(self, query):
+        if not self.test_connection():
+            print("Error: Couldn`t connect to the database.")
+            return
+        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+            connection.commit()
+            print("Query executed successfully.")
+            return
+            
+        except Exception as e:
+            print(f"Error: {e}")
+            return
 
 # method for migrating tables to database
 def migrate():
     manager = SchemaManager()
     for table_name in table_queries.keys():
         manager.create_table(table_name, table_queries[table_name])
+    manager.run_query(create_triggers)
         
 
 class Table(ABC):
@@ -147,12 +165,25 @@ class Table(ABC):
     #R
     def count(self, **kwargs):
         query = f"SELECT COUNT(*) FROM {self.table_name}"
-        cols = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
-        values = ()
-        if cols:
-            condition = " AND ".join([f"{col} = %s" for col in cols])
-            values = tuple([kwargs[col] for col in cols])
+        
+        # Conditions
+        columns = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
+        values = tuple()
+        if columns:
+            con_list = []
+            raw_values = []
+            for col in columns:
+                if not isinstance(kwargs[col], (tuple, type(None))):
+                    con_list.append(f"{col} = %s")
+                    raw_values.append(kwargs[col])
+                elif isinstance(kwargs[col], tuple):
+                    con_list.append(f"{col} IN ({", ".join(['%s' for _ in kwargs[col]])})")
+                    raw_values += kwargs[col]
+                   
+            condition = " AND ".join(con_list)
+            values = tuple(raw_values)
             query = f"{query} WHERE {condition}"
+            
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
@@ -171,11 +202,21 @@ class Table(ABC):
         query = f"SELECT * FROM {self.table_name}"
         
         # Conditions
-        cols = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
-        values = ()
-        if cols:
-            condition = " AND ".join([f"{col} = %s" for col in cols])
-            values = tuple([kwargs[col] for col in cols])
+        columns = [col for col in kwargs if col in self._attrs and kwargs[col] is not None]
+        values = tuple()
+        if columns:
+            con_list = []
+            raw_values = []
+            for col in columns:
+                if not isinstance(kwargs[col], (tuple, type(None))):
+                    con_list.append(f"{col} = %s")
+                    raw_values.append(kwargs[col])
+                elif isinstance(kwargs[col], tuple):
+                    con_list.append(f"{col} IN ({", ".join(['%s' for _ in kwargs[col]])})")
+                    raw_values += kwargs[col]
+                   
+            condition = " AND ".join(con_list)
+            values = tuple(raw_values)
             query = f"{query} WHERE {condition}"
             
         if order_by:
@@ -270,12 +311,13 @@ class Table(ABC):
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
+                rows_updated = cursor.rowcount
             connection.commit()
-            print(f"Record updated successfully in the {self.table_name}.")
+            return rows_updated
               
         except Exception as e:
             print(f"Error: {e}")
-            
+                        
                 
     #D
     def delete(self, **kwargs):
@@ -293,7 +335,7 @@ class Table(ABC):
                 cursor.execute(query, values)
                 rows_deleted = cursor.rowcount
             connection.commit()
-            print(f"{rows_deleted} records deleted from the {self.table_name}.")
+            return rows_deleted
             
         except Exception as e:
             print(f"Error: {e}")

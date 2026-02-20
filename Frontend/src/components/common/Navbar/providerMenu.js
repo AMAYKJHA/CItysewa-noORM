@@ -1,8 +1,6 @@
 export default [
-    {label: 'Dashboard', path:'/'},
-    {label: 'My Services', path:''},
-    {label: 'Bookings', path: ''},
-    {label: 'Earnings', path: ''},
-    {label: 'Reviews', path: ''},
-    {label: 'Profile', path: ''},
+    { label: 'Dashboard', path: '/provider' },
+    { label: 'My Services', path: '/provider/my-services' },
+    { label: 'Bookings', path: '/provider/bookings' },
+    { label: 'Profile', path: '/provider/profile' },
 ];
