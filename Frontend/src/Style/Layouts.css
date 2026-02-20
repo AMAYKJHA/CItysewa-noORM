@@ -1,30 +1,107 @@
-.public-layout, .admin-layout, .provider-layout{
-    display: flex; 
-    justify-content: space-evenly;
-    align-items: center; 
-    border: 2px solid green; 
+.public-layout,
+.admin-layout,
+.provider-layout,
+.customer-layout {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
     width: 100%;
     min-height: 100vh;
     flex-direction: column;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.admin-layout span{
+/* Main content grows so footer stays at bottom */
+.public-layout > section,
+.admin-layout .admin-dashboard-layout,
+.provider-layout .provider-main,
+.customer-layout .customer-main {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-y: auto;
+}
+
+/* Clear fixed navbar on public pages (same navbar as dashboard) */
+.public-layout > section {
+    padding-top: 110px;
+}
+
+@media only screen and (min-width: 768px) {
+    .public-layout > section {
+        padding-top: 120px;
+    }
+}
+
+/* Clear fixed navbar: top (25px) + nav height (~70px) + gap */
+.provider-main,
+.customer-main {
+    padding-top: 110px;
+    min-height: 0;
+}
+
+.admin-layout .admin-dashboard-layout {
+    display: flex;
+    width: 100%;
+}
+
+/* Footer always at bottom; never shrinks */
+.public-layout .footer,
+.admin-layout .footer,
+.provider-layout .footer,
+.customer-layout .footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.admin-layout .admin-main {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    min-width: 0;
+    margin-left: 0;
+    transition: margin-left 0.25s ease;
 }
 
-.public-layout, .admin-layout{
+.admin-layout .admin-main-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+}
+
+.public-layout section {
+    flex: 1;
+    width: 100%;
+}
+
+.public-layout,
+.admin-layout,
+.provider-layout,
+.customer-layout {
     border: none;
 }
 
-@media only screen and (min-width: 1024px){
-    .admin-panel{
-        width: 100%;
-        display: flex;
-        flex-direction: row !important;
-        justify-content: space-evenly !important;
-        margin: 4vw 0 4vw 0;
+@media only screen and (min-width: 768px) {
+    .provider-main,
+    .customer-main {
+        padding-top: 120px;
     }
+}
+
+@media only screen and (min-width: 1024px) {
+    .admin-layout .admin-main {
+        margin-left: 260px;
+    }
+}
+
+/* Auth layout - login / register pages */
+.auth-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 24px 16px;
 }

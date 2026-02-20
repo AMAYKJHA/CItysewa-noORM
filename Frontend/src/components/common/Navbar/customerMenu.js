@@ -1,6 +1,6 @@
 export default [
-    {label: 'Home', path:'/'},
-    {label: 'Services', path:'/services'},
-    {label: 'My Bookings', path: ''},
-    {label: 'Profile', path: ''},
+    { label: 'Dashboard', path: '/customer' },
+    { label: 'Services', path: '/customer/services' },
+    { label: 'My Bookings', path: '/customer/bookings' },
+    { label: 'Profile', path: '/customer/profile' },
 ];

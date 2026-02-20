@@ -1,33 +1,35 @@
-import { Link } from "react-router-dom";
-import BrowseServices from "../components/services/BrowseServices";
-import bg from "./../assets/bgb.png";
-import "../Style/Home.css";
+import FeaturedServices from '../components/home/FeaturedServices';
+import Reviews from '../components/home/Reviews';
+import JoinUs from '../components/home/JoinUs';
+import Stats from '../components/home/Stats';
+import '../Style/Home.css';
+import { Link } from 'react-router-dom';
+
+const Hero = () => {
+    return (
+        <section className="hero">
+            <div className="hero-content">
+                <h1 className="hero-title">Connect with Local Experts</h1>
+                <p className="hero-subtitle">Find trusted service providers in your neighborhood for any need</p>
+                <div className="hero-cta">
+                    <Link to="/services" className="cta-primary">Browse Services</Link>
+                    <Link to="/about" className="cta-secondary">Learn More</Link>
+                </div>
+            </div>
+        </section>
+    );
+};
 
 const Home = () => {
-    return(
+    return (
         <main className="home">
-            {/* <p>Hero Section</p> */}
-            <Hero></Hero>
-            {/* <BrowseServices from="home"/>
-            <p>Get involved section</p>
-            <section className="get-involved" style={{display: 'flex'}}>
-                <div className="be-customer" style={{width:'250px', aspectRatio:'1.5', border:'2px solid red', display:'flex', justifyContent:'center', alignItems: 'center'}}>Become a Customer</div>
-                <div className="be-provider" style={{width:'250px', aspectRatio:'1.5', border:'2px solid red', display:'flex', justifyContent:'center', alignItems: 'center'}}>Become a Provider</div>
-            </section>
-            <p>User comments and views</p>
-            <h3>See what our users have to say</h3>
-            <p>FAQs</p>
-            <h3>Frequently Asked Questions</h3> */}
+            <Hero />
+            <FeaturedServices />
+            <Reviews />
+            <Stats />
+            <JoinUs />
         </main>
     );
 };
 
 export default Home;
-
-const Hero = () => {
-    return(
-        <section className="hero">
-            <h1>Home Section</h1>
-        </section>
-    );
-};

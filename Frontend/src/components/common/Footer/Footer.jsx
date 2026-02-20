@@ -10,25 +10,50 @@ const Footer = (props) => {
     if(props.type === 'customer') footerLinks = footerCustomer;
     if(props.type === 'provider') footerLinks = footerProvider;
     if(props.type === 'admin') footerLinks = footerAdmin;
-    return(
+    return (
         <footer className="footer">
-            <section className="footerTop">
-                <h2>CitySewa</h2>
-                <p>Connecting Local Skills with Local Needs</p>
-            </section>
-            <section className="footerLinks">
-                {Object.entries(footerLinks).map(([section, links]) => (
-                    <div className="footerColumn" key={section}>
-                        <h4>{section.charAt(0).toUpperCase() + section.slice(1)}</h4>
-                        <span className="linkSpan">{links.map((item) => (
-                            <Link key={item.label} to={item.path} style={{all:'unset', textDecoration:'underline'}} className="link">{item.label}</Link>
-                        ))}</span>
-                    </div>
-                ))}
-            </section>
-            <section className="footerBottom">
-                © {new Date().getFullYear()} CitySewa. All Rights Reserved.
-            </section>
+            <div className="footer-inner">
+                <section className="footerTop">
+                    <h2>CitySewa</h2>
+                    <p>Connecting Local Skills with Local Needs</p>
+                </section>
+                <section className="footerLinks">
+                    {Object.entries(footerLinks).map(([section, links]) => (
+                        <div className="footerColumn" key={section}>
+                            <h4>{section.charAt(0).toUpperCase() + section.slice(1)}</h4>
+                            <span className="linkSpan">
+                                {links.map((item) => {
+                                    if (item.href) {
+                                        return (
+                                            <a
+                                                key={item.label}
+                                                href={item.href}
+                                                className="link"
+                                                rel="noreferrer"
+                                            >
+                                                {item.label}
+                                            </a>
+                                        );
+                                    }
+                                    return (
+                                        <Link
+                                            key={item.label}
+                                            to={item.path}
+                                            className="link"
+                                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    );
+                                })}
+                            </span>
+                        </div>
+                    ))}
+                </section>
+                <section className="footerBottom">
+                    © {new Date().getFullYear()} CitySewa. All Rights Reserved.
+                </section>
+            </div>
         </footer>
     );
 };
