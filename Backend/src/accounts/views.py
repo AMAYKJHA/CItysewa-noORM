@@ -10,8 +10,8 @@ from drf_spectacular.utils import extend_schema
 from django.core.cache import cache
 from django.conf import settings
 
-from accounts.utils.generators import generate_otp
-from accounts.utils.verification import send_user_OTP_email
+from src.accounts.utils.generators import generate_otp
+from src.accounts.utils.verification import send_user_OTP_email
 
 from .tables import (
     Token,
