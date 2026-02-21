@@ -24,10 +24,55 @@ String parseErrorMessage(dynamic error) {
 class AuthService {
   final modUrl = "accounts/provider";
 
+  // send otp
+  Future<ApiResponse> sendOTP(String email) async {
+    final url = Uri.parse("$baseUrl/accounts/auth/otp/send");
+
+    try {
+      final response = await http.post(url, body: {"email": email});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return ApiResponse(success: true, message: parseErrorMessage(data));
+      } else {
+        final data = jsonDecode(response.body);
+        return ApiResponse(success: false, message: parseErrorMessage(data));
+      }
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+
+  // verify otp
+  Future<ApiResponse> verifyOTP(String email, int otp) async {
+    final url = Uri.parse("$baseUrl/accounts/auth/otp/verify");
+
+    try {
+      final response = await http.post(
+        url,
+        body: {"email": email, "otp": otp.toString()},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return ApiResponse(success: true, message: parseErrorMessage(data));
+      } else {
+        final data = jsonDecode(response.body);
+        return ApiResponse(success: false, message: parseErrorMessage(data));
+      }
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        message: "Something went wrong. Please try again.",
+      );
+    }
+  }
+
   // login
   Future<LoginResponse> login(String email, String password) async {
-    final body = {"email": email, "password": password};
     final url = Uri.parse("$baseUrl/$modUrl/login");
+    final body = {"email": email, "password": password};
     try {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {

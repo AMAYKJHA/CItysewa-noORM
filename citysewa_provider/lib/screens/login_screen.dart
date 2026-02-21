@@ -8,10 +8,10 @@ import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 final authService = AuthService();
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -190,7 +190,7 @@ class _LoginFormState extends State<LoginForm> {
 }
 
 class GoToSignup extends StatelessWidget {
-  GoToSignup({super.key});
+  const GoToSignup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +200,7 @@ class GoToSignup extends StatelessWidget {
         Text("Dont`t have an account? ", style: TextStyle(fontSize: 16)),
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/register');
+            Navigator.pushNamed(context, '/otp');
           },
           child: Text(
             "Sign Up",
