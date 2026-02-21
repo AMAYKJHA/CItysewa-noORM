@@ -15,6 +15,9 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    String? email = args["email"];
+
     return Scaffold(
       backgroundColor: Color(0xfffbf0f9),
       body: Center(
@@ -31,7 +34,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: 10),
                   WelcomeText(),
                   SizedBox(height: 20),
-                  SignupForm(),
+                  SignupForm(email: email!),
                   const SizedBox(height: 20),
                   GoToLogin(),
                 ],
@@ -65,7 +68,8 @@ class WelcomeText extends StatelessWidget {
 }
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({super.key});
+  final String email;
+  const SignupForm({super.key, required this.email});
 
   @override
   State<SignupForm> createState() => _SignupFormState();
@@ -103,7 +107,9 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
+    TextEditingController emailController = TextEditingController(
+      text: widget.email,
+    );
     TextEditingController passController = TextEditingController();
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
@@ -112,6 +118,14 @@ class _SignupFormState extends State<SignupForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          TextField(
+            readOnly: true,
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(prefixIcon: Icon(Icons.email_outlined)),
+          ),
+
+          const SizedBox(height: 10),
           TextField(
             controller: firstNameController,
             keyboardType: TextInputType.name,
@@ -128,16 +142,6 @@ class _SignupFormState extends State<SignupForm> {
             decoration: InputDecoration(
               hintText: "Last name",
               prefixIcon: Icon(Icons.abc),
-            ),
-          ),
-
-          const SizedBox(height: 10),
-          TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: "Email",
-              prefixIcon: Icon(Icons.email_outlined),
             ),
           ),
 

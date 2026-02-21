@@ -209,7 +209,7 @@ class GoToSignup extends StatelessWidget {
         Text("Dont`t have an account? ", style: TextStyle(fontSize: 16)),
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/register');
+            Navigator.pushNamed(context, '/otp');
           },
           child: Text(
             "Sign Up",

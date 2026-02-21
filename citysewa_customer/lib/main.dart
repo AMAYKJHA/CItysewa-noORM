@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import "package:citysewa_customer/screens/splash_screen.dart" show SplashScreen;
 import 'package:citysewa_customer/screens/login_screen.dart' show LoginScreen;
 import 'package:citysewa_customer/screens/home_screen.dart' show HomeScreen;
+import 'package:citysewa_customer/screens/otp_screen.dart' show OTPScreen;
 import 'package:citysewa_customer/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_customer/screens/search_screen.dart' show SearchScreen;
 import 'package:citysewa_customer/screens/book_service_screen.dart'
@@ -89,6 +90,7 @@ class RootApp extends StatelessWidget {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginScreen(),
         '/home': (context) => HomeScreen(),
+        '/otp': (context) => OTPScreen(),
         '/register': (context) => SignupScreen(),
         '/profile': (context) => ProfileScreen(),
         '/search': (context) => SearchScreen(),
