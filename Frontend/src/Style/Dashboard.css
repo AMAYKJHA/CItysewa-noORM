@@ -1,8 +1,3 @@
-/* ============================================
-   ADMIN DASHBOARD - Real-world style
-   KPI cards, content card, tables, modal
-   ============================================ */
-
 .admin-dashboard {
     width: 100%;
     max-width: 1200px;
@@ -10,7 +5,6 @@
     color: var(--text-primary);
 }
 
-/* KPI cards */
 .dashboard-kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -56,7 +50,6 @@
     color: var(--accent-color);
 }
 
-/* Content card wrapper */
 .dashboard-content-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -65,7 +58,6 @@
     overflow: hidden;
 }
 
-/* Table section */
 .dashboard-table-section {
     padding: 20px;
 }
@@ -117,7 +109,6 @@
     color: var(--text-secondary);
 }
 
-/* Table */
 .tablewrapper {
     overflow-x: auto;
     border: 1px solid var(--border-color);
@@ -171,7 +162,6 @@
     text-decoration: underline;
 }
 
-/* Pagination */
 .dashboard-pagination {
     display: flex;
     flex-wrap: wrap;
@@ -232,7 +222,6 @@
     color: var(--text-secondary);
 }
 
-/* Verification detail modal */
 .admin-modal-overlay {
     position: fixed;
     inset: 0;
@@ -398,7 +387,6 @@
     color: var(--text-primary);
 }
 
-/* Responsive */
 @media only screen and (min-width: 600px) {
     .dashboard-kpi-grid {
         grid-template-columns: repeat(3, 1fr);
