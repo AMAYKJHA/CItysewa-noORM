@@ -85,7 +85,9 @@ class SendOTPAPIView(APIView):
                 },
                 status=HTTP_200_OK
             )
-
+        else:
+            cache.delete(f"otp:{email}")
+        
         return Response(
             {"detail": "We were unable to send the verification code. Please try again later."},
             status=HTTP_500_INTERNAL_SERVER_ERROR
