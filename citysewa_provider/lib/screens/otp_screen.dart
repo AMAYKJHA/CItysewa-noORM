@@ -215,7 +215,7 @@ class _OTPFormState extends State<OTPForm> {
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: "OTP",
-                    prefixIcon: Icon(Icons.token),
+                    prefixIcon: Icon(Icons.key_rounded),
                   ),
                 ),
               ),
