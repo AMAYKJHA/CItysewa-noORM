@@ -4,7 +4,8 @@ from rest_framework.status import (
     HTTP_200_OK, 
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
-    HTTP_500_INTERNAL_SERVER_ERROR
+    HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_429_TOO_MANY_REQUESTS
 )
 from drf_spectacular.utils import extend_schema
 from django.core.cache import cache
@@ -51,19 +52,45 @@ from .messages import (
 class SendOTPAPIView(APIView):
     def post(self, request):
         email = request.data.get("email")
-        if email:
-            otp_expiry_time = settings.OTP_EXPIRY_TIME
-            origin_url = settings.ORIGIN_URL
-            otp = generate_otp()
-            cache.set(f"otp:{email}", otp, otp_expiry_time)
-            send_user_OTP_email(recipient_email=email, otp=otp, otp_expiry_minutes=otp_expiry_time // 60, origin_url=origin_url)
-            return Response({
-                "message": f"OTP has been sent to your email. It will expire after {otp_expiry_time // 60} minutes."},
+        otp_expiry_time = settings.OTP_EXPIRY_TIME
+        otp_expiry_minutes = otp_expiry_time // 60
+        origin_url = settings.ORIGIN_URL
+
+        if not email:
+            return Response(
+                {"detail": "Email address is required for verification."},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        if cache.get(f"otp:{email}"):
+            return Response(
+                {
+                    "detail": f"An OTP has already been sent. Please wait {otp_expiry_minutes} minutes before requesting a new one."
+                },
+                status=HTTP_429_TOO_MANY_REQUESTS
+            )
+
+        otp = generate_otp()
+        cache.set(f"otp:{email}", otp, otp_expiry_time)
+
+        if send_user_OTP_email(
+            recipient_email=email,
+            otp=otp,
+            otp_expiry_minutes=otp_expiry_minutes,
+            origin_url=origin_url
+        ):
+            return Response(
+                {
+                    "message": f"A verification code has been sent to your email. It will expire in {otp_expiry_minutes} minutes."
+                },
                 status=HTTP_200_OK
             )
-        
-        return Response({"detail": "Email is required for verification."}, status=HTTP_400_BAD_REQUEST) 
 
+        return Response(
+            {"detail": "We were unable to send the verification code. Please try again later."},
+            status=HTTP_500_INTERNAL_SERVER_ERROR
+        )
+        
 class VerifyOTPAPIView(APIView):
     def post(self, request):
         email = request.data.get("email")
