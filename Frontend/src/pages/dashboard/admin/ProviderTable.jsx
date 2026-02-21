@@ -101,6 +101,7 @@ const Providers = () => {
                             <th>Name</th>
                             <th>Gender</th>
                             <th>Email</th>
+                            <th>Verified</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,6 +111,7 @@ const Providers = () => {
                                 <td>{[provider.first_name, provider.last_name].filter(Boolean).join(" ") || "—"}</td>
                                 <td>{provider.gender || "—"}</td>
                                 <td>{provider.email || "—"}</td>
+                                <td>{provider.verified ? "Yes" : "No"}</td>
                             </tr>
                         ))}
                     </tbody>
