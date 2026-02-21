@@ -24,13 +24,13 @@ const FeaturedServices = () => {
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % services.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
 
-  if (loading) return <p style={{textAlign:'center'}}>Loading featured services...</p>;
-  if (services.length === 0) return <p style={{textAlign:'center'}}>No fetaured services available.</p>;
+  if (loading) return <p style={{textAlign:'center', padding:'200px'}}>Loading featured services...</p>;
+  if (services.length === 0) return <p style={{textAlign:'center', padding:'200px'}}>No fetaured services available yet.</p>;
 
   const total = services.length;
-  const baseAngle = 360 / total; // base rotation per card
-  const maxZ = 200; // front card Z distance
-  const flattenFactor = 0.7; // smaller = more flat
+  const baseAngle = 360 / total;
+  const maxZ = 200;
+  const flattenFactor = 0.7; 
 
   return (
     <section className="featured-services">
@@ -44,8 +44,7 @@ const FeaturedServices = () => {
   if (offset < -half) offset += total;
   if (offset > half) offset -= total;
 
-  // DYNAMIC UNFOLDING
-  const unfoldFactor = 0.5; // 0 = cylinder, 1 = fully flat
+  const unfoldFactor = 0.5;
   const rotationY = offset * baseAngle * flattenFactor * (1 - unfoldFactor);
   const translateZ = maxZ - Math.abs(offset) * 50 * flattenFactor * (1 - unfoldFactor);
 
@@ -85,12 +84,3 @@ const FeaturedServices = () => {
 };
 
 export default FeaturedServices;
-
-// const FeaturedServices = () => {
-// const OPTIONS = { loop: true };
-// const SLIDE_COUNT = 6;
-// const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
-// return(
-//   <EmblaCarousel slides={SLIDES} options={OPTIONS} />
-// );
-// };
