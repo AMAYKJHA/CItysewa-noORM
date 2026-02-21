@@ -22,7 +22,7 @@ def _send_email(
     recipient_email,
 ):
     email_config = get_email_config()
-
+    print(email_config)
     try:
         connection = get_connection(
             host=email_config["EMAIL_HOST"],
@@ -49,8 +49,8 @@ def _send_email(
 
     try:
         mail.send(fail_silently=False)
-    except Exception:
-        print("Failed to send email.")
-        return False
+    except Exception as e:
+        print("EMAIL ERROR:", str(e))
+        raise
 
     return True
