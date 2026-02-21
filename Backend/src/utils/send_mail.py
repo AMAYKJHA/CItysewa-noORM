@@ -1,6 +1,7 @@
+import requests
+
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
-
 from django.conf import settings
 
 def get_email_config():
@@ -13,7 +14,8 @@ def get_email_config():
             "DEFAULT_FROM_EMAIL": settings.DEFAULT_FROM_EMAIL
     }
 
-
+"""
+# Using SMTP
 def _send_email(
     subject,
     body,
@@ -51,6 +53,50 @@ def _send_email(
         mail.send(fail_silently=False)
     except Exception as e:
         print("EMAIL ERROR:", str(e))
+        raise
+
+    return True
+"""
+
+# Using api request
+def _send_email(
+    subject,
+    body,
+    template_name,
+    context,
+    recipient_email,
+):
+    html_content = render_to_string(f"{template_name}.html", context)
+
+    if not html_content:
+        html_content = body
+
+    url = settings.BREVO_API_URL
+
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.BREVO_API_KEY,
+        "content-type": "application/json",
+    }
+
+    payload = {
+        "sender": {
+            "name": "CitySewa",
+            "email": settings.DEFAULT_FROM_EMAIL,
+        },
+        "to": [
+            {"email": recipient_email}
+        ],
+        "subject": subject,
+        "htmlContent": html_content,
+        "textContent": body,
+    }
+
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print("EMAIL API ERROR:", str(e))
         raise
 
     return True

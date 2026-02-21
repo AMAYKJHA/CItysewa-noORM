@@ -186,7 +186,11 @@ if env.bool("USE_SMTP", False):
 
     EMAIL_HOST_USER = env.str("EMAIL_LOGIN")
     EMAIL_HOST_PASSWORD = env.str("EMAIL_SMTP_KEY")
-    DEFAULT_FROM_EMAIL = env.str("FROM_EMAIL")
+else:
+    BREVO_API_URL = env.str("BREVO_API_URL")
+    BREVO_API_KEY = env.str("BREVO_API_KEY")
+    
+DEFAULT_FROM_EMAIL = env.str("FROM_EMAIL")
 
 if env.bool("USE_SENTRY", default=True):
     sentry_sdk.init(
