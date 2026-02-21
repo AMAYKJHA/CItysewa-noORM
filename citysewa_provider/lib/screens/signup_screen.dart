@@ -104,7 +104,9 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
+    TextEditingController emailController = TextEditingController(
+      text: widget.email,
+    );
     TextEditingController passController = TextEditingController();
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
@@ -117,13 +119,9 @@ class _SignupFormState extends State<SignupForm> {
             readOnly: true,
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: widget.email,
-              prefixIcon: Icon(Icons.email_outlined),
-            ),
+            decoration: InputDecoration(prefixIcon: Icon(Icons.email_outlined)),
           ),
 
-          const SizedBox(height: 10),
           TextField(
             controller: firstNameController,
             keyboardType: TextInputType.name,
