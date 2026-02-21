@@ -112,12 +112,12 @@ class VerifyOTPAPIView(APIView):
                 status=HTTP_400_BAD_REQUEST
             )
 
-        if otp != cached_otp:
+        if otp != str(cached_otp):
             return Response(
                 {"detail": "Invalid OTP."},
                 status=HTTP_400_BAD_REQUEST
             )
-            
+        
         cache.delete(f"otp:{email}")
 
         return Response(
