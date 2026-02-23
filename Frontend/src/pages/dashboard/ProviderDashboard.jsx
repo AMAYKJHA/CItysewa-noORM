@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { fetchBookings, getBookingStats } from "../../api/client";
+import { fetchProviderBookings, getBookingStats } from "../../api/client";
 import "../../Style/Dashboard.css";
 import "../../Style/ProviderDashboard.css";
 
@@ -17,10 +17,11 @@ const ProviderDashboard = () => {
             if (!user) return;
             try {
                 const [bookingsRes, statsRes] = await Promise.all([
-                    fetchBookings({ provider_id: user.id }),
+                    fetchProviderBookings(user.id),
                     getBookingStats(),
                 ]);
                 const allBookings = bookingsRes.data || [];
+                console.log("Fetched bookings:", allBookings);
                 setBookings(allBookings);
                 const pending = allBookings.filter((b) => b.status?.toLowerCase() === "pending").length;
                 const completed = allBookings.filter((b) => b.status?.toLowerCase() === "completed").length;
@@ -53,7 +54,7 @@ const ProviderDashboard = () => {
                 <div className="verification-warning" role="alert">
                     <div className="verification-warning-content">
                         <strong>Account Verification Required</strong>
-                        <p>Your provider account is not verified. Please verify your account through the CitySewa Provider App to start receiving bookings.</p>
+                        <p>Your provider account is not verified. Please verify your account through the CitySewa Provider App to start receiving bookings. For our app,  <a target="_blank" href="https://citysewa.vercel.app/">Click here</a></p>
                     </div>
                 </div>
             )}

@@ -1,204 +1,10 @@
-/* ============================================
-   JOIN OUR TEAM PAGE
-   Clean • Responsive • Professional
-============================================ */
-
 .join-our-team-page {
-    width: 100%;
-    min-height: 100vh;
-    padding: 120px 20px 60px;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-}
-
-/* ---------- Hero Section ---------- */
-
-.join-hero {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.join-hero h1 {
-    font-size: 2.3rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-}
-
-.join-hero p {
-    max-width: 650px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: var(--text-secondary);
-}
-
-/* ---------- Layout ---------- */
-
-.join-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    gap: 50px;
-}
-
-/* ---------- Info Section ---------- */
-
-.join-info h2 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-.join-info ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.join-info li {
-    margin-bottom: 14px;
-    color: var(--text-secondary);
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-/* ---------- Form ---------- */
-
-.join-form {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 40px;
-    border-radius: 16px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
-    display: flex;
-}
-
-.join-form fieldset {
-    width: 100%;
-    border: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.join-form legend {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-/* ---------- Inputs ---------- */
-
-.join-form label {
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.join-form input,
-.join-form textarea {
-    width: 100%;
-    margin-top: 8px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.join-form textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-.join-form input:focus,
-.join-form textarea:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 4px var(--accent-light);
-}
-
-/* ---------- Button ---------- */
-
-.join-form button {
-    margin-top: 10px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    background-color: var(--accent-color);
-    color: white;
-    transition: all 0.25s ease;
-}
-
-.join-form button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-/* ---------- Error / Success Messages ---------- */
-
-.form-error {
-    font-size: 0.85rem;
-    color: #ff4d4f;
-    margin-top: 4px;
-}
-
-.form-success {
-    padding: 16px;
-    border-radius: 10px;
-    background: rgba(0, 200, 83, 0.1);
-    color: #00c853;
-    text-align: center;
-    font-weight: 500;
-}
-
-/* ---------- Responsive ---------- */
-
-@media (min-width: 768px) {
-    .join-our-team-page {
-        padding: 140px 40px 80px;
-    }
-
-    .join-hero h1 {
-        font-size: 3rem;
-    }
-
-    .join-content {
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: start;
-    }
-
-    .join-form {
-        margin: 0;
-    }
-}
-
-@media (min-width: 1024px) {
-    .join-our-team-page {
-        padding: 160px 60px 100px;
-    }
-}
-
-
-
-
-/* .join-page {
     width: 100%;
     min-height: 100vh;
     color: var(--text-primary);
     background-color: var(--bg-primary);
     padding-top: 50px;
 }
-
 
 .join-hero {
     background: linear-gradient(135deg, var(--accent-color) 0%, #ff8a50 100%);
@@ -210,22 +16,19 @@
 }
 
 .join-hero::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background:
-        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
     pointer-events: none;
 }
 
 .join-hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin: 0 0 12px 0;
+    margin-bottom: 12px;
     position: relative;
     z-index: 2;
 }
@@ -233,7 +36,6 @@
 .join-subtitle {
     font-size: 1.2rem;
     opacity: 0.95;
-    margin: 0;
     position: relative;
     z-index: 2;
 }
@@ -242,82 +44,56 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 60px 20px;
+    display: grid;
+    gap: 48px;
 }
 
-.join-section {
-    margin-bottom: 60px;
-}
-
-.join-section h2 {
+.join-info h2 {
     font-size: 2rem;
     font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 20px 0;
+    margin-bottom: 20px;
 }
 
-.join-section p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--text-secondary);
-    margin: 0 0 16px 0;
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
-    margin-top: 32px;
-}
-
-.benefit-card {
+.benefits-list li {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 32px 24px;
-    text-align: center;
+    padding: 24px;
+    margin-bottom: 20px;
     box-shadow: var(--card-shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.benefit-card:hover {
+.benefits-list li:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     border-color: var(--accent-color);
 }
 
-.benefit-card h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
+.benefits-list strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
     color: var(--text-primary);
-    margin: 0 0 12px 0;
 }
 
-.benefit-card p {
+.benefits-list p {
     font-size: 0.95rem;
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
 }
 
-.join-form-section {
-    background: linear-gradient(
-        135deg,
-        var(--accent-light) 0%,
-        rgba(255, 107, 53, 0.05) 100%
-    );
-    border-radius: 16px;
-    padding: 48px 32px;
-    border: 1px solid var(--border-color);
-    margin-top: 40px;
-}
-
 .join-form {
-    max-width: 600px;
-    margin: 0 auto;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 32px 28px;
+    border-radius: 16px;
+    padding: 40px 32px;
     box-shadow: var(--card-shadow);
 }
 
@@ -327,24 +103,27 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 22px;
 }
 
 .join-form legend {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 600;
     margin-bottom: 10px;
+}
+
+.join-form span {
+    display: flex;
+    flex-direction: column;
 }
 
 .join-form label {
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--text-primary);
 }
 
 .join-form input,
 .join-form textarea {
-    width: 100%;
     margin-top: 8px;
     padding: 12px 14px;
     border-radius: 8px;
@@ -367,9 +146,33 @@
     box-shadow: 0 0 0 3px var(--accent-light);
 }
 
-.join-submit-btn {
-    display: inline-block;
-    padding: 14px 28px;
+.error {
+    background: rgba(255, 77, 79, 0.08);
+    border: 1px solid rgba(255, 77, 79, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    color: #ff4d4f;
+    font-size: 0.9rem;
+}
+
+.success {
+    background: rgba(0, 200, 83, 0.08);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    color: #00c853;
+    font-size: 0.9rem;
+}
+
+.field-error {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #ff4d4f;
+}
+
+.join-form button {
+    margin-top: 10px;
+    padding: 14px 24px;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
@@ -377,15 +180,20 @@
     cursor: pointer;
     background-color: var(--accent-color);
     color: white;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.join-submit-btn:hover {
+.join-form button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
 
-@media only screen and (min-width: 768px) {
+.join-form button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
     .join-hero {
         padding: 100px 40px 80px;
     }
@@ -400,19 +208,13 @@
 
     .join-content {
         padding: 80px 40px;
-    }
-
-    .benefits-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
     }
 }
 
-@media only screen and (min-width: 1024px) {
+@media (min-width: 1024px) {
     .join-content {
         padding: 100px 60px;
     }
-
-    .benefits-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-} */
+}

@@ -13,7 +13,6 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Main content grows so footer stays at bottom */
 .public-layout > section,
 .admin-layout .admin-dashboard-layout,
 .provider-layout .provider-main,
@@ -24,7 +23,6 @@
     overflow-y: auto;
 }
 
-/* Clear fixed navbar on public pages (same navbar as dashboard) */
 .public-layout > section {
     padding-top: 110px;
 }
@@ -35,7 +33,6 @@
     }
 }
 
-/* Clear fixed navbar: top (25px) + nav height (~70px) + gap */
 .provider-main,
 .customer-main {
     padding-top: 110px;
@@ -47,7 +44,6 @@
     width: 100%;
 }
 
-/* Footer always at bottom; never shrinks */
 .public-layout .footer,
 .admin-layout .footer,
 .provider-layout .footer,
@@ -96,7 +92,6 @@
     }
 }
 
-/* Auth layout - login / register pages */
 .auth-layout {
     display: flex;
     align-items: center;

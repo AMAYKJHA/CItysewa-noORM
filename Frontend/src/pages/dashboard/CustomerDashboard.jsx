@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { fetchBookings, fetchServices } from "../../api/client";
+import { fetchCustomerBookings, fetchServices } from "../../api/client";
 import { Link } from "react-router-dom";
 import "../../Style/Dashboard.css";
 import "../../Style/CustomerDashboard.css";
@@ -17,7 +17,7 @@ const CustomerDashboard = () => {
             if (!user) return;
             try {
                 const [bookingsRes, servicesRes] = await Promise.all([
-                    fetchBookings({ customer_id: user.id }),
+                    fetchCustomerBookings(user.id),
                     fetchServices(),
                 ]);
                 const allBookings = bookingsRes.data || [];
@@ -42,6 +42,11 @@ const CustomerDashboard = () => {
 
     return (
         <div className="customer-dashboard">
+            <div className="verification-warning" role="alert">
+                <div className="verification-warning-content">
+                    <p>Please download the CitySewa Customer App in your mobile device to start booking services. <a target="_blank" href="https://citysewa.vercel.app/">Click here</a></p>
+                </div>
+            </div>
             <div className="dashboard-header">
                 <h1>Welcome back, {user.first_name || "Customer"}</h1>
                 <p className="dashboard-subtitle">View your bookings and discover new services</p>

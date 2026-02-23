@@ -101,8 +101,12 @@ export const createService = (data) =>
 export const fetchBookings = (data) =>
     api.get("/bookings",data);
 
-export const fetchBookingById = (id) =>
-    api.get(`/bookings/${id}`);
+export const fetchCustomerBookings = (id) =>
+    // api.get(`/bookings/${id}`);
+    api.get(`bookings?customer_id=${id}`);
+
+export const fetchProviderBookings = (id) =>
+    api.get(`bookings?provider_id=${id}`);
 
 export const createBooking = (data) =>
     api.post("/bookings/register",data);

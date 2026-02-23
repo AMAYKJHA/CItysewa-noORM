@@ -1,7 +1,3 @@
-/* ============================================
-   THEME VARIABLES - Light and Dark Mode
-   ============================================ */
-
 :root[data-theme="light"] {
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fa;
@@ -28,10 +24,6 @@
     --hover-bg: #333333;
 }
 
-/* ============================================
-   GLOBAL STYLES
-   ============================================ */
-
 * {
     margin: 0;
     padding: 0;
@@ -49,9 +41,7 @@ html, body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* ============================================
-   HOME PAGE LAYOUT
-   ============================================ */
+/* HOME PAGE LAYOUT */ 
 
 .home {
     width: 100%;
@@ -60,10 +50,6 @@ html, body {
     gap: 0;
     padding-top: 50px;
 }
-
-/* ============================================
-   HERO SECTION
-   ============================================ */
 
 .hero {
     width: 100%;
@@ -151,9 +137,7 @@ html, body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ============================================
-   FEATURED SERVICES SECTION
-   ============================================ */
+/* FEATURED SERVICES SECTION */
 
 .featured-services {
     padding: 80px 20px;
@@ -174,7 +158,7 @@ html, body {
 }
 
 .carousel-container {
-    perspective: 1200px; /* stronger perspective for flatten effect */
+    perspective: 1200px;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -203,8 +187,6 @@ html, body {
     box-shadow: var(--card-shadow);
 }
 
-
-/* Card image */
 .service-card img {
     width: 80%;
     border-radius: 10px;
@@ -212,7 +194,6 @@ html, body {
     object-fit: cover;
 }
 
-/* Card header */
 .service-header h3 {
     font-size: 1.6rem;
     color: var(--text-primary);
@@ -224,7 +205,6 @@ html, body {
     color: var(--accent-color);
 }
 
-/* Description */
 .service-desc {
     font-size: 1rem;
     color: var(--text-secondary);
@@ -232,7 +212,6 @@ html, body {
     line-height: 1.5;
 }
 
-/* Category badge */
 .service-category {
     display: inline-block;
     background-color: var(--accent-light);
@@ -274,13 +253,13 @@ html, body {
 .service-card.active {
     z-index: 2;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1); /* rotation handled inline */
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .service-card:not(.active) {
     z-index: 1;
     opacity: 0.3;
-    transform: translate(-50%, -50%) scale(0.7); /* rotation handled inline */
+    transform: translate(-50%, -50%) scale(0.7);
 }
 
 /* Carousel dots (optional) */
@@ -333,9 +312,7 @@ html, body {
     }
 }
 
-/* ============================================
-   REVIEWS SECTION
-   ============================================ */
+/* REVIEWS SECTION */
 
 .reviews-section {
     padding: 80px 20px;
@@ -411,9 +388,7 @@ html, body {
     font-size: 0.85rem;
 }
 
-/* ============================================
-   STATS SECTION
-   ============================================ */
+/* STATS SECTION */
 
 .stats-section {
     padding: 80px 20px;
@@ -465,9 +440,7 @@ html, body {
     opacity: 0.95;
 }
 
-/* ============================================
-   JOIN US SECTION
-   ============================================ */
+/* JOIN US SECTION */
 
 .join-us-section {
     padding: 80px 20px;
@@ -576,9 +549,7 @@ html, body {
     box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
+/* RESPONSIVE DESIGN */
 
 @media (max-width: 768px) {
     .home {
@@ -722,9 +693,7 @@ html, body {
     }
 }
 
-/* ============================================
-   ACCESSIBILITY & ANIMATIONS
-   ============================================ */
+/* ACCESSIBILITY & ANIMATIONS */
 
 @media (prefers-reduced-motion: reduce) {
     * {
@@ -740,9 +709,7 @@ html, body {
     }
 }
 
-/* ============================================
-   UTILITY & HELPER CLASSES
-   ============================================ */
+/* UTILITY & HELPER CLASSES */
 
 .no-services {
     color: var(--text-secondary);
