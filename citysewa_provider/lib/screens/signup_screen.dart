@@ -31,9 +31,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppLogo(size: 50),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   WelcomeText(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SignupForm(email: email!),
                   const SizedBox(height: 20),
                   GoToLogin(),
@@ -51,7 +51,7 @@ class WelcomeText extends StatelessWidget {
   const WelcomeText({super.key});
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       child: Center(
         child: Column(
           children: [
@@ -122,6 +122,7 @@ class _SignupFormState extends State<SignupForm> {
             decoration: InputDecoration(prefixIcon: Icon(Icons.email_outlined)),
           ),
 
+          const SizedBox(height: 10),
           TextField(
             controller: firstNameController,
             keyboardType: TextInputType.name,
@@ -131,7 +132,7 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: lastNameController,
             keyboardType: TextInputType.name,
@@ -141,7 +142,7 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: passController,
             obscureText: true,
@@ -156,7 +157,7 @@ class _SignupFormState extends State<SignupForm> {
             width: double.infinity,
             child: ElevatedButton(
               child: isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 30,
                       width: 30,
                       child: CircularProgressIndicator(
