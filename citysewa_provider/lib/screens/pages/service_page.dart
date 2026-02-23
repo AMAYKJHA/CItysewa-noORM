@@ -76,10 +76,14 @@ class ServiceTile extends StatelessWidget {
                 width: 90,
                 height: 90,
                 color: Colors.white,
-                child: Image.asset(
-                  service.thumbnail ?? 'assets/images/test.png',
-                  fit: BoxFit.cover,
-                ),
+                child: service.thumbnail != null
+                    ? Image.network(
+                        service.thumbnail!,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      )
+                    : Image.asset('assets/images/test.png', fit: BoxFit.cover),
               ),
             ),
             const SizedBox(width: 12),
