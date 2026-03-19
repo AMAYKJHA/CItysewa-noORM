@@ -13,66 +13,149 @@
 }
 
 .verification-form {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin: 0;
-    background-color: var(--bg-secondary);
+    gap: 18px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.verification-form:hover {
+    border-color: var(--accent-color);
 }
 
 .verification-form h3 {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
     color: var(--text-primary);
-    margin: 0 0 12px 0;
+    margin-bottom: 8px;
 }
 
 .verification-form span {
-    margin-top: 12px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.verification-form span:nth-of-type(1) input {
-    max-width: 71%;
+.verification-form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
+.verification-form input,
 .verification-form select {
-    margin-top: 8px;
-    min-width: fit-content;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 0.95rem;
     border: 1px solid var(--border-color);
-    background: var(--bg-primary);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
     color: var(--text-primary);
-    border-radius: 6px;
-    padding: 8px 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
 }
 
-.verification-form input {
-    border: 1px solid var(--border-color);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    border-radius: 6px;
-    padding: 8px 12px;
+.verification-form input:focus,
+.verification-form select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
 }
 
-@media only screen and (min-width: 375px) {
+.verification-form input:disabled {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+.verification-form input[type="file"] {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.verification-form .PhoneInput {
+    width: 100%;
+}
+
+.verification-form .PhoneInputInput {
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.verification-form .PhoneInputInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.error {
+    padding: 12px 14px;
+    background-color: rgba(255, 77, 79, 0.1);
+    color: #e74c3c;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 77, 79, 0.3);
+}
+
+.success {
+    padding: 12px 14px;
+    background-color: rgba(46, 204, 113, 0.12);
+    color: #27ae60;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(46, 204, 113, 0.35);
+}
+
+.verification-form button {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+}
+
+.verification-form button:hover {
+    background-color: #ff8a50;
+    transform: translateY(-1px);
+}
+
+.verification-form button:active {
+    transform: translateY(0);
+}
+
+@media only screen and (min-width: 480px) {
+
+    .verification-form {
+        padding: 32px 28px;
+    }
+
     .verification-form h3 {
-        font-size: 1.15rem;
-    }
-    .verification-form span label {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-    }
-    .verification-form span input {
-        font-size: 0.95rem;
+        font-size: 1.5rem;
     }
 }
 
 @media only screen and (min-width: 768px) {
+
+    .verification-form {
+        max-width: 560px;
+        padding: 36px 32px;
+    }
+
     .provider-profile h2 {
         font-size: 1.35rem;
     }

@@ -9,6 +9,7 @@
     --card-bg: #ffffff;
     --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     --hover-bg: #f5f5f5;
+    --bg-btn: rgb(255, 125, 90);
 }
 
 :root[data-theme="dark"] {
@@ -22,6 +23,7 @@
     --card-bg: #252525;
     --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     --hover-bg: #333333;
+    --bg-btn: orange;
 }
 
 * {
@@ -40,8 +42,6 @@ html, body {
     color: var(--text-primary);
     transition: background-color 0.3s, color 0.3s;
 }
-
-/* HOME PAGE LAYOUT */ 
 
 .home {
     width: 100%;
@@ -137,8 +137,6 @@ html, body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* FEATURED SERVICES SECTION */
-
 .featured-services {
     padding: 80px 20px;
     background-color: var(--bg-primary);
@@ -157,49 +155,6 @@ html, body {
     margin-bottom: 50px;
 }
 
-.carousel-container {
-    perspective: 1200px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-    overflow: visible;
-}
-
-.service-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 280px;
-    transform-style: preserve-3d;
-    transform-origin: center center;
-    border: 2px solid var(--border-color);
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    box-sizing: border-box;
-    transition: transform 0.8s ease, opacity 0.8s ease;
-    box-shadow: var(--card-shadow);
-}
-
-.service-card img {
-    width: 80%;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    object-fit: cover;
-}
-
-.service-header h3 {
-    font-size: 1.6rem;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-}
-
 .price {
     font-weight: 700;
     color: var(--accent-color);
@@ -212,7 +167,7 @@ html, body {
     line-height: 1.5;
 }
 
-.service-category {
+.service-category, .service-details-btn {
     display: inline-block;
     background-color: var(--accent-light);
     color: var(--accent-color);
@@ -221,98 +176,11 @@ html, body {
     font-size: 0.9rem;
 }
 
-.carousel-controls {
-    position: absolute;
-    bottom: -60px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* border: 2px solid red; */
-    /* gap: 20px; */
-    z-index: 10;
-}
-
-.carousel-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: var(--accent-color);
-    border: none;
-    color: #fff;
-    font-size: 1.2rem;
+.service-details-btn{
+    background-color: var(--bg-btn);
+    color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.3s;
-    margin: 0px 25px 0px 25px;
 }
-
-.carousel-btn:hover {
-    transform: scale(1.1);
-}
-
-.service-card.active {
-    z-index: 2;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.service-card:not(.active) {
-    z-index: 1;
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(0.7);
-}
-
-/* Carousel dots (optional) */
-.carousel-dots {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: var(--border-color);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.dot.active {
-    background-color: var(--accent-color);
-    transform: scale(1.3);
-}
-
-.dot:hover {
-    background-color: var(--text-secondary);
-}
-
-/* Responsive tweaks */
-@media (max-width: 768px) {
-    .carousel-container {
-        height: 300px;
-    }
-
-    .service-card {
-        width: 220px;
-        padding: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel-container {
-        height: 250px;
-    }
-
-    .service-card {
-        width: 180px;
-        padding: 12px;
-    }
-}
-
-/* REVIEWS SECTION */
 
 .reviews-section {
     padding: 80px 20px;
@@ -388,8 +256,6 @@ html, body {
     font-size: 0.85rem;
 }
 
-/* STATS SECTION */
-
 .stats-section {
     padding: 80px 20px;
     background-color: var(--bg-primary);
@@ -438,9 +304,8 @@ html, body {
     font-size: 1rem;
     font-weight: 500;
     opacity: 0.95;
+    color: var(--text-primary) !important;
 }
-
-/* JOIN US SECTION */
 
 .join-us-section {
     padding: 80px 20px;
@@ -549,8 +414,6 @@ html, body {
     box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
 }
 
-/* RESPONSIVE DESIGN */
-
 @media (max-width: 768px) {
     .home {
         padding-top: 80px;
@@ -583,24 +446,6 @@ html, body {
     .stats-section,
     .join-us-section {
         padding: 50px 15px;
-    }
-
-    .carousel {
-        height: 250px;
-    }
-
-    .service-card {
-        padding: 20px;
-    }
-
-    .carousel-controls {
-        gap: 20px;
-    }
-
-    .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
     }
 
     .reviews-grid {
@@ -659,23 +504,6 @@ html, body {
         margin-bottom: 30px;
     }
 
-    .carousel {
-        height: 200px;
-    }
-
-    .service-card {
-        padding: 15px;
-    }
-
-    .carousel-controls {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .carousel-dots {
-        order: -1;
-    }
-
     .stat-card {
         padding: 30px 15px;
     }
@@ -693,8 +521,6 @@ html, body {
     }
 }
 
-/* ACCESSIBILITY & ANIMATIONS */
-
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -709,15 +535,100 @@ html, body {
     }
 }
 
-/* UTILITY & HELPER CLASSES */
-
 .no-services {
     color: var(--text-secondary);
     font-size: 1.1rem;
     padding: 40px;
 }
 
-/* Smooth scrolling */
 html {
     scroll-behavior: smooth;
+}
+
+.carousel-wrapper {
+  position: relative;
+  max-width: 1000px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.carousel {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+}
+
+.slide {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.service-card {
+  flex: 1;
+  max-width: 300px;
+  padding: 16px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.service-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.2;
+  z-index: 10;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.carousel-btn:hover {
+  opacity: 0.6;
+}
+
+.carousel-btn.left { left: -40px; }
+.carousel-btn.right { right: -40px; }
+
+.dots {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dots span {
+  width: 8px;
+  height: 8px;
+  margin: 5px;
+  background: gray;
+  display: inline-block;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dots .active {
+  background: white;
+}
+
+@media (max-width: 600px) {
+  .slide {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carousel-btn.left { left: -10px; }
+  .carousel-btn.right { right: -10px; }
 }
