@@ -12,7 +12,7 @@ import moonIcon from "../../../assets/dark.png";
 const Navbar = (props) => {
     const {user} = useAuth();
     const location = useLocation();
-    const { isDark, toggleTheme } = useTheme();
+    const { isLight, toggleTheme } = useTheme();
     const [menuOpen, setMenuOpen] = useState(false);
     const isAuthenticated = !!user;
 
@@ -46,13 +46,13 @@ const Navbar = (props) => {
             {/* Nav menu for desktop devices */}
             <div className='desktop-menu'>
                 <NavMenu menu={menu} role={props.type} currentPath={location.pathname}/>
-                <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+                <ThemeToggle isLight={isLight} toggleTheme={toggleTheme} />
             </div>
             {/* Nav menu for handheld devices */}
             {  menuOpen && (
                 <div className={`handheld-menu ${menuOpen ? 'open' : ''}`}>
                     <NavMenu menu={menu} role={props.type} currentPath={location.pathname}/>
-                    <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+                    <ThemeToggle isLight={isLight} toggleTheme={toggleTheme} />
                 </div>
             )}
         </nav>
@@ -102,15 +102,15 @@ const NavLogoSection = () => {
     );
 }
 
-const ThemeToggle = ({ isDark, toggleTheme }) => {
+const ThemeToggle = ({ isLight, toggleTheme }) => {
     return (
         <button 
             className='theme-toggle' 
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={isLight ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-            {isDark ? <img src={sunIcon} width={22} height={22} alt='sunicon'/> : <img src={moonIcon} width={20} height={20} alt='moonicon'/>}
+            {isLight ? <img src={moonIcon} width={20} height={20} alt='moonicon'/> : <img src={sunIcon} width={22} height={22} alt='sunicon'/>}
         </button>
     );
 }
