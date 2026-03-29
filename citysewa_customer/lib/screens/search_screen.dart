@@ -141,7 +141,7 @@ class _SearchResultState extends State<SearchResult> {
       return _buildEmptyState(
         icon: Icons.search,
         title: "Find Services",
-        subtitle: "Search for plumbers, electricians,\nmechanics and more",
+        subtitle: "Search for plumber, electrician,\nmechanic and more",
       );
     }
 
