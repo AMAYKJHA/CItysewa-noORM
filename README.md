@@ -8,6 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Django](https://img.shields.io/badge/Django-5.2-green)
 ![DRF](https://img.shields.io/badge/DRF-3.16-red)
+![Redis](https://img.shields.io/badge/Redis-7.2-DC382D?logo=redis&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
@@ -46,15 +47,17 @@ The project deliberately avoids Django's ORM in favor of **raw SQL** with a cust
 - 📅 **Book Services** — Schedule service appointments with date and time selection
 - 📍 **Address Management** — Save and manage multiple addresses for service delivery
 - 👤 **Profile Management** — Maintain and update personal profile information
-- 📊 **Dashboard** — Track active and past bookings in one place
+- 📊 **Dashboard** — Track active and past bookings with stats (pending, completed, cancelled)
+- 📧 **Email OTP Verification** — Secure account verification via one-time password sent to email
 
 ### For Service Providers
 
-- 📝 **Registration & Onboarding** — Easy sign-up and profile setup
+- 📝 **Registration & Onboarding** — Easy sign-up and profile setup with email OTP verification
 - ✅ **Verification System** — Upload identity documents for account verification
-- 🛠️ **Service Listings** — Create and manage service offerings with pricing
-- 📋 **Booking Management** — View and manage incoming customer bookings
+- 🛠️ **Service Listings** — Create and manage service offerings with pricing and thumbnails
+- 📋 **Booking Management** — View and manage incoming customer bookings with stats dashboard
 - 👤 **Profile Management** — Update business details and descriptions
+- 💰 **Earnings Tracking** — Track completed bookings and total earnings
 
 ### For Admins
 
@@ -65,10 +68,15 @@ The project deliberately avoids Django's ORM in favor of **raw SQL** with a cust
 ### Platform-Wide
 
 - 🔐 **Role-Based Authentication** — Separate login flows for customers, providers, and admins
-- 🌐 **Responsive Web App** — Full-featured React web interface
-- 📱 **Mobile Apps** — Flutter-based native mobile experiences
-- 📄 **API Documentation** — Interactive Swagger/OpenAPI docs
+- 📧 **Email OTP Verification** — Redis-backed OTP system with 5-minute expiry, powered by Brevo email API
+- ⚡ **Redis Caching** — OTP storage and application caching via `django-redis`
+- 🌐 **Responsive Web App** — Full-featured React web interface with dark/light theme toggle
+- 📱 **Mobile Apps** — Flutter-based native mobile experiences for both Android and iOS
+- 📄 **API Documentation** — Interactive Swagger/OpenAPI docs via `drf-spectacular`
 - 🗄️ **ORM-Free Architecture** — Raw SQL with custom database manager for full control
+- 📁 **Supabase S3 Storage** — Profile photos, service thumbnails, and verification documents stored on S3-compatible storage
+- 🛡️ **Sentry Monitoring** — Optional error tracking and performance monitoring
+- 🚀 **Render Deployment** — Production-ready with Gunicorn, PostgreSQL, and auto-migrations
 
 ---
 
@@ -80,20 +88,22 @@ This monorepo contains **four** core products that work together:
 
 A full-featured **React + Vite** web application serving as the primary user interface.
 
-| Tech             | Details                      |
-| ---------------- | ---------------------------- |
-| React            | v19 — UI library             |
-| Vite             | v7 — Build tool & dev server |
-| React Router DOM | v7 — Client-side routing     |
-| Axios            | HTTP client for API calls    |
-| ESLint           | Code quality & linting       |
+| Tech             | Details                          |
+| ---------------- | -------------------------------- |
+| React            | v19 — UI library                 |
+| Vite             | v7 — Build tool & dev server     |
+| React Router DOM | v7 — Client-side routing         |
+| Axios            | HTTP client for API calls        |
+| Embla Carousel   | v8.6 — Featured content carousel |
+| ESLint           | Code quality & linting           |
 
 **Supports multiple user experiences:**
 
-- **Public browsing** — Home, About, and Services pages (no login required)
-- **Customer flows** — Dashboard, bookings, addresses, and profile
-- **Provider flows** — Dashboard, service management, and profile
-- **Admin flows** — Dashboard, user management, and service oversight
+- **Public browsing** — Home, About, Services, and Join Our Team pages (no login required)
+- **Customer flows** — Dashboard, bookings, addresses, profile, and service search
+- **Provider flows** — Dashboard, service management, earnings, and profile
+- **Admin flows** — Dashboard, user management, service oversight, and provider verification
+- **Dark/Light Theme** — Toggle between dark and light mode (persisted in localStorage)
 
 **Quick Start:**
 
@@ -155,28 +165,34 @@ flutter run
 
 A **Django + Django REST Framework** service layer powering all client applications.
 
-| Tech            | Details                              |
-| --------------- | ------------------------------------ |
-| Python          | 3.12+                                |
-| Django          | 5.2                                  |
-| DRF             | 3.16                                 |
-| drf-spectacular | OpenAPI / Swagger docs               |
-| PostgreSQL      | Production database                  |
-| SQLite          | Local development mode               |
-| Supabase        | Postgres database and S3 filestorage |
-| Gunicorn        | Production WSGI server               |
-| Sentry SDK      | Optional error monitoring            |
+| Tech            | Details                                                |
+| --------------- | ------------------------------------------------------ |
+| Python          | 3.12+                                                  |
+| Django          | 5.2                                                    |
+| DRF             | 3.16                                                   |
+| drf-spectacular | OpenAPI / Swagger docs                                 |
+| PostgreSQL      | Production database                                    |
+| SQLite          | Local development mode                                 |
+| Redis           | 7.2 — OTP storage & application caching (django-redis) |
+| Brevo           | Transactional email API for OTP delivery               |
+| Supabase S3     | S3-compatible file storage (photos, docs, thumbnails)  |
+| Gunicorn        | Production WSGI server                                 |
+| Sentry SDK      | Optional error tracking & performance monitoring       |
 
 **Key API Endpoints:**
 
-| Route                  | Description                         |
-| ---------------------- | ----------------------------------- |
-| `api/v1/accounts/...`  | Authentication & account management |
-| `api/v1/services/...`  | Service listing & CRUD              |
-| `api/v1/bookings/...`  | Booking listing & CRUD              |
-| `api/v1/addresses/...` | Address listing & CRUD              |
-| `api/v1/docs`          | Interactive Swagger documentation   |
-| `api/v1/schema`        | OpenAPI 3.0 schema (JSON)           |
+| Route                             | Description                           |
+| --------------------------------- | ------------------------------------- |
+| `api/v1/accounts/auth/otp/send`   | Send OTP to email (Redis-backed)      |
+| `api/v1/accounts/auth/otp/verify` | Verify OTP code                       |
+| `api/v1/accounts/customer/...`    | Customer auth & profile management    |
+| `api/v1/accounts/provider/...`    | Provider auth, profile & verification |
+| `api/v1/accounts/admin/...`       | Admin auth & management               |
+| `api/v1/services/...`             | Service listing & CRUD                |
+| `api/v1/bookings/...`             | Booking listing, CRUD & stats         |
+| `api/v1/addresses/...`            | Address, district & location CRUD     |
+| `api/v1/docs`                     | Interactive Swagger documentation     |
+| `api/v1/schema`                   | OpenAPI 3.0 schema (JSON)             |
 
 **Database Tables:** `users`, `tokens`, `customers`, `providers`, `documents`, `services`, `districts`, `locations`, `addresses`, `bookings`
 
@@ -207,17 +223,17 @@ python manage.py runserver
           │  Django REST Backend │
           │     (Backend/)       │
           │   Raw SQL · No ORM   │
-          └──────────┬───────────┘
-                     │
-          ┌──────────▼───────────┐
-          │     PostgreSQL       │
-          │  (SQLite for local)  │
-          └──────────┬───────────┘
-                     │  file store
-                     ▼
-          ┌──────────────────────┐
-          │      Supabase S3     │
-          └──────────────────────┘
+          └──────┬───────┬───────┘
+                 │       │
+    ┌────────────▼─┐  ┌──▼─────────────┐
+    │  PostgreSQL  │  │     Redis      │
+    │(SQLite local)│  │  OTP & Cache   │
+    └──────┬───────┘  └────────────────┘
+           │
+     ┌─────▼──────┐   ┌────────────────┐
+     │ Supabase S3│   │  Brevo Email   │
+     │ File Store │   │  (OTP Delivery)│
+     └────────────┘   └────────────────┘
 ```
 
 ---
@@ -246,6 +262,7 @@ CItysewa-noORM/
 | Frontend    | Node.js ≥ 18, npm ≥ 9                                                      |
 | Mobile Apps | [Flutter SDK](https://docs.flutter.dev/get-started/install) (Dart ^3.10.1) |
 | Database    | PostgreSQL (production) or SQLite (local dev)                              |
+| Cache       | Redis (for OTP storage & caching)                                          |
 
 ### Quick Start (Full Stack — Local)
 

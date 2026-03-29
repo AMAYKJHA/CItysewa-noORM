@@ -25,18 +25,20 @@ The backend for **CitySewa** — a city services marketplace connecting customer
 
 ## Tech Stack
 
-| Technology | Version / Notes |
-|---|---|
-| Python | 3.12+ |
-| Django | 5.2 |
-| Django REST Framework | 3.16 |
-| drf-spectacular | OpenAPI / Swagger docs |
-| PostgreSQL | Production database |
-| SQLite | Local development mode |
-| Boto3 | S3-compatible storage (Supabase) |
-| Gunicorn | Production WSGI server |
-| Sentry SDK | Optional error monitoring |
-| uv | Package manager |
+| Technology            | Version / Notes                                            |
+| --------------------- | ---------------------------------------------------------- |
+| Python                | 3.12+                                                      |
+| Django                | 5.2                                                        |
+| Django REST Framework | 3.16                                                       |
+| drf-spectacular       | OpenAPI / Swagger docs                                     |
+| PostgreSQL            | Production database                                        |
+| SQLite                | Local development mode                                     |
+| Redis                 | 7.2 — OTP storage & application caching (via django-redis) |
+| Brevo                 | Transactional email API for OTP delivery                   |
+| Boto3                 | S3-compatible storage (Supabase)                           |
+| Gunicorn              | Production WSGI server                                     |
+| Sentry SDK            | Optional error tracking & performance monitoring           |
+| uv                    | Package manager                                            |
 
 ---
 
@@ -72,18 +74,18 @@ Backend/
 
 The project uses **raw SQL** (no ORM). The schema is defined in [`schema.sql`](schema.sql) and includes:
 
-| Table | Description |
-|---|---|
-| `users` | Core user accounts (email, phone, password, admin flag) |
-| `tokens` | Auth tokens linked to users |
-| `customers` | Customer profiles (name, gender, photo) |
+| Table       | Description                                                        |
+| ----------- | ------------------------------------------------------------------ |
+| `users`     | Core user accounts (email, phone, password, admin flag)            |
+| `tokens`    | Auth tokens linked to users                                        |
+| `customers` | Customer profiles (name, gender, photo)                            |
 | `providers` | Service provider profiles (name, description, verification status) |
-| `documents` | Provider verification documents (type, number, status) |
-| `services` | Service listings (title, type, price, thumbnail) |
-| `districts` | Geographic districts |
-| `locations` | Locations with area, ward, city, district |
-| `addresses` | User addresses linked to locations |
-| `bookings` | Service bookings (date, time, status) |
+| `documents` | Provider verification documents (type, number, status)             |
+| `services`  | Service listings (title, type, price, thumbnail)                   |
+| `districts` | Geographic districts                                               |
+| `locations` | Locations with area, ward, city, district                          |
+| `addresses` | User addresses linked to locations                                 |
+| `bookings`  | Service bookings (date, time, status)                              |
 
 All tables include `created_at` and `updated_at` timestamps with an auto-update trigger via `set_updated_at()`.
 
@@ -91,15 +93,21 @@ All tables include `created_at` and `updated_at` timestamps with an auto-update 
 
 ## API Endpoints
 
-| Route | Description |
-|---|---|
-| `/` | Redirects to Swagger UI |
-| `api/v1/` | API root |
-| `api/v1/accounts/...` | Authentication & account management |
-| `api/v1/services/...` | Service listing & CRUD |
-| `api/v1/schema` | OpenAPI 3.0 schema (JSON) |
-| `api/v1/docs` | Interactive Swagger documentation |
-| `sentry-debug` | Sentry integration test endpoint |
+| Route                             | Description                              |
+| --------------------------------- | ---------------------------------------- |
+| `/`                               | Redirects to Swagger UI                  |
+| `api/v1/`                         | API root                                 |
+| `api/v1/accounts/auth/otp/send`   | Send email OTP (Redis-backed, 5-min TTL) |
+| `api/v1/accounts/auth/otp/verify` | Verify OTP code                          |
+| `api/v1/accounts/customer/...`    | Customer auth, registration & profiles   |
+| `api/v1/accounts/provider/...`    | Provider auth, profiles & verification   |
+| `api/v1/accounts/admin/...`       | Admin auth & management                  |
+| `api/v1/services/...`             | Service listing & CRUD                   |
+| `api/v1/bookings/...`             | Booking listing, CRUD & stats            |
+| `api/v1/addresses/...`            | Address, district & location management  |
+| `api/v1/schema`                   | OpenAPI 3.0 schema (JSON)                |
+| `api/v1/docs`                     | Interactive Swagger documentation        |
+| `sentry-debug`                    | Sentry integration test endpoint         |
 
 ---
 
@@ -110,32 +118,39 @@ All tables include `created_at` and `updated_at` timestamps with an auto-update 
 - Python 3.12+
 - [`uv`](https://docs.astral.sh/uv/) package manager
 - PostgreSQL (for production) or SQLite (for local dev)
+- Redis (for OTP storage & caching)
 
 ### Installation
 
 1. **Navigate to the Backend directory:**
+
    ```bash
    cd Backend
    ```
 
 2. **Create a virtual environment and install dependencies:**
+
    ```bash
    uv venv
    uv sync
    ```
 
 3. **Set up environment variables:**
+
    ```bash
    cp .env.example .env
    ```
+
    Edit `.env` with your values (see [Environment Variables](#environment-variables)).
 
 4. **Run the database schema migration:**
+
    ```bash
    python manage.py custommigrate
    ```
 
 5. **Start the development server:**
+
    ```bash
    python manage.py runserver
    ```
@@ -149,26 +164,33 @@ All tables include `created_at` and `updated_at` timestamps with an auto-update 
 
 Create a `.env` file from `.env.example`. Key settings:
 
-| Variable | Description | Default |
-|---|---|---|
-| `DEBUG` | Enable debug mode | `True` |
-| `LOCAL` | Use SQLite instead of PostgreSQL | `False` |
-| `DJANGO_SECRET_KEY` | Django secret key | — |
-| `DJANGO_ALLOWED_HOSTS` | Comma-separated allowed hosts | `127.0.0.1,localhost` |
-| `CORS_ALLOW_ALL_ORIGINS` | Allow all CORS origins | `True` |
-| `CORS_ALLOWED_ORIGINS` | Specific allowed origins | `http://localhost:3001` |
-| `DB_NAME` | PostgreSQL database name | — |
-| `DB_USER` | PostgreSQL user | — |
-| `DB_HOST` | PostgreSQL host | — |
-| `DB_PORT` | PostgreSQL port | `5432` |
-| `DB_PASSWORD` | PostgreSQL password | — |
-| `USE_S3` | Enable Supabase S3 storage | `False` |
-| `SUPABASE_S3_ACCESS_KEY_ID` | S3 access key | — |
-| `SUPABASE_S3_SECRET_ACCESS_KEY` | S3 secret key | — |
-| `SUPABASE_S3_BUCKET_NAME` | S3 bucket name | — |
-| `SUPABASE_S3_REGION_NAME` | S3 region | — |
-| `SUPABASE_S3_ENDPOINT_URL` | S3 endpoint URL | — |
-| `SENTRY_DSN` | Sentry DSN (optional) | — |
+| Variable                        | Description                       | Default                 |
+| ------------------------------- | --------------------------------- | ----------------------- |
+| `DEBUG`                         | Enable debug mode                 | `True`                  |
+| `LOCAL`                         | Use SQLite instead of PostgreSQL  | `False`                 |
+| `DJANGO_SECRET_KEY`             | Django secret key                 | —                       |
+| `DJANGO_ALLOWED_HOSTS`          | Comma-separated allowed hosts     | `127.0.0.1,localhost`   |
+| `CORS_ALLOW_ALL_ORIGINS`        | Allow all CORS origins            | `True`                  |
+| `CORS_ALLOWED_ORIGINS`          | Specific allowed origins          | `http://localhost:3001` |
+| `DB_NAME`                       | PostgreSQL database name          | —                       |
+| `DB_USER`                       | PostgreSQL user                   | —                       |
+| `DB_HOST`                       | PostgreSQL host                   | —                       |
+| `DB_PORT`                       | PostgreSQL port                   | `5432`                  |
+| `DB_PASSWORD`                   | PostgreSQL password               | —                       |
+| `USE_S3`                        | Enable Supabase S3 storage        | `False`                 |
+| `SUPABASE_S3_ACCESS_KEY_ID`     | S3 access key                     | —                       |
+| `SUPABASE_S3_SECRET_ACCESS_KEY` | S3 secret key                     | —                       |
+| `SUPABASE_S3_BUCKET_NAME`       | S3 bucket name                    | —                       |
+| `SUPABASE_S3_REGION_NAME`       | S3 region                         | —                       |
+| `SUPABASE_S3_ENDPOINT_URL`      | S3 endpoint URL                   | —                       |
+| `REDIS_HOST`                    | Redis server host                 | `localhost`             |
+| `REDIS_PORT`                    | Redis server port                 | `6379`                  |
+| `REDIS_PASSWORD`                | Redis password                    | —                       |
+| `OTP_EXPIRY_TIME`               | OTP validity in seconds           | `300` (5 min)           |
+| `BREVO_API_URL`                 | Brevo transactional email API URL | —                       |
+| `BREVO_API_KEY`                 | Brevo API key                     | —                       |
+| `SENTRY_DSN`                    | Sentry DSN (optional)             | —                       |
+| `USE_SENTRY`                    | Enable Sentry monitoring          | `False`                 |
 
 ### Quick start for local development (SQLite):
 
