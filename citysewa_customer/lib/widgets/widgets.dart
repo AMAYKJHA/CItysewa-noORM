@@ -318,7 +318,7 @@ class ServiceTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          "Rs. ${service.price}/${service.priceUnit}",
+                          "Rs. ${service.price} ${service.priceUnit}",
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
