@@ -23,7 +23,7 @@ The project deliberately avoids Django's ORM in favor of **raw SQL** with a cust
 
 🔗 **Live App Demo:** [https://citysewa.vercel.app](https://citysewa.vercel.app)
 
-🔗 **Admin Dashboard:** [https://citysewa-admin.vercel.app](https://citysewa-admin.vercel.app)
+🔗 **Admin Dashboard:** [https://admin-citysewa.vercel.app](https://admin-citysewa.vercel.app)
 
 🔗 **Backend:** [https://citysewa2.onrender.com](https://citysewa2.onrender.com)
 
