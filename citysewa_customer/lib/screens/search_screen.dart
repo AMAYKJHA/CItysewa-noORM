@@ -80,7 +80,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         },
         style: TextStyle(fontSize: 16),
         decoration: InputDecoration(
-          hintText: 'Search for plumber, mechanic...',
+          hintText: 'cook, plumber, mechanic...',
           hintStyle: TextStyle(color: Colors.grey.shade400),
           prefixIcon: Icon(Icons.search, color: Colors.deepOrange),
           suffixIcon: _controller.text.isNotEmpty
