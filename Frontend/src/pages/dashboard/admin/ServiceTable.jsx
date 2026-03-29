@@ -18,7 +18,7 @@ const ServiceTable = () => {
             if (searchBy === "Id") return String(s.id).toLowerCase().includes(q);
             if (searchBy === "Title") return (s.title || "").toLowerCase().includes(q);
             if (searchBy === "Provider") {
-                const name = [s.provider?.first_name, s.provider?.last_name].filter(Boolean).join(" ");
+                const name = s.provider_name || "";
                 return name.toLowerCase().includes(q);
             }
             return true;

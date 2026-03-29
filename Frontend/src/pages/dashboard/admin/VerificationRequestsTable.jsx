@@ -17,6 +17,7 @@ const VerificationRequests = () => {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [detailLoading, setDetailLoading] = useState(false);
     const [detailError, setDetailError] = useState(null);
+    const [hoveredId, setHoveredId] = useState(null);
 
     const filtered = useMemo(() => {
         if (!searchQuery.trim()) return requests;
@@ -56,7 +57,7 @@ const VerificationRequests = () => {
         load();
     }, []);
 
-    const handleRowClick = async (id) => {
+    const handleDetailClick = async (id) => {
         setDetailError(null);
         setDetailLoading(true);
         setSelectedRequest(null);
@@ -204,13 +205,13 @@ const VerificationRequests = () => {
                         </thead>
                         <tbody>
                             {requestsOnDisplay.map((req) => (
-                                <tr key={req.id} onClick={() => handleRowClick(req.id)}>
+                                <tr key={req.id}>
                                     <td>{req.id}</td>
                                     <td>{[req.first_name, req.last_name].filter(Boolean).join(" ") || "—"}</td>
                                     <td>{req.phone_number ? "View" : "—"}</td>
                                     <td>{req.document_type || "—"}</td>
-                                    <td>{req.document_number ? "View" : "—"}</td>
-                                    <td>
+                                    <td onMouseLeave={()=>setHoveredId(null)}  onMouseOver={()=>setHoveredId(req.id)}>{hoveredId === req.id ? req.document_number : req.document_number ? "View" : "—"}</td>
+                                    <td onClick={() => handleDetailClick(req.id)}>
                                         <span className="table-action-link">View details</span>
                                     </td>
                                 </tr>

@@ -50,43 +50,46 @@ const VerificationForm = () => {
         }
     };
     return(
-        <form className="verification-form" onSubmit={handleSubmit}>
-            <h3>Verify Your Account</h3>
-            {error && <p className="error">{error}</p>}
-            {success && <p className="success">{success}</p>}
-            <span>
-                <label htmlFor="provider-id">ID</label>
-                <input type="number" id="provider-id" name="id" value={user.id} disabled/>
-            </span>
-            <span>
-                <label htmlFor="provider-photo">Upload Your Photo</label>
-                <input type="file" id="provider-photo" name="photo" accept=".jpg,.jpeg,.png" onChange={handleChange} required/>
-            </span>
-            <span>
-                <label>Phone Number</label>
-                <PhoneInput international defaultCountry="NP" value={formData.phone_number} onChange={(value) => setFromData((prev) => ({...prev, phone_number: value}))} placeholder="Enter phone number"/>
-            </span>
-            <span>
-                <label htmlFor="provider-doc-type">Document Type</label>
-                <select id="provider-doc-type" name="document_type" value={formData.document_type} onChange={handleChange} required>
-                    <option value={""} hidden disabled>Choose Document Type</option>
-                    <option value={"National Id"}>National Id</option>
-                    <option value={"Citizenship"}>Citizenship</option>
-                    <option value={"Driving Liscense"}>Driving License</option>
-                    <option value={"Voter Id"}>Voter Id</option>
-                    {/* <option value={"Pan Card"}>Pan Card</option> */}
-                </select>
-            </span>
-            <span>
-                <label htmlFor="provider-doc-number">Document Number</label>
-                <input type="text" id="provider-doc-number" name="document_number" value={formData.document_number} onChange={handleChange} required/>
-            </span>
-            <span>
-                <label htmlFor="provider-document">Attach Document</label>
-                <input type="file" id="provider-document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} required/>
-            </span>
-            <button type="submit">Submit</button>
-        </form>
+        <>
+            <h2>Verification</h2>
+            <form className="verification-form" onSubmit={handleSubmit}>
+                <h3>Verify Your Account</h3>
+                {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
+                <span>
+                    <label htmlFor="provider-id">ID</label>
+                    <input type="number" id="provider-id" name="id" value={user.id} disabled/>
+                </span>
+                <span>
+                    <label htmlFor="provider-photo">Upload Your Photo</label>
+                    <input type="file" id="provider-photo" name="photo" accept=".jpg,.jpeg,.png" onChange={handleChange} required/>
+                </span>
+                <span>
+                    <label>Phone Number</label>
+                    <PhoneInput international defaultCountry="NP" value={formData.phone_number} onChange={(value) => setFromData((prev) => ({...prev, phone_number: value}))} placeholder="Enter phone number"/>
+                </span>
+                <span>
+                    <label htmlFor="provider-doc-type">Document Type</label>
+                    <select id="provider-doc-type" name="document_type" value={formData.document_type} onChange={handleChange} required>
+                        <option value={""} hidden disabled>Choose Document Type</option>
+                        <option value={"National Id"}>National Id</option>
+                        <option value={"Citizenship"}>Citizenship</option>
+                        <option value={"Driving Liscense"}>Driving License</option>
+                        <option value={"Voter Id"}>Voter Id</option>
+                        {/* <option value={"Pan Card"}>Pan Card</option> */}
+                    </select>
+                </span>
+                <span>
+                    <label htmlFor="provider-doc-number">Document Number</label>
+                    <input type="text" id="provider-doc-number" name="document_number" value={formData.document_number} onChange={handleChange} required/>
+                </span>
+                <span>
+                    <label htmlFor="provider-document">Attach Document</label>
+                    <input type="file" id="provider-document" name="document" accept=".jpg,.jpeg,.png,.pdf" onChange={handleChange} required/>
+                </span>
+                <button type="submit">Submit</button>
+            </form>
+        </>
     );
 };
 

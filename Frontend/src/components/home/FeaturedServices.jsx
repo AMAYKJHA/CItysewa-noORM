@@ -1,19 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchServices } from '../../api/client';
 import '../../Style/Home.css';
 
 const FeaturedServices = () => {
   const [services, setServices] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [grouped, setGrouped] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const [transition, setTransition] = useState(true);
+  const [visibleCards, setVisibleCards] = useState(3);
   const [loading, setLoading] = useState(true);
+
+  const trackRef = useRef(null);
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+  const autoplayRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 600) setVisibleCards(1);
+      else if (window.innerWidth < 900) setVisibleCards(2);
+      else setVisibleCards(3);
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     const getServices = async () => {
       try {
-        const response = await fetchServices();
-        setServices(response.data?.result?.slice(0, 6) || []);
-      } catch (err) {
-        console.error(err);
+        const res = await fetchServices();
+        const data = res.data?.slice(0, 6) || [];
+        setServices(data);
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
@@ -21,63 +42,146 @@ const FeaturedServices = () => {
     getServices();
   }, []);
 
-  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % services.length);
-  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
+  const chunk = (arr, size) => {
+    const res = [];
+    for (let i = 0; i < arr.length; i += size) {
+      res.push(arr.slice(i, i + size));
+    }
+    return res;
+  };
 
-  if (loading) return <p style={{textAlign:'center'}}>Loading featured services...</p>;
-  if (services.length === 0) return <p style={{textAlign:'center'}}>No fetaured services available.</p>;
+  useEffect(() => {
+    if (!services.length) return;
 
-  const total = services.length;
-  const baseAngle = 360 / total; // base rotation per card
-  const maxZ = 200; // front card Z distance
-  const flattenFactor = 0.7; // smaller = more flat
+    const groups = chunk(services, visibleCards);
+
+    const slides = [
+      groups[groups.length - 1],
+      ...groups,
+      groups[0],
+    ];
+
+    setGrouped(slides);
+    setCurrentIndex(1);
+  }, [services, visibleCards]);
+
+  const nextSlide = () => {
+    if (!transition) return;
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const prevSlide = () => {
+    if (!transition) return;
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  useEffect(() => {
+    const handleEnd = () => {
+      if (currentIndex === grouped.length - 1) {
+        setTransition(false);
+        setCurrentIndex(1);
+      }
+      if (currentIndex === 0) {
+        setTransition(false);
+        setCurrentIndex(grouped.length - 2);
+      }
+    };
+
+    const track = trackRef.current;
+    track?.addEventListener('transitionend', handleEnd);
+    return () => track?.removeEventListener('transitionend', handleEnd);
+  }, [currentIndex, grouped]);
+
+  useEffect(() => {
+    if (!transition) {
+      requestAnimationFrame(() => setTransition(true));
+    }
+  }, [transition]);
+
+  useEffect(() => {
+    autoplayRef.current = setInterval(nextSlide, 3000);
+    return () => clearInterval(autoplayRef.current);
+  }, []);
+
+  const pauseAuto = () => clearInterval(autoplayRef.current);
+  const resumeAuto = () => {
+    clearInterval(autoplayRef.current);
+    autoplayRef.current = setInterval(nextSlide, 3000);
+  };
+
+  const handleStart = (e) => {
+    isDragging.current = true;
+    startX.current = e.touches ? e.touches[0].clientX : e.clientX;
+  };
+
+  const handleMove = (e) => {
+    if (!isDragging.current) return;
+    const currentX = e.touches ? e.touches[0].clientX : e.clientX;
+    const diff = startX.current - currentX;
+
+    if (diff > 50) {
+      nextSlide();
+      isDragging.current = false;
+    } else if (diff < -50) {
+      prevSlide();
+      isDragging.current = false;
+    }
+  };
+
+  const handleEnd = () => {
+    isDragging.current = false;
+  };
+
+  if (loading) return <p className="center">Loading...</p>;
+  if (!grouped.length) return <p className="center">No services</p>;
 
   return (
     <section className="featured-services">
       <h2>Featured Services</h2>
-      <p className="subtitle">Explore our most popular services</p>
-
-      <div className="carousel-container">
-        {services.map((service, idx) => {
-  let offset = idx - currentIndex;
-  const half = Math.floor(total / 2);
-  if (offset < -half) offset += total;
-  if (offset > half) offset -= total;
-
-  // DYNAMIC UNFOLDING
-  const unfoldFactor = 0.5; // 0 = cylinder, 1 = fully flat
-  const rotationY = offset * baseAngle * flattenFactor * (1 - unfoldFactor);
-  const translateZ = maxZ - Math.abs(offset) * 50 * flattenFactor * (1 - unfoldFactor);
-
-  const scale = offset === 0 ? 1 : 0.7;
-  const opacity = offset === 0 ? 1 : 0.3;
-
-  return (
-    <div
-      key={service.id || idx}
-      className={`service-card ${offset === 0 ? 'active' : ''}`}
-      style={{
-        transform: `translate(-50%, -50%) rotateY(${rotationY}deg) translateZ(${translateZ}px) scale(${scale})`,
-        opacity,
-        zIndex: offset === 0 ? 2 : 1,
-      }}
-    >
-      <img src={service.thumbnail || '/placeholder.png'} alt={service.title || 'Service'} />
-      <div className="service-header">
-        <h3>{service.title}</h3>
-        <span className="price">Rs. {service.price || 0} {service.price_unit || ''}</span>
-      </div>
-      <p className="service-desc">{service.description}</p>
-      <div className="service-footer">
-        <span className="service-category">{service.service_type || 'General'}</span>
-      </div>
-    </div>
-  );
-})}
-
-        <div className="carousel-controls">
-          <button className="carousel-btn prev" onClick={prevSlide}>❮</button>
-          <button className="carousel-btn next" onClick={nextSlide}>❯</button>
+      <div
+        className="carousel-wrapper"
+        onMouseEnter={pauseAuto}
+        onMouseLeave={resumeAuto}
+        onMouseDown={handleStart}
+        onMouseMove={handleMove}
+        onMouseUp={handleEnd}
+        onTouchStart={handleStart}
+        onTouchMove={handleMove}
+        onTouchEnd={handleEnd}
+      >
+        <button className="carousel-btn left" onClick={prevSlide}>❮</button>
+        <div className="carousel">
+          <div
+            ref={trackRef}
+            className="carousel-track"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+              transition: transition ? '0.5s ease' : 'none',
+            }}
+          >
+            {grouped.map((group, i) => (
+              <div className="slide" key={i}>
+                {group.map((s, idx) => (
+                  <div className="service-card" key={idx}>
+                    <img src={s.thumbnail || '/placeholder.png'} alt={s.title} />
+                    <h3>{s.title}</h3>
+                    <p>{s.description}</p>
+                    <span>Rs. {s.price}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <button className="carousel-btn right" onClick={nextSlide}>❯</button>
+        <div className="dots">
+          {grouped.slice(1, -1).map((_, i) => (
+            <span
+              key={i}
+              className={currentIndex === i + 1 ? 'active' : ''}
+              onClick={() => setCurrentIndex(i + 1)}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -85,12 +189,3 @@ const FeaturedServices = () => {
 };
 
 export default FeaturedServices;
-
-// const FeaturedServices = () => {
-// const OPTIONS = { loop: true };
-// const SLIDE_COUNT = 6;
-// const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
-// return(
-//   <EmblaCarousel slides={SLIDES} options={OPTIONS} />
-// );
-// };
