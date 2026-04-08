@@ -68,7 +68,10 @@ class ServiceListAPIView(APIView):
                     print("Not from cache")
                     services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type, provider_id=provider_id)
                     serializer = ServiceListSerializer(services, many=True)
-                    cache.set(f"service_{service_type}", serializer.data)
+                    try:
+                        cache.set(f"service_{service_type}", serializer.data)
+                    except Exception as e:
+                        print(f"Error: {e}")
                     return Response(serializer.data, status=HTTP_200_OK)
         except Exception as e:
             print(f"Error {e}")
