@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -28,6 +30,10 @@ class ServiceCreateAPIView(APIView):
         serializer = ServiceCreateSeriazlier(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            try:
+                cache.delete(f"service_{serializer.data.get("service_type")}")
+            except Exception as e:
+                print(f"Error {e}")
             return Response(data=serializer.data, status=HTTP_200_OK)
         return Response(serializer.errors, HTTP_400_BAD_REQUEST)
  
@@ -52,8 +58,22 @@ class ServiceListAPIView(APIView):
             provider_id = int(provider_id) if provider_id is not None else None
         except ValueError:
             provider_id = None
+        try:
+            if service_type and provider_id is None:
+                services = cache.get(f"service_{service_type}")
+                if services is not None:
+                    print("From cache")
+                    return Response(services, status=HTTP_200_OK)
+                else:
+                    print("Not from cache")
+                    services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type, provider_id=provider_id)
+                    serializer = ServiceListSerializer(services, many=True)
+                    cache.set(f"service_{service_type}", serializer.data)
+                    return Response(serializer.data, status=HTTP_200_OK)
+        except Exception as e:
+            print(f"Error {e}")
+            
         services = Service().all(order_by=order_by, order_dir=direction, service_type=service_type, provider_id=provider_id)
-        
         serializer = ServiceListSerializer(services, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
 
