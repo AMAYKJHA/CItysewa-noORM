@@ -71,6 +71,19 @@ class ServiceListAPIView(APIView):
                     except Exception as e:
                         print(f"Error: {e}")
                     return Response(serializer.data, status=HTTP_200_OK)
+            elif service_type is None and provider_id is None:
+                services = cache.get("services_all")
+                if services is not None:
+                    return Response(services, status=HTTP_200_OK)
+                else:
+                    services = Service().all(order_by=order_by, order_dir=direction)
+                    serializer = ServiceListSerializer(services, many=True)
+                    try:
+                        cache.set("services_all", serializer.data)
+                    except Exception as e:
+                        print(f"Error: {e}")
+                    return Response(serializer.data, status=HTTP_200_OK)
+                    
         except Exception as e:
             print(f"Error {e}")
             
