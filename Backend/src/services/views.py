@@ -31,6 +31,7 @@ class ServiceCreateAPIView(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             try:
+                cache.delete(f"service_all")
                 cache.delete(f"service_{serializer.data.get("service_type")}")
             except Exception as e:
                 print(f"Error {e}")
@@ -72,14 +73,14 @@ class ServiceListAPIView(APIView):
                         print(f"Error: {e}")
                     return Response(serializer.data, status=HTTP_200_OK)
             elif service_type is None and provider_id is None:
-                services = cache.get("services_all")
+                services = cache.get("service_all")
                 if services is not None:
                     return Response(services, status=HTTP_200_OK)
                 else:
                     services = Service().all(order_by=order_by, order_dir=direction)
                     serializer = ServiceListSerializer(services, many=True)
                     try:
-                        cache.set("services_all", serializer.data)
+                        cache.set("service_all", serializer.data)
                     except Exception as e:
                         print(f"Error: {e}")
                     return Response(serializer.data, status=HTTP_200_OK)

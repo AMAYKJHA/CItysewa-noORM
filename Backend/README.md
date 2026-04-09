@@ -16,6 +16,7 @@ The backend for **CitySewa** — a city services marketplace connecting customer
 - [Project Structure](#project-structure)
 - [Database Schema](#database-schema)
 - [API Endpoints](#api-endpoints)
+- [Caching](#caching)
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
 - [Custom Migrations](#custom-migrations)
@@ -107,7 +108,27 @@ All tables include `created_at` and `updated_at` timestamps with an auto-update 
 | `api/v1/addresses/...`            | Address, district & location management  |
 | `api/v1/schema`                   | OpenAPI 3.0 schema (JSON)                |
 | `api/v1/docs`                     | Interactive Swagger documentation        |
+| `keepalive`                       | Health check + cache connectivity status |
 | `sentry-debug`                    | Sentry integration test endpoint         |
+
+---
+
+## Caching
+
+CitySewa uses Redis (via `django-redis`) for OTP flows and service listing cache acceleration.
+
+### Service listing cache
+
+- **All services list** (`GET /api/v1/services` with no `service_type` and no `provider_id`) is cached under key `services_all`.
+- **Service type filtered list** (`GET /api/v1/services?service_type=<type>` with no `provider_id`) is cached under key `service_<ServiceType>`.
+- Cache TTL is **300 seconds** (from Django `CACHES["default"]["TIMEOUT"]`).
+- On service creation, the corresponding type cache key is invalidated (`service_<service_type>`), and the global list cache (`services_all`) naturally refreshes after TTL expiry.
+- Requests with `provider_id` (or other non-cached combinations) are served directly from the database.
+
+### Keepalive endpoint
+
+- `GET /keepalive` returns server status plus cache connectivity info.
+- Useful for quick health checks after deployment.
 
 ---
 
@@ -231,7 +252,7 @@ The live deployment is available at: **[https://citysewa2.onrender.com](https://
 
 ```bash
 python manage.py custommigrate --noinput
-gunicorn config.wsgi:application --workers 2 --threads 2 --bind 0.0.0.0:8000
+gunicorn config.wsgi:application --workers 1 --threads 2 --bind 0.0.0.0:8000
 ```
 
 ---
