@@ -123,8 +123,8 @@ class AddressAPIView(APIView):
         
     def post(self, request):
         data = request.data
-        location = request.data.pop("location", {})
-        customer_id = request.data.pop("customer_id", None)
+        location = data.pop("location", {})
+        customer_id = data.pop("customer_id", None)
         
         if customer_id:
             customer = Customer().get(id=customer_id)
